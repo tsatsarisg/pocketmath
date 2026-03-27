@@ -16,28 +16,28 @@ export function BreakdownRow({
   return (
     <div
       className={cn(
-        "flex items-baseline justify-between gap-6 py-2.5",
-        "border-b border-border/40 last:border-0",
+        "flex items-baseline justify-between gap-4 py-3",
+        "border-b border-border/30 last:border-0",
         highlight && "font-medium",
       )}
     >
       <dt
         className={cn(
-          "text-sm leading-snug",
+          "text-[0.8125rem] leading-snug",
           highlight ? "text-foreground" : "text-muted-foreground",
         )}
       >
         {label}
         {sub && (
-          <span className="block text-xs font-normal text-muted-foreground/60 mt-0.5">
+          <span className="block text-[0.6875rem] font-normal text-muted-foreground/50 mt-0.5">
             {sub}
           </span>
         )}
       </dt>
       <dd
         className={cn(
-          "text-sm tabular-nums text-right shrink-0 font-medium",
-          highlight ? "text-foreground" : "text-muted-foreground",
+          "text-[0.8125rem] tabular-nums text-right shrink-0 font-medium",
+          highlight ? "text-foreground font-semibold" : "text-muted-foreground",
           negative && "text-destructive",
         )}
       >

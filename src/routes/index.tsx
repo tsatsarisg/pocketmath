@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
 import { calculateEmployee } from "@/lib/tax/employee";
 import { calculateSelfEmployed } from "@/lib/tax/self-employed";
 import { calculateMplokaki } from "@/lib/tax/mplokaki";
@@ -206,13 +205,13 @@ function HomePage() {
       </a>
 
       {/* B8: Replace root div with main landmark */}
-      <main id="main-content" className="mx-auto max-w-2xl space-y-6 sm:space-y-10">
+      <main id="main-content" className="mx-auto max-w-[640px] space-y-8">
         {/* Hero */}
         <section className="space-y-2 text-center pt-2">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-[1.875rem] sm:text-[2rem] font-bold tracking-tight text-foreground">
             {t("hero.headline")}
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-[0.875rem] max-w-sm mx-auto">
             {t("hero.subtitle")}
           </p>
         </section>
@@ -236,51 +235,49 @@ function HomePage() {
         </div>
 
         {/* Inputs */}
-        <Card>
-          <CardContent className="pt-6 pb-6">
-            {mode === "employee" && (
-              <EmployeeInputs
-                monthly={empMonthly}
-                setMonthly={setEmpMonthly}
-                children={empChildren}
-                setChildren={setEmpChildren}
-                age={empAge}
-                setAge={setEmpAge}
-              />
-            )}
-            {mode === "self-employed" && (
-              <SelfEmployedInputs
-                monthly={seMonthly}
-                setMonthly={setSeMonthly}
-                expenses={seExpenses}
-                setExpenses={setSeExpenses}
-                efka={seEfka}
-                setEfka={setSeEfka}
-                years={seYears}
-                setYears={setSeYears}
-                age={seAge}
-                setAge={setSeAge}
-              />
-            )}
-            {mode === "mplokaki" && (
-              <MplokakiInputs
-                monthly={mpMonthly}
-                setMonthly={setMpMonthly}
-                efka={mpEfka}
-                setEfka={setMpEfka}
-                children={mpChildren}
-                setChildren={setMpChildren}
-                age={mpAge}
-                setAge={setMpAge}
-              />
-            )}
-          </CardContent>
-        </Card>
+        <div className="rounded-2xl bg-secondary/40 p-5 sm:p-6">
+          {mode === "employee" && (
+            <EmployeeInputs
+              monthly={empMonthly}
+              setMonthly={setEmpMonthly}
+              children={empChildren}
+              setChildren={setEmpChildren}
+              age={empAge}
+              setAge={setEmpAge}
+            />
+          )}
+          {mode === "self-employed" && (
+            <SelfEmployedInputs
+              monthly={seMonthly}
+              setMonthly={setSeMonthly}
+              expenses={seExpenses}
+              setExpenses={setSeExpenses}
+              efka={seEfka}
+              setEfka={setSeEfka}
+              years={seYears}
+              setYears={setSeYears}
+              age={seAge}
+              setAge={setSeAge}
+            />
+          )}
+          {mode === "mplokaki" && (
+            <MplokakiInputs
+              monthly={mpMonthly}
+              setMonthly={setMpMonthly}
+              efka={mpEfka}
+              setEfka={setMpEfka}
+              children={mpChildren}
+              setChildren={setMpChildren}
+              age={mpAge}
+              setAge={setMpAge}
+            />
+          )}
+        </div>
 
         {/* B9: Empty state when no user input yet */}
         {!hasUserInput && (
-          <div className="rounded-xl border border-dashed border-border/60 py-10 text-center">
-            <p className="text-sm text-muted-foreground">
+          <div className="rounded-2xl bg-secondary/20 py-12 text-center">
+            <p className="text-sm text-muted-foreground/60">
               {t("results.emptyState")}
             </p>
           </div>
@@ -293,7 +290,7 @@ function HomePage() {
             <section className="space-y-4" aria-label={t("results.headline")}>
               {/* Period toggle — right-aligned, sits above the cards */}
               <div className="flex items-center justify-between">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                <p className="text-[0.6875rem] text-muted-foreground font-semibold uppercase tracking-[0.1em]">
                   {t("results.headline")}
                 </p>
                 <PeriodToggle value={period} onChange={setPeriod} />
@@ -321,17 +318,17 @@ function HomePage() {
               </div>
 
               {/* Expandable breakdown */}
-              <div className="rounded-xl border border-border overflow-hidden">
+              <div className="rounded-2xl bg-secondary/30 overflow-hidden transition-colors duration-200">
                 <button
                   onClick={() => setBreakdownOpen((o) => !o)}
                   aria-expanded={breakdownOpen}
-                  className="w-full flex items-center justify-between px-4 py-3.5 text-sm font-medium text-foreground hover:bg-muted/40 transition-colors duration-150"
+                  className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors duration-200"
                 >
                   <span>{breakdownOpen ? t("results.hideBreakdown") : t("results.showBreakdown")}</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="15"
-                    height="15"
+                    width="16"
+                    height="16"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -339,7 +336,7 @@ function HomePage() {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     className={cn(
-                      "text-muted-foreground transition-transform duration-200",
+                      "text-muted-foreground/60 transition-transform duration-300 ease-out",
                       breakdownOpen && "rotate-180",
                     )}
                     aria-hidden="true"
@@ -354,7 +351,7 @@ function HomePage() {
                     breakdownOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0",
                   )}
                 >
-                  <div className="px-4 pb-5 pt-1 border-t border-border/60">
+                  <div className="px-5 pb-5 pt-1">
                     {mode === "employee" && empResult && (
                       <EmployeeBreakdown result={empResult} period={period} />
                     )}
@@ -369,7 +366,7 @@ function HomePage() {
               </div>
 
               {/* B4: Legal disclaimer */}
-              <p className="text-xs text-muted-foreground/70 text-center px-2">
+              <p className="text-[0.6875rem] text-muted-foreground/50 text-center px-2">
                 {t("disclaimer")}
               </p>
             </section>

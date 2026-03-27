@@ -14,7 +14,7 @@ function LanguageToggle() {
     <div
       role="radiogroup"
       aria-label="Language / Γλώσσα"
-      className="inline-flex rounded-lg bg-muted p-0.5 gap-0.5"
+      className="inline-flex rounded-xl bg-secondary/60 p-0.5 gap-0.5"
     >
       {(['el', 'en'] as const).map((lang) => (
         <button
@@ -23,9 +23,9 @@ function LanguageToggle() {
           aria-checked={current === lang}
           onClick={() => void i18n.changeLanguage(lang)}
           className={cn(
-            'rounded-md px-2.5 py-1 text-xs font-medium transition-all duration-150',
+            'rounded-lg px-2.5 py-1 text-xs font-medium transition-all duration-150',
             current === lang
-              ? 'bg-background text-foreground shadow-sm ring-1 ring-border'
+              ? 'bg-background text-foreground shadow-sm ring-1 ring-border/60'
               : 'text-muted-foreground hover:text-foreground',
           )}
         >
@@ -41,14 +41,22 @@ function RootLayout() {
 
   return (
     <div className="flex min-h-svh flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-          <Link
-            to="/"
-            className="text-base font-semibold tracking-tight hover:opacity-80 transition-opacity duration-150"
-          >
-            PocketMath
-          </Link>
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
+        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
+          <div className="flex items-center gap-4">
+            <Link
+              to="/"
+              className="text-base font-bold tracking-tight text-foreground hover:text-primary transition-colors duration-200"
+            >
+              PocketMath
+            </Link>
+            <Link
+              to="/compare"
+              className="text-[0.8125rem] font-medium text-muted-foreground hover:text-foreground transition-colors duration-150"
+            >
+              {t("nav.compare")}
+            </Link>
+          </div>
           <LanguageToggle />
         </div>
       </header>
@@ -57,25 +65,40 @@ function RootLayout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-border/60">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 px-4 py-4 sm:flex-row sm:py-3">
-          <p className="text-xs text-muted-foreground/70 text-center sm:text-left">
+      <footer className="mt-auto">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-6 sm:py-4">
+          <p className="text-[0.6875rem] text-muted-foreground/50 text-center">
             {t("footer.taxYear")}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 text-[0.6875rem]">
+            <Link
+              to="/privacy"
+              className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
+            >
+              {t("footer.privacy")}
+            </Link>
+            <span className="text-muted-foreground/30">·</span>
+            <Link
+              to="/terms"
+              className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
+            >
+              {t("footer.terms")}
+            </Link>
+            <span className="text-muted-foreground/30">·</span>
             <a
               href="https://ko-fi.com/pocketmath"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+              className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
             >
               ☕ Ko-fi
             </a>
+            <span className="text-muted-foreground/30">·</span>
             <a
               href="https://revolut.me/pocketmath"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+              className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
             >
               ⚡ Revolut
             </a>

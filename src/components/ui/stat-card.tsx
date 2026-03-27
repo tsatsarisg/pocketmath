@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
 
 export function StatCard({
   label,
@@ -15,51 +14,44 @@ export function StatCard({
   className?: string;
 }) {
   return (
-    <Card
+    <div
       aria-label={`${label}: ${amount}`}
       className={cn(
-        "flex-1 min-w-0 transition-shadow duration-200",
+        "flex-1 min-w-0 rounded-2xl transition-all duration-300",
         hero
-          ? "bg-net-accent-muted ring-2 ring-net-accent"
-          : "hover:shadow-md",
+          ? "bg-net-accent-muted ring-2 ring-net-accent/30 p-5 sm:p-6"
+          : "bg-card ring-1 ring-border/50 p-4 sm:p-5 hover:shadow-md hover:-translate-y-0.5",
         className,
       )}
     >
-      <CardContent
+      <p
         className={cn(
-          "flex flex-col",
-          hero ? "pt-5 pb-5 gap-1.5" : "pt-4 pb-4 gap-1",
+          "text-[0.6875rem] font-semibold uppercase tracking-[0.1em]",
+          hero ? "text-net-accent" : "text-muted-foreground",
         )}
       >
-        <p
-          className={cn(
-            "text-xs font-semibold uppercase tracking-widest",
-            hero ? "text-net-accent" : "text-muted-foreground",
-          )}
-        >
-          {label}
-        </p>
-        <p
-          className={cn(
-            "font-bold tabular-nums leading-none tracking-tight",
-            hero
-              ? "text-[2.75rem] sm:text-[2.25rem] text-net-accent"
-              : "text-2xl text-foreground",
-          )}
-        >
-          {amount}
-        </p>
-        {sub && (
-          <p
-            className={cn(
-              "text-xs tabular-nums",
-              hero ? "text-net-accent/70" : "text-muted-foreground",
-            )}
-          >
-            {sub}
-          </p>
+        {label}
+      </p>
+      <p
+        className={cn(
+          "tabular-nums leading-none tracking-tight mt-1",
+          hero
+            ? "text-[3rem] sm:text-[2.5rem] font-extrabold text-net-accent"
+            : "text-[1.75rem] font-bold text-foreground",
         )}
-      </CardContent>
-    </Card>
+      >
+        {amount}
+      </p>
+      {sub && (
+        <p
+          className={cn(
+            "text-[0.75rem] mt-0.5",
+            hero ? "text-net-accent/60 mt-1" : "text-muted-foreground",
+          )}
+        >
+          {sub}
+        </p>
+      )}
+    </div>
   );
 }

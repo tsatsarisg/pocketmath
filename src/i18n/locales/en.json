@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "compare": "Compare"
+  },
   "hero": {
     "headline": "How much actually stays in your pocket?",
     "subtitle": "Net income calculator for tax year 2026"
@@ -36,7 +39,7 @@
     "hideBreakdown": "Hide detailed breakdown",
     "emptyState": "Enter your salary above to see the result"
   },
-  "disclaimer": "Results are estimates for informational purposes only. Not tax advice. Based on Law 5246/2025 — last updated March 2026.",
+  "disclaimer": "Results are approximate estimates for informational and educational purposes only. They do not constitute tax, financial, or legal advice and should not be used as the sole basis for any financial decision. Consult a qualified accountant for professional tax advice. Based on Law 5246/2025.",
   "breakdown": {
     "employee": {
       "grossSalary": "Gross salary",
@@ -81,12 +84,129 @@
     }
   },
   "footer": {
-    "taxYear": "Tax year 2026 · Greece · Not tax advice"
+    "taxYear": "Calculation parameters verified as of March 2026 · Based on Law 5246/2025 · Not tax advice",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "compare": {
+    "headline": "Compare employment types",
+    "subtitle": "Same gross income — which arrangement puts more money in your pocket over a year?",
+    "grossMonthly": "Gross monthly income",
+    "emptyState": "Enter a monthly income to compare all three options",
+    "employee": "Employee",
+    "selfEmployed": "Self-Employed",
+    "mplokaki": "Block Invoice",
+    "netIncome": "Net income",
+    "annualNet": "Annual net",
+    "annualNetLabel": "Annual net income",
+    "monthlyEquiv": "Monthly equivalent (÷12)",
+    "actualPaycheck": "Actual paycheck",
+    "totalTaxes": "Taxes & contributions",
+    "effectiveTaxRate": "Effective rate",
+    "bestNet": "Best annual net",
+    "annualComparison": "Annual comparison",
+    "whyDifferent": "Why is the employee monthly paycheck lower?",
+    "whyDifferentBody": "Greek employees receive 14 salaries per year — 12 regular + Christmas bonus + Easter bonus + summer leave bonus. The annual total is higher, but each paycheck is 1/14 of that, not 1/12. The monthly equivalent rows above divide the annual net by 12 so all three options are on the same footing.",
+    "defaults": "Comparison uses: 0 children, age 35, 1st EFKA category, 4 years in business, no expenses.",
+    "detailedCalc": "Need a detailed breakdown?",
+    "goToCalculator": "Go to calculator"
   },
   "a11y": {
     "skipToContent": "Skip to main content",
     "modeEmployee": "Mode: Employee",
     "modeSelfEmployed": "Mode: Self-employed",
     "modeMplokaki": "Mode: Block invoice"
+  },
+  "legal": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use & Legal Disclaimer",
+    "lastUpdated": "Last updated: March 2026",
+    "backToCalculator": "Back to calculator",
+    "privacy": {
+      "title": "Privacy Policy",
+      "whoWeAre": {
+        "heading": "1. Who we are",
+        "text": "PocketMath.gr is a free informational tool operated as a personal project. For questions about this privacy policy, contact us at privacy@pocketmath.gr."
+      },
+      "whatData": {
+        "heading": "2. What personal data we process",
+        "intro": "PocketMath is designed to minimise data processing.",
+        "calculations": "Calculation data: All tax calculations are performed entirely within your browser (client-side). The salary, income, or other financial figures you enter are never transmitted to our servers, never stored by us, and are not accessible to us in any way.",
+        "serverLogs": "Server logs: When you visit this website, our hosting provider automatically processes your IP address and basic request information (page visited, timestamp, browser type) for the purpose of delivering the website to you. These logs are retained per the hosting provider's standard retention policy and then automatically deleted.",
+        "language": "Language preference: We store your language preference (Greek or English) in your browser's localStorage. This is a strictly necessary functional storage that allows the website to display content in your chosen language. This data remains on your device, is not transmitted to our servers, and can be deleted at any time by clearing your browser data.",
+        "noCookies": "We do not use cookies for tracking, analytics, or advertising. We do not use any third-party analytics services. We do not serve advertisements. We do not create user accounts or profiles."
+      },
+      "legalBasis": {
+        "heading": "3. Legal basis for processing",
+        "text": "We process the limited personal data described above on the following legal bases under GDPR Article 6(1):",
+        "serverLogs": "Server logs: Legitimate interest (Art. 6(1)(f)) in operating and securing the website.",
+        "localStorage": "Language preference (localStorage): Strictly necessary for the service functionality as requested by you, exempt from consent under Art. 5(3) of the ePrivacy Directive (Greek Law 3471/2006, Art. 4(5))."
+      },
+      "dataSharing": {
+        "heading": "4. Data sharing and international transfers",
+        "text": "We do not sell, trade, or share your personal data with third parties. Our hosting provider processes server logs as a data processor on our behalf."
+      },
+      "retention": {
+        "heading": "5. Data retention",
+        "serverLogs": "Server logs: Per hosting provider's standard retention policy.",
+        "localStorage": "localStorage language preference: Until you clear your browser data or change the setting."
+      },
+      "rights": {
+        "heading": "6. Your rights",
+        "intro": "Under the GDPR and Greek Law 4624/2019, you have the right to:",
+        "list": "Access information about what personal data we process; request correction of inaccurate data; request deletion of your personal data; request limitation of processing; object to processing based on legitimate interest; lodge a complaint with the Hellenic Data Protection Authority (HDPA/APDPX).",
+        "hdpa": "Hellenic Data Protection Authority — Kifissias 1-3, 115 23 Athens, Greece — Tel: +30 210 6475600 — contact@dpa.gr — www.dpa.gr"
+      },
+      "changes": {
+        "heading": "7. Changes to this policy",
+        "text": "We may update this policy to reflect changes in our practices or applicable law. The \"Last updated\" date at the top indicates the most recent revision."
+      }
+    },
+    "terms": {
+      "title": "Terms of Use & Legal Disclaimer",
+      "nature": {
+        "heading": "1. Nature of this service",
+        "text": "PocketMath.gr is a free informational tool that provides estimated calculations of income tax, social security contributions, and net income based on Greek tax legislation. This website is NOT a tax advisory service, accounting service, or financial advisory service. The operator of this website is not a certified accountant, tax advisor, or licensed professional within the meaning of Greek Law 4152/2013."
+      },
+      "noAdvice": {
+        "heading": "2. No tax advice",
+        "intro": "The calculations, results, figures, and information provided by this website:",
+        "list": [
+          "Are approximate estimates provided for general informational and educational purposes only",
+          "Do NOT constitute tax advice, financial advice, legal advice, or any form of professional advice",
+          "Do NOT replace consultation with a qualified certified accountant or tax advisor",
+          "Should NOT be used as the sole basis for any financial decision, tax filing, tax payment, or legal action",
+          "May contain errors, inaccuracies, or omissions despite our reasonable efforts to ensure accuracy"
+        ],
+        "responsibility": "You are solely responsible for verifying all calculations with a qualified professional before making any financial or tax-related decisions."
+      },
+      "accuracy": {
+        "heading": "3. Legislative basis and accuracy",
+        "text": "Calculations are based on the provisions of Greek Law 5246/2025 and related tax and social security legislation, as understood and interpreted by the website operator at the time of implementation. The tax rates, brackets, social security contribution rates, tax credits, and other parameters reflected in this tool are accurate as of March 2026. Tax legislation may change, and these parameters may be amended, replaced, or reinterpreted by Greek authorities at any time. We endeavour to update this tool when legislative changes occur, but we do not guarantee that the tool reflects the current state of the law at any given time.",
+        "asOf": "The phrase \"as of [date]\" indicates the date on which the legislative parameters were last verified by the operator. It does not guarantee accuracy for any subsequent period, even if the underlying legislation has not changed."
+      },
+      "liability": {
+        "heading": "4. Limitation of liability",
+        "intro": "To the maximum extent permitted by Greek law:",
+        "list": [
+          "The website is provided \"as is\" and \"as available\" without any warranty, express or implied, regarding accuracy, completeness, reliability, or fitness for any particular purpose",
+          "The operator shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from or related to any errors in calculations, any reliance placed on the results, any financial decisions made based on information from this website, or any tax penalties resulting from use of this tool",
+          "This limitation applies regardless of the legal theory under which liability is asserted, including tort or contract"
+        ]
+      },
+      "ip": {
+        "heading": "5. Intellectual property",
+        "text": "All content, code, design, and calculations on this website are the property of the operator unless otherwise stated. Greek tax legislation referenced herein is public law and is not claimed as proprietary content."
+      },
+      "law": {
+        "heading": "6. Governing law and jurisdiction",
+        "text": "These terms are governed by the laws of the Hellenic Republic. Any disputes shall be subject to the exclusive jurisdiction of the courts of Athens, Greece."
+      },
+      "changes": {
+        "heading": "7. Changes to these terms",
+        "text": "We reserve the right to modify these terms at any time. Continued use of the website after changes constitutes acceptance of the modified terms."
+      }
+    }
   }
 }
