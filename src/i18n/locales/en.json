@@ -35,6 +35,7 @@
     "net": "Net",
     "perMonth": "/month",
     "perYear": "/year",
+    "paycheckBadge": "1 of 14 paychecks / year",
     "showBreakdown": "Show detailed breakdown",
     "hideBreakdown": "Hide detailed breakdown",
     "emptyState": "Enter your salary above to see the result"

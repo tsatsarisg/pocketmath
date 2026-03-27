@@ -1,5 +1,6 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 export const Route = createRootRoute({
@@ -37,7 +38,11 @@ function LanguageToggle() {
 }
 
 function RootLayout() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language.startsWith("en") ? "en" : "el";
+  }, [i18n.language]);
 
   return (
     <div className="flex min-h-svh flex-col bg-background text-foreground">

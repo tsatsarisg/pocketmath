@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
+import { usePageMeta } from "@/lib/use-page-meta";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { calculateEmployee } from "@/lib/tax/employee";
@@ -33,7 +34,17 @@ type Period = "monthly" | "annual";
 // ---------------------------------------------------------------------------
 
 function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEl = i18n.language.startsWith("el");
+  usePageMeta({
+    title: isEl
+      ? "PocketMath – Υπολογιστής Καθαρού Μισθού 2026"
+      : "PocketMath – Net Salary Calculator Greece 2026",
+    description: isEl
+      ? "Δωρεάν υπολογιστής καθαρού μισθού για Ελλάδα 2026. Μισθωτός, ελεύθερος επαγγελματίας, μπλοκάκι. Βασισμένο στον Ν.5246/2025."
+      : "Free net salary calculator for Greece 2026. Compare employee, self-employed and block invoice (mplokaki). Based on Law 5246/2025.",
+    canonical: "https://pocketmath.gr/",
+  });
 
   const MODES: { id: Mode; label: string }[] = [
     { id: "employee", label: t("modes.employee") },
@@ -187,7 +198,7 @@ function HomePage() {
   // B9: Gate results on actual user input
   const hasUserInput =
     mode === "employee"
-      ? empMonthly !== "" && empMonthly !== "2000"
+      ? empMonthly !== "" && empMonthly !== "0"
       : mode === "self-employed"
         ? seMonthly !== "" && seMonthly !== "0"
         : mpMonthly !== "" && mpMonthly !== "0";
@@ -302,6 +313,7 @@ function HomePage() {
                   label={stats.netLabel}
                   amount={stats.netValue}
                   sub={stats.netSub}
+                  badge={mode === "employee" && period === "monthly" ? t("results.paycheckBadge") : undefined}
                   hero
                   className="order-first sm:order-last"
                 />

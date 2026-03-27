@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { usePageMeta } from "@/lib/use-page-meta";
 import { cn } from "@/lib/utils";
 import { compareAll } from "@/lib/tax/compare";
 import type { CompareEntry } from "@/lib/tax/compare";
@@ -184,7 +185,17 @@ function NetBar({ ranked }: { ranked: RankedEntry[] }) {
 }
 
 function ComparePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isEl = i18n.language.startsWith("el");
+  usePageMeta({
+    title: isEl
+      ? "PocketMath – Σύγκριση Μισθωτού, Ελεύθερου Επαγγελματία & Μπλοκάκι 2026"
+      : "PocketMath – Compare Employee vs Self-Employed vs Block Invoice Greece 2026",
+    description: isEl
+      ? "Σύγκριση καθαρού ετήσιου εισοδήματος για μισθωτό, ελεύθερο επαγγελματία και μπλοκάκι με το ίδιο μεικτό εισόδημα. Ελλάδα 2026."
+      : "Compare annual net income for employee, self-employed and block invoice (mplokaki) with the same gross income. Greece 2026.",
+    canonical: "https://pocketmath.gr/compare",
+  });
   const [gross, setGross] = useState("");
 
   const grossNum = Math.max(0, parseFloat(gross) || 0);

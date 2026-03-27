@@ -4,12 +4,14 @@ export function StatCard({
   label,
   amount,
   sub,
+  badge,
   hero,
   className,
 }: {
   label: string;
   amount: string;
   sub?: string;
+  badge?: string;
   hero?: boolean;
   className?: string;
 }) {
@@ -42,11 +44,17 @@ export function StatCard({
       >
         {amount}
       </p>
+      {badge && (
+        <span className="inline-flex items-center mt-2 px-2 py-0.5 rounded-full bg-net-accent/10 ring-1 ring-net-accent/20 text-[0.6875rem] font-medium text-net-accent tabular-nums">
+          {badge}
+        </span>
+      )}
       {sub && (
         <p
           className={cn(
             "text-[0.75rem] mt-0.5",
             hero ? "text-net-accent/60 mt-1" : "text-muted-foreground",
+            badge && "mt-1.5",
           )}
         >
           {sub}
