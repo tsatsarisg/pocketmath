@@ -1,0 +1,92 @@
+{
+  "hero": {
+    "headline": "How much actually stays in your pocket?",
+    "subtitle": "Net income calculator for tax year 2026"
+  },
+  "modes": {
+    "employee": "Employee",
+    "selfEmployed": "Self-Employed",
+    "mplokaki": "Block Invoice"
+  },
+  "period": {
+    "monthly": "Monthly",
+    "annual": "Annual"
+  },
+  "inputs": {
+    "grossMonthly": "Gross salary / month",
+    "children": "Children",
+    "age": "Age",
+    "revenue": "Revenue / month",
+    "expenses": "Expenses / month",
+    "efkaCategory": "EFKA Category",
+    "yearsInBusiness": "Years in business",
+    "invoiced": "Invoiced / month"
+  },
+  "results": {
+    "headline": "Results",
+    "gross": "Gross",
+    "revenue": "Revenue",
+    "invoiced": "Invoiced",
+    "taxAndContributions": "Taxes & contributions",
+    "taxAndEfka": "Taxes & EFKA",
+    "net": "Net",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "showBreakdown": "Show detailed breakdown",
+    "hideBreakdown": "Hide detailed breakdown",
+    "emptyState": "Enter your salary above to see the result"
+  },
+  "disclaimer": "Results are estimates for informational purposes only. Not tax advice. Based on Law 5246/2025 — last updated March 2026.",
+  "breakdown": {
+    "employee": {
+      "grossSalary": "Gross salary",
+      "salaries": "x14 salaries",
+      "employeeSs": "Employee SS contributions",
+      "ssRate": "13.87%",
+      "taxableIncome": "Taxable income",
+      "grossTax": "Income tax (gross)",
+      "taxCredit": "Tax credit",
+      "netTax": "Income tax (net)",
+      "netIncome": "Net income",
+      "effectiveTaxRate": "Effective tax rate",
+      "employerCost": "Employer cost (21.79% SS)"
+    },
+    "selfEmployed": {
+      "annualRevenue": "Annual revenue",
+      "annualExpenses": "Expenses",
+      "annualEfka": "EFKA",
+      "taxableIncome": "Taxable income",
+      "grossTax": "Income tax (gross)",
+      "firstYearBenefit": "First 3-year discount",
+      "firstYearBenefitSub": "50% first bracket discount",
+      "annualTax": "Income tax (net)",
+      "prepayment": "Tax prepayment",
+      "prepaymentSub": "of tax",
+      "totalTaxWithPrepayment": "Total tax + prepayment",
+      "netIncome": "Net income",
+      "effectiveTaxRate": "Effective tax rate"
+    },
+    "mplokaki": {
+      "grossInvoiced": "Total invoiced",
+      "annualEfka": "EFKA",
+      "taxableIncome": "Taxable income",
+      "grossTax": "Income tax (gross)",
+      "taxCredit": "Tax credit",
+      "annualTax": "Income tax (net)",
+      "totalWithheld": "20% withholding from clients",
+      "balanceDue": "Balance due",
+      "refund": "Tax refund",
+      "netIncome": "Net income",
+      "effectiveTaxRate": "Effective tax rate"
+    }
+  },
+  "footer": {
+    "taxYear": "Tax year 2026 · Greece · Not tax advice"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "modeEmployee": "Mode: Employee",
+    "modeSelfEmployed": "Mode: Self-employed",
+    "modeMplokaki": "Mode: Block invoice"
+  }
+}
