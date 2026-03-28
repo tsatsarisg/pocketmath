@@ -1,18 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { LegalSection as Section } from "@/components/ui/legal-section";
 
-export const Route = createFileRoute("/terms")({
-  component: TermsPage,
-});
-
-function TermsPage() {
+export default function TermsPage() {
   const { t } = useTranslation();
 
   return (
     <article className="mx-auto max-w-[640px] space-y-8 pb-8">
       <div className="space-y-2">
         <Link
-          to="/"
+          href="/"
           className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
         >
           &larr; {t("legal.backToCalculator")}
@@ -71,22 +70,5 @@ function TermsPage() {
         <p>{t("legal.terms.changes.text")}</p>
       </Section>
     </article>
-  );
-}
-
-function Section({
-  heading,
-  children,
-}: {
-  heading: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold text-foreground">{heading}</h2>
-      <div className="text-[0.9375rem] leading-relaxed text-muted-foreground space-y-2">
-        {children}
-      </div>
-    </section>
   );
 }
