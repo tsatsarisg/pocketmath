@@ -31,9 +31,34 @@ export default function PrivacyPage() {
       <Section heading={t("legal.privacy.whatData.heading")}>
         <p>{t("legal.privacy.whatData.intro")}</p>
         <ul className="list-disc pl-5 space-y-3">
-          <li><strong>{t("legal.privacy.whatData.calculations").split(":")[0]}:</strong> {t("legal.privacy.whatData.calculations").split(":").slice(1).join(":")}</li>
-          <li><strong>{t("legal.privacy.whatData.serverLogs").split(":")[0]}:</strong> {t("legal.privacy.whatData.serverLogs").split(":").slice(1).join(":")}</li>
-          <li><strong>{t("legal.privacy.whatData.language").split(":")[0]}:</strong> {t("legal.privacy.whatData.language").split(":").slice(1).join(":")}</li>
+          <li>
+            <strong>
+              {t("legal.privacy.whatData.calculations").split(":")[0]}:
+            </strong>{" "}
+            {t("legal.privacy.whatData.calculations")
+              .split(":")
+              .slice(1)
+              .join(":")}
+          </li>
+          <li>
+            <strong>
+              {t("legal.privacy.whatData.serverLogs").split(":")[0]}:
+            </strong>{" "}
+            {t("legal.privacy.whatData.serverLogs")
+              .split(":")
+              .slice(1)
+              .join(":")}
+          </li>
+          <li>
+            <strong>
+              {t("legal.privacy.whatData.language").split(":")[0]}:
+            </strong>{" "}
+            {t("legal.privacy.whatData.language").split(":").slice(1).join(":")}
+          </li>
+          <li>
+            <strong>{t("legal.privacy.whatData.theme").split(":")[0]}:</strong>{" "}
+            {t("legal.privacy.whatData.theme").split(":").slice(1).join(":")}
+          </li>
         </ul>
         <p className="mt-3">{t("legal.privacy.whatData.noCookies")}</p>
       </Section>
@@ -60,9 +85,14 @@ export default function PrivacyPage() {
       <Section heading={t("legal.privacy.rights.heading")}>
         <p>{t("legal.privacy.rights.intro")}</p>
         <p className="mt-2">{t("legal.privacy.rights.list")}</p>
+        <p className="mt-3">{t("legal.privacy.rights.howTo")}</p>
         <p className="mt-3 text-[0.8125rem] text-muted-foreground">
           {t("legal.privacy.rights.hdpa")}
         </p>
+      </Section>
+
+      <Section heading={t("legal.privacy.children.heading")}>
+        <p>{t("legal.privacy.children.text")}</p>
       </Section>
 
       <Section heading={t("legal.privacy.changes.heading")}>

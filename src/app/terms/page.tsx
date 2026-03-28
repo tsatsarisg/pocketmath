@@ -24,6 +24,10 @@ export default function TermsPage() {
         </p>
       </div>
 
+      <Section heading={t("legal.terms.acceptance.heading")}>
+        <p>{t("legal.terms.acceptance.text")}</p>
+      </Section>
+
       <Section heading={t("legal.terms.nature.heading")}>
         <p>{t("legal.terms.nature.text")}</p>
       </Section>
@@ -31,11 +35,11 @@ export default function TermsPage() {
       <Section heading={t("legal.terms.noAdvice.heading")}>
         <p>{t("legal.terms.noAdvice.intro")}</p>
         <ul className="list-disc pl-5 space-y-2">
-          {(t("legal.terms.noAdvice.list", { returnObjects: true }) as string[]).map(
-            (item, i) => (
-              <li key={i}>{item}</li>
-            ),
-          )}
+          {(
+            t("legal.terms.noAdvice.list", { returnObjects: true }) as string[]
+          ).map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
         </ul>
         <p className="mt-3 font-medium text-foreground">
           {t("legal.terms.noAdvice.responsibility")}
@@ -50,16 +54,24 @@ export default function TermsPage() {
       <Section heading={t("legal.terms.liability.heading")}>
         <p>{t("legal.terms.liability.intro")}</p>
         <ul className="list-disc pl-5 space-y-2">
-          {(t("legal.terms.liability.list", { returnObjects: true }) as string[]).map(
-            (item, i) => (
-              <li key={i}>{item}</li>
-            ),
-          )}
+          {(
+            t("legal.terms.liability.list", { returnObjects: true }) as string[]
+          ).map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
         </ul>
       </Section>
 
       <Section heading={t("legal.terms.ip.heading")}>
         <p>{t("legal.terms.ip.text")}</p>
+      </Section>
+
+      <Section heading={t("legal.terms.externalLinks.heading")}>
+        <p>{t("legal.terms.externalLinks.text")}</p>
+      </Section>
+
+      <Section heading={t("legal.terms.availability.heading")}>
+        <p>{t("legal.terms.availability.text")}</p>
       </Section>
 
       <Section heading={t("legal.terms.law.heading")}>

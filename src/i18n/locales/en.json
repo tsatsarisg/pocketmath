@@ -136,42 +136,52 @@
         "calculations": "Calculation data: All tax calculations are performed entirely within your browser (client-side). The salary, income, or other financial figures you enter are never transmitted to our servers, never stored by us, and are not accessible to us in any way.",
         "serverLogs": "Server logs: When you visit this website, our hosting provider automatically processes your IP address and basic request information (page visited, timestamp, browser type) for the purpose of delivering the website to you. These logs are retained per the hosting provider's standard retention policy and then automatically deleted.",
         "language": "Language preference: We store your language preference (Greek or English) in your browser's localStorage. This is a strictly necessary functional storage that allows the website to display content in your chosen language. This data remains on your device, is not transmitted to our servers, and can be deleted at any time by clearing your browser data.",
+        "theme": "Theme preference: We store your chosen colour theme (dark or light) in your browser's localStorage. Like the language preference, this is strictly necessary functional storage that remains on your device and is never transmitted to our servers.",
         "noCookies": "We do not use cookies for tracking, analytics, or advertising. We do not use any third-party analytics services. We do not serve advertisements. We do not create user accounts or profiles."
       },
       "legalBasis": {
         "heading": "3. Legal basis for processing",
         "text": "We process the limited personal data described above on the following legal bases under GDPR Article 6(1):",
         "serverLogs": "Server logs: Legitimate interest (Art. 6(1)(f)) in operating and securing the website.",
-        "localStorage": "Language preference (localStorage): Strictly necessary for the service functionality as requested by you, exempt from consent under Art. 5(3) of the ePrivacy Directive (Greek Law 3471/2006, Art. 4(5))."
+        "localStorage": "Language and theme preferences (localStorage): Strictly necessary for the service functionality as requested by you, exempt from consent under Art. 5(3) of the ePrivacy Directive (Greek Law 3471/2006, Art. 4(5))."
       },
       "dataSharing": {
         "heading": "4. Data sharing and international transfers",
-        "text": "We do not sell, trade, or share your personal data with third parties. Our hosting provider processes server logs as a data processor on our behalf."
+        "text": "We do not sell, trade, or share your personal data with third parties. Our hosting provider (Cloudflare Pages, based in the EU with processing within the EEA) processes server logs as a data processor on our behalf. When you click external donation links (e.g. Ko-fi, Revolut) in our footer, you leave our website and are subject to those services' own privacy policies. We have no control over their data practices."
       },
       "retention": {
         "heading": "5. Data retention",
-        "serverLogs": "Server logs: Per hosting provider's standard retention policy.",
-        "localStorage": "localStorage language preference: Until you clear your browser data or change the setting."
+        "serverLogs": "Server logs: Per hosting provider's standard retention policy (typically no more than 30 days).",
+        "localStorage": "localStorage preferences (language, theme): Until you clear your browser data or change the setting."
       },
       "rights": {
         "heading": "6. Your rights",
         "intro": "Under the GDPR and Greek Law 4624/2019, you have the right to:",
         "list": "Access information about what personal data we process; request correction of inaccurate data; request deletion of your personal data; request limitation of processing; object to processing based on legitimate interest; lodge a complaint with the Hellenic Data Protection Authority (HDPA/APDPX).",
+        "howTo": "To exercise any of these rights, contact us at privacy@pocketmath.gr. We will respond within 30 days.",
         "hdpa": "Hellenic Data Protection Authority — Kifissias 1-3, 115 23 Athens, Greece — Tel: +30 210 6475600 — contact@dpa.gr — www.dpa.gr"
       },
+      "children": {
+        "heading": "7. Children's privacy",
+        "text": "PocketMath is not directed at children. You must be at least 15 years old to use this website, in accordance with Greek Law 4624/2019 (Art. 21) implementing GDPR Article 8. We do not knowingly collect personal data from anyone under 15."
+      },
       "changes": {
-        "heading": "7. Changes to this policy",
+        "heading": "8. Changes to this policy",
         "text": "We may update this policy to reflect changes in our practices or applicable law. The \"Last updated\" date at the top indicates the most recent revision."
       }
     },
     "terms": {
       "title": "Terms of Use & Legal Disclaimer",
+      "acceptance": {
+        "heading": "1. Acceptance of terms",
+        "text": "By accessing or using PocketMath.gr, you agree to be bound by these Terms of Use. If you do not agree with any part of these terms, you must not use this website. You must be at least 15 years old to use this service."
+      },
       "nature": {
-        "heading": "1. Nature of this service",
+        "heading": "2. Nature of this service",
         "text": "PocketMath.gr is a free informational tool that provides estimated calculations of income tax, social security contributions, and net income based on Greek tax legislation. This website is NOT a tax advisory service, accounting service, or financial advisory service. The operator of this website is not a certified accountant, tax advisor, or licensed professional within the meaning of Greek Law 4152/2013."
       },
       "noAdvice": {
-        "heading": "2. No tax advice",
+        "heading": "3. No tax advice",
         "intro": "The calculations, results, figures, and information provided by this website:",
         "list": [
           "Are approximate estimates provided for general informational and educational purposes only",
@@ -183,12 +193,12 @@
         "responsibility": "You are solely responsible for verifying all calculations with a qualified professional before making any financial or tax-related decisions."
       },
       "accuracy": {
-        "heading": "3. Legislative basis and accuracy",
+        "heading": "4. Legislative basis and accuracy",
         "text": "Calculations are based on the provisions of Greek Law 5246/2025 and related tax and social security legislation, as understood and interpreted by the website operator at the time of implementation. The tax rates, brackets, social security contribution rates, tax credits, and other parameters reflected in this tool are accurate as of March 2026. Tax legislation may change, and these parameters may be amended, replaced, or reinterpreted by Greek authorities at any time. We endeavour to update this tool when legislative changes occur, but we do not guarantee that the tool reflects the current state of the law at any given time.",
         "asOf": "The phrase \"as of [date]\" indicates the date on which the legislative parameters were last verified by the operator. It does not guarantee accuracy for any subsequent period, even if the underlying legislation has not changed."
       },
       "liability": {
-        "heading": "4. Limitation of liability",
+        "heading": "5. Limitation of liability",
         "intro": "To the maximum extent permitted by Greek law:",
         "list": [
           "The website is provided \"as is\" and \"as available\" without any warranty, express or implied, regarding accuracy, completeness, reliability, or fitness for any particular purpose",
@@ -197,15 +207,23 @@
         ]
       },
       "ip": {
-        "heading": "5. Intellectual property",
+        "heading": "6. Intellectual property",
         "text": "All content, code, design, and calculations on this website are the property of the operator unless otherwise stated. Greek tax legislation referenced herein is public law and is not claimed as proprietary content."
       },
+      "externalLinks": {
+        "heading": "7. External links",
+        "text": "This website contains links to third-party websites (e.g. Ko-fi, Revolut) for voluntary donations. We are not responsible for the content, privacy practices, or availability of these external sites. Accessing them is at your own risk and subject to their own terms."
+      },
+      "availability": {
+        "heading": "8. Service availability",
+        "text": "PocketMath is provided on an 'as available' basis. We may modify, suspend, or discontinue any part of the service at any time without notice. We are not liable for any interruption or unavailability of the service."
+      },
       "law": {
-        "heading": "6. Governing law and jurisdiction",
+        "heading": "9. Governing law and jurisdiction",
         "text": "These terms are governed by the laws of the Hellenic Republic. Any disputes shall be subject to the exclusive jurisdiction of the courts of Athens, Greece."
       },
       "changes": {
-        "heading": "7. Changes to these terms",
+        "heading": "10. Changes to these terms",
         "text": "We reserve the right to modify these terms at any time. Continued use of the website after changes constitutes acceptance of the modified terms."
       }
     }
