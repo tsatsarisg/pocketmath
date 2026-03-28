@@ -8,15 +8,15 @@ import {
 /**
  * Get the base credit amount before phase-out.
  *
- * 0 children: 777, 1: 810, 2: 900, 3: 1120, 4: 1340, 5+: +220 per additional.
+ * 0 children: 777, 1: 900, 2: 1,120, 3: 1,340, 4: 1,580, 5: 1,780, 6+: +220 per additional.
  */
 function getBaseCredit(children: number): number {
-  if (children <= 4) {
+  if (children <= 5) {
     return TAX_CREDIT_BASE[children] ?? 777;
   }
-  // 4 children = 1340, each additional child adds 220
-  const base4 = TAX_CREDIT_BASE[4] ?? 1_340;
-  return base4 + (children - 4) * TAX_CREDIT_EXTRA_PER_CHILD;
+  // 5 children = 1780, each additional child adds 220
+  const base5 = TAX_CREDIT_BASE[5] ?? 1_780;
+  return base5 + (children - 5) * TAX_CREDIT_EXTRA_PER_CHILD;
 }
 
 /**
@@ -34,13 +34,13 @@ function getBaseCredit(children: number): number {
 export function taxCredit(taxableIncome: number, children = 0): number {
   const base = getBaseCredit(children);
 
-  if (taxableIncome <= TAX_CREDIT_PHASE_OUT_THRESHOLD) {
+  // Phase-out does NOT apply for 5+ children
+  if (children >= 5 || taxableIncome <= TAX_CREDIT_PHASE_OUT_THRESHOLD) {
     return base;
   }
 
   const excess = taxableIncome - TAX_CREDIT_PHASE_OUT_THRESHOLD;
-  const reduction =
-    Math.floor(excess / 1_000) * TAX_CREDIT_PHASE_OUT_PER_1000;
+  const reduction = Math.floor(excess / 1_000) * TAX_CREDIT_PHASE_OUT_PER_1000;
 
   return Math.max(0, Math.round((base - reduction) * 100) / 100);
 }

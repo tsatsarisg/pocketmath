@@ -114,7 +114,7 @@ describe("calculateTax — standard scale (age=35, children=0, isEmployee=true)"
 
     expect(b2.from).toBe(10_000);
     expect(b2.to).toBe(20_000);
-    expect(b2.rate).toBe(0.20);
+    expect(b2.rate).toBe(0.2);
     expect(b2.taxable).toBe(10_000);
     expect(b2.tax).toBe(2_000);
 
@@ -145,7 +145,7 @@ describe("calculateTax — standard scale (age=35, children=0, isEmployee=true)"
 describe("calculateTax — family reductions (age=35, isEmployee=true)", () => {
   it("0 children: bracket 2 rate stays at 20%, bracket 3 at 26%", () => {
     const result = calculateTax(30_000, 0, 35, true);
-    expect(result.brackets[1]!.rate).toBe(0.20);
+    expect(result.brackets[1]!.rate).toBe(0.2);
     expect(result.brackets[2]!.rate).toBe(0.26);
     expect(gross(result)).toBe(5_500);
   });
@@ -170,7 +170,7 @@ describe("calculateTax — family reductions (age=35, isEmployee=true)", () => {
     // b1: 900  b2: 900  b3: 2,000  total: 3,800
     const result = calculateTax(30_000, 3, 35, true);
     expect(result.brackets[1]!.rate).toBe(0.09);
-    expect(result.brackets[2]!.rate).toBe(0.20);
+    expect(result.brackets[2]!.rate).toBe(0.2);
     expect(gross(result)).toBe(3_800);
   });
 
@@ -188,13 +188,21 @@ describe("calculateTax — family reductions (age=35, isEmployee=true)", () => {
     expect(result.brackets[2]!.rate).toBe(0.16);
   });
 
+  it("6 children: bracket 3 drops to 14% (continues -2pp per child beyond 4)", () => {
+    const result = calculateTax(30_000, 6, 35, true);
+    expect(result.brackets[1]!.rate).toBe(0);
+    expect(result.brackets[2]!.rate).toBe(0.14);
+  });
+
   it("family reductions only affect brackets 2 and 3; bracket 4+ stays unchanged", () => {
     const result3children = calculateTax(40_000, 3, 35, true);
     const result0children = calculateTax(40_000, 0, 35, true);
     // bracket 4 (30k–40k @ 34%) should be identical in both
     expect(result3children.brackets[3]!.rate).toBe(0.34);
     expect(result0children.brackets[3]!.rate).toBe(0.34);
-    expect(result3children.brackets[3]!.tax).toBe(result0children.brackets[3]!.tax);
+    expect(result3children.brackets[3]!.tax).toBe(
+      result0children.brackets[3]!.tax,
+    );
   });
 });
 
@@ -212,7 +220,7 @@ describe("calculateTax — youth overrides", () => {
   });
 
   it("age <= 25: income above 20,000 only pays tax on the excess beyond the two zero brackets", () => {
-    // b1: 0  b2: 0  b3: 10,000×26%=2,600  total: 2,600
+    // b1: 0  b2: 0  b3: 10,000×26%=2,600  total: 2,600 (0 children, bracket 3 stays standard)
     const result = calculateTax(30_000, 0, 25, true);
     expect(gross(result)).toBe(2_600);
   });
@@ -235,15 +243,37 @@ describe("calculateTax — youth overrides", () => {
     const at30 = calculateTax(20_000, 0, 30, true);
     const at31 = calculateTax(20_000, 0, 31, true);
     expect(at30.brackets[1]!.rate).toBe(0.09);
-    expect(at31.brackets[1]!.rate).toBe(0.20);
+    expect(at31.brackets[1]!.rate).toBe(0.2);
   });
 
-  it("age 26–30: family reductions do not apply (youth override takes priority)", () => {
-    // Even with 3 children the bracket 2 rate is 9% (youth), not the family 9%
-    // that would coincidentally match; bracket 3 must be the standard 26%, not family 20%
+  it("age 26–30: family reductions apply to bracket 3; bracket 2 uses min(9%, familyRate)", () => {
+    // 3 children: family bracket 2 = 9%, min(9%, 9%) = 9%
+    // 3 children: family bracket 3 = 20%
+    // b1: 900  b2: 10,000×9%=900  b3: 10,000×20%=2,000  total: 3,800
     const result = calculateTax(30_000, 3, 28, true);
     expect(result.brackets[1]!.rate).toBe(0.09);
-    expect(result.brackets[2]!.rate).toBe(0.26);
+    expect(result.brackets[2]!.rate).toBe(0.2);
+    expect(gross(result)).toBe(3_800);
+  });
+
+  it("age 26–30, 4+ children: bracket 2 is 0% (family override lower than youth 9%)", () => {
+    // 4 children: family bracket 2 = 0%, min(9%, 0%) = 0%
+    // 4 children: family bracket 3 = 18%
+    // b1: 900  b2: 0  b3: 10,000×18%=1,800  total: 2,700
+    const result = calculateTax(30_000, 4, 28, true);
+    expect(result.brackets[1]!.rate).toBe(0);
+    expect(result.brackets[2]!.rate).toBe(0.18);
+    expect(gross(result)).toBe(2_700);
+  });
+
+  it("age <= 25 with children: bracket 3 still gets family reduction", () => {
+    // 3 children: bracket 3 = 20%
+    // b1: 0  b2: 0  b3: 10,000×20%=2,000  total: 2,000
+    const result = calculateTax(30_000, 3, 24, true);
+    expect(result.brackets[0]!.rate).toBe(0);
+    expect(result.brackets[1]!.rate).toBe(0);
+    expect(result.brackets[2]!.rate).toBe(0.2);
+    expect(gross(result)).toBe(2_000);
   });
 
   it("age 31+: standard rates apply — youth override is not in effect", () => {
@@ -261,7 +291,7 @@ describe("calculateTax — isEmployee=false (self-employed)", () => {
     const selfEmployed = calculateTax(30_000, 3, 35, false);
     const employee = calculateTax(30_000, 3, 35, true);
     // Self-employed gets standard brackets, employee gets family-reduced ones
-    expect(selfEmployed.brackets[1]!.rate).toBe(0.20);
+    expect(selfEmployed.brackets[1]!.rate).toBe(0.2);
     expect(selfEmployed.brackets[2]!.rate).toBe(0.26);
     expect(gross(selfEmployed)).toBeGreaterThan(gross(employee));
   });

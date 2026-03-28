@@ -1,5 +1,9 @@
 import type { CalculateTaxResult, TaxBracket } from "./types";
-import { STANDARD_BRACKETS, getBracket2Rate, getBracket3Rate } from "./constants";
+import {
+  STANDARD_BRACKETS,
+  getBracket2Rate,
+  getBracket3Rate,
+} from "./constants";
 
 /**
  * Build the effective bracket array based on age, children, and employee status.
@@ -32,9 +36,18 @@ function buildBrackets(
   if (age <= 25) {
     b1.rate = 0;
     b2.rate = 0;
+    // Family reductions still apply to bracket 3 for employees
+    if (isEmployee) {
+      b3.rate = getBracket3Rate(children);
+    }
   } else if (age <= 30) {
-    // Age 26-30: second bracket at 9%
-    b2.rate = 0.09;
+    // Age 26-30: second bracket at 9% (or lower if family rate is lower)
+    if (isEmployee) {
+      b2.rate = Math.min(0.09, getBracket2Rate(children));
+      b3.rate = getBracket3Rate(children);
+    } else {
+      b2.rate = 0.09;
+    }
   } else if (isEmployee) {
     // Age > 30, employee/mplokaki: apply family reductions
     b2.rate = getBracket2Rate(children);

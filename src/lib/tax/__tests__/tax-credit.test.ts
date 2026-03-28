@@ -2,12 +2,13 @@
  * Tests for the tax credit phase-out function.
  *
  * Credit structure (2026):
- *   0 children: 777  |  1: 810  |  2: 900  |  3: 1,120  |  4: 1,340  |  5+: +220 per child
+ *   0 children: 777  |  1: 900  |  2: 1,120  |  3: 1,340  |  4: 1,580  |  5: 1,780  |  6+: +220 per child
  *
  * Phase-out mechanics:
  *   - Income <= 12,000 → full credit
  *   - Income > 12,000  → reduction = floor((income - 12,000) / 1,000) * 20
  *   - Credit is clamped to 0 (cannot go negative)
+ *   - Phase-out does NOT apply for 5+ children
  *
  * The floor division means the reduction steps in discrete EUR 20 increments
  * every full EUR 1,000 above the threshold — fractional thousands produce no
@@ -29,30 +30,29 @@ describe("taxCredit — full credit at income <= 12,000", () => {
     expect(taxCredit(0, 0)).toBe(777);
   });
 
-  it("1 child: full credit 810 at income <= 12,000", () => {
-    expect(taxCredit(12_000, 1)).toBe(810);
-    expect(taxCredit(5_000, 1)).toBe(810);
+  it("1 child: full credit 900 at income <= 12,000", () => {
+    expect(taxCredit(12_000, 1)).toBe(900);
+    expect(taxCredit(5_000, 1)).toBe(900);
   });
 
-  it("2 children: full credit 900 at income <= 12,000", () => {
-    expect(taxCredit(12_000, 2)).toBe(900);
+  it("2 children: full credit 1,120 at income <= 12,000", () => {
+    expect(taxCredit(12_000, 2)).toBe(1_120);
   });
 
-  it("3 children: full credit 1,120 at income <= 12,000", () => {
-    expect(taxCredit(12_000, 3)).toBe(1_120);
+  it("3 children: full credit 1,340 at income <= 12,000", () => {
+    expect(taxCredit(12_000, 3)).toBe(1_340);
   });
 
-  it("4 children: full credit 1,340", () => {
-    expect(taxCredit(10_000, 4)).toBe(1_340);
+  it("4 children: full credit 1,580", () => {
+    expect(taxCredit(10_000, 4)).toBe(1_580);
   });
 
-  it("5 children: credit = 1,340 + 220 = 1,560", () => {
-    // base4=1340, 5-4=1 extra child → 1340 + 1*220 = 1560
-    expect(taxCredit(10_000, 5)).toBe(1_560);
+  it("5 children: credit = 1,780", () => {
+    expect(taxCredit(10_000, 5)).toBe(1_780);
   });
 
-  it("6 children: credit = 1,340 + 2*220 = 1,780", () => {
-    expect(taxCredit(10_000, 6)).toBe(1_780);
+  it("6 children: credit = 1,780 + 220 = 2,000", () => {
+    expect(taxCredit(10_000, 6)).toBe(2_000);
   });
 });
 
@@ -119,27 +119,33 @@ describe("taxCredit — full phase-out to zero (0 children)", () => {
 // ---------------------------------------------------------------------------
 
 describe("taxCredit — phase-out with children (higher base = later full phase-out)", () => {
-  it("1 child at 13,000: reduction=20, credit=810-20=790", () => {
-    expect(taxCredit(13_000, 1)).toBe(790);
+  it("1 child at 13,000: reduction=20, credit=900-20=880", () => {
+    expect(taxCredit(13_000, 1)).toBe(880);
   });
 
-  it("2 children at 14,000: reduction=40, credit=900-40=860", () => {
-    expect(taxCredit(14_000, 2)).toBe(860);
+  it("2 children at 14,000: reduction=40, credit=1120-40=1080", () => {
+    expect(taxCredit(14_000, 2)).toBe(1_080);
   });
 
-  it("3 children at 20,000: reduction=160, credit=1120-160=960", () => {
-    expect(taxCredit(20_000, 3)).toBe(960);
+  it("3 children at 20,000: reduction=160, credit=1340-160=1180", () => {
+    expect(taxCredit(20_000, 3)).toBe(1_180);
   });
 
   it("3 children require more income to fully phase out than 0 children", () => {
-    // 0 children fully phases out at 51,000; 3 children (base=1120) phase out later
+    // 0 children fully phases out at 51,000; 3 children (base=1340) phase out later
     expect(taxCredit(51_000, 0)).toBe(0);
     expect(taxCredit(51_000, 3)).toBeGreaterThan(0);
   });
 
-  it("3 children fully phase out at income 68,000: floor(56000/1000)*20=1120", () => {
-    // 1120 / 20 = 56 thousands above threshold: 12,000 + 56,000 = 68,000
-    expect(taxCredit(68_000, 3)).toBe(0);
-    expect(taxCredit(67_000, 3)).toBeGreaterThan(0);
+  it("3 children fully phase out at income 79,000: floor(67000/1000)*20=1340", () => {
+    // 1340 / 20 = 67 thousands above threshold: 12,000 + 67,000 = 79,000
+    expect(taxCredit(79_000, 3)).toBe(0);
+    expect(taxCredit(78_000, 3)).toBeGreaterThan(0);
+  });
+
+  it("5+ children: phase-out does NOT apply, full credit always returned", () => {
+    expect(taxCredit(100_000, 5)).toBe(1_780);
+    expect(taxCredit(500_000, 5)).toBe(1_780);
+    expect(taxCredit(100_000, 6)).toBe(2_000);
   });
 });

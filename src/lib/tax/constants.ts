@@ -51,9 +51,10 @@ export const FAMILY_RATES_BRACKET_3: Readonly<Record<number, number>> = {
   // 5+ → 16%
 };
 
-/** Get the 3rd-bracket rate based on number of children. 5+ children = 16%. */
+/** Get the 3rd-bracket rate based on number of children. Decreases by 2pp per child beyond 4. */
 export function getBracket3Rate(children: number): number {
-  if (children >= 5) return 0.16;
+  if (children >= 5)
+    return Math.max(0, Math.round((0.18 - (children - 4) * 0.02) * 100) / 100);
   return FAMILY_RATES_BRACKET_3[children] ?? 0.26;
 }
 
@@ -63,13 +64,14 @@ export function getBracket3Rate(children: number): number {
 
 export const TAX_CREDIT_BASE: Readonly<Record<number, number>> = {
   0: 777,
-  1: 810,
-  2: 900,
-  3: 1_120,
-  4: 1_340,
+  1: 900,
+  2: 1_120,
+  3: 1_340,
+  4: 1_580,
+  5: 1_780,
 };
 
-/** Additional credit per child beyond 4. */
+/** Additional credit per child beyond 5. */
 export const TAX_CREDIT_EXTRA_PER_CHILD = 220;
 
 /** Income threshold above which the credit phases out. */
@@ -101,7 +103,7 @@ export const EFKA_CATEGORIES: readonly EfkaCategory[] = [
     label: "Ειδική",
     pension: 111.06,
     health: 39.4,
-    monthly: 160.46,
+    monthly: 150.46,
     note: "First 5 years only",
   },
   {
