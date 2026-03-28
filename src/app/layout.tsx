@@ -7,7 +7,8 @@ import { Footer } from "./footer";
 import { safeJsonStringify } from "@/lib/safe-json";
 
 export const metadata: Metadata = {
-  title: "PocketMath – Υπολογιστής Καθαρού Μισθού 2026 | Net Salary Calculator Greece",
+  title:
+    "PocketMath – Υπολογιστής Καθαρού Μισθού 2026 | Net Salary Calculator Greece",
   description:
     "Δωρεάν υπολογιστής καθαρού μισθού για Ελλάδα 2026. Σύγκριση μισθωτού, ελεύθερου επαγγελματία και μπλοκάκι. Βασισμένο στον Ν.5246/2025.",
   keywords:
