@@ -17,11 +17,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://pocketmath.gr"),
   alternates: {
     canonical: "/",
-    languages: {
-      el: "/",
-      en: "/",
-      "x-default": "/",
-    },
   },
   openGraph: {
     type: "website",
