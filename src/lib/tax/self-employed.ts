@@ -21,7 +21,10 @@ function firstYearBenefitAmount(
   if (yearsInBusiness > FIRST_YEAR_BENEFIT_MAX_YEARS) return 0;
 
   // The benefit is 50% off the first bracket (0–10,000 at 9%)
-  const firstBracketIncome = Math.min(Math.max(0, taxableIncome), STANDARD_BRACKETS[0]!.limit);
+  const firstBracketIncome = Math.min(
+    Math.max(0, taxableIncome),
+    STANDARD_BRACKETS[0]!.limit,
+  );
   const normalTax = firstBracketIncome * STANDARD_BRACKETS[0]!.rate;
   const discountedTax = normalTax * FIRST_YEAR_BRACKET_DISCOUNT;
 
@@ -56,11 +59,15 @@ export function calculateSelfEmployed(
 
   // Self-employed: no family reductions (children=0, isEmployee=false)
   const taxBreakdown = calculateTax(taxableIncome, 0, age, false);
-  let grossTax = taxBreakdown.grossTax;
+  const grossTax = taxBreakdown.grossTax;
 
   // First 3 years benefit: 50% off first bracket
-  const firstYearBenefit = firstYearBenefitAmount(taxableIncome, yearsInBusiness);
-  const annualTax = Math.round(Math.max(0, grossTax - firstYearBenefit) * 100) / 100;
+  const firstYearBenefit = firstYearBenefitAmount(
+    taxableIncome,
+    yearsInBusiness,
+  );
+  const annualTax =
+    Math.round(Math.max(0, grossTax - firstYearBenefit) * 100) / 100;
 
   // Prepayment
   const prepaymentRate = getPrepaymentRate(yearsInBusiness);

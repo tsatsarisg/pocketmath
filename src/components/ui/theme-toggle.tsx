@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const [isDark, setIsDark] = useState(true);
-
   // Sync state with the actual DOM class on mount — the inline script in
   // <head> has already applied the correct class before React hydrates.
-  useEffect(() => {
-    setIsDark(document.documentElement.classList.contains("dark"));
-  }, []);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document === "undefined") return true;
+    return document.documentElement.classList.contains("dark");
+  });
 
   function toggle() {
     const html = document.documentElement;

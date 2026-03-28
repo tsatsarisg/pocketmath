@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { calculateEmployee } from "@/lib/tax/employee";
 import { calculateSelfEmployed } from "@/lib/tax/self-employed";
@@ -91,11 +91,10 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   const [mpAge, setMpAge] = useState("35");
 
   // Reset seEfka to "1st" when seYears changes to >5 and current value is "special"
-  useEffect(() => {
-    if (Number(seYears) > 5 && seEfka === "special") {
-      setSeEfka("1st");
-    }
-  }, [seYears, seEfka]);
+  const prevSeYears = Number(seYears);
+  if (prevSeYears > 5 && seEfka === "special") {
+    setSeEfka("1st");
+  }
 
   // Calculations
   const empResult = useMemo(() => {
