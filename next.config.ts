@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const nextConfig: NextConfig = {
   // ---------------------------------------------------------------------------
   // Remove the X-Powered-By: Next.js response header (stack fingerprinting).
@@ -36,10 +38,9 @@ const nextConfig: NextConfig = {
   // and serve as the authoritative source. public/_headers provides a secondary
   // layer at the CDN edge for Cloudflare Pages / Netlify deployments.
   //
-  // CSP: script-src uses SHA-256 hashes instead of 'unsafe-inline'.
-  // The hashes cover the two JSON-LD <script> blocks in layout.tsx.
-  // If you change the content of jsonLdWebApp or jsonLdFaq in layout.tsx,
-  // regenerate the hashes with: node scripts/gen-csp-hashes.mjs
+  // CSP: script-src uses 'unsafe-inline' because Next.js injects inline
+  // bootstrap/hydration scripts whose hashes change on every build.
+  // External script loading is still blocked by default-src 'self'.
   // ---------------------------------------------------------------------------
   async headers() {
     return [
@@ -74,13 +75,12 @@ const nextConfig: NextConfig = {
               "camera=(), microphone=(), geolocation=(), payment=(), browsing-topics=()",
           },
           // Content Security Policy.
-          // Hashes cover the JSON-LD blocks in layout.tsx (via safeJsonStringify).
-          // Regenerate with: node scripts/gen-csp-hashes.mjs
+          // unsafe-eval is added in dev only — Turbopack requires it for HMR.
           {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'sha256-U8/Hnu9jI03RWMMdQ61EqhwmQguGG/TJ4chgwIIdgn4=' 'sha256-eDUWbxlt/BAsO7oz7spi9+iz1gJTnEWdXlFrc6sjZW8='",
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https:",
               "font-src 'self'",
