@@ -122,43 +122,49 @@
   "legal": {
     "privacyPolicy": "Privacy Policy",
     "termsOfUse": "Terms of Use & Legal Disclaimer",
-    "lastUpdated": "Last updated: March 2026",
+    "lastUpdated": "Last updated: 28 March 2026",
     "backToCalculator": "Back to calculator",
     "privacy": {
       "title": "Privacy Policy",
       "whoWeAre": {
         "heading": "1. Who we are",
-        "text": "PocketMath.gr is a free informational tool operated as a personal project. For questions about this privacy policy, contact us at privacy@pocketmath.gr."
+        "text": "PocketMath.gr is a free educational and informational tool operated as a personal learning project based in Greece. Its purpose is to help people better understand gross pay, net pay, taxes, deductions, and common Greek work arrangements. For privacy questions or data-rights requests, contact us at tsatsarisgiorgos@gmail.com."
       },
       "whatData": {
         "heading": "2. What personal data we process",
-        "intro": "PocketMath is designed to minimise data processing.",
+        "intro": "PocketMath is designed to minimise data processing and keep calculations on your device wherever possible.",
         "calculations": "Calculation data: All tax calculations are performed entirely within your browser (client-side). The salary, income, or other financial figures you enter are never transmitted to our servers, never stored by us, and are not accessible to us in any way.",
-        "serverLogs": "Server logs: When you visit this website, our hosting provider automatically processes your IP address and basic request information (page visited, timestamp, browser type) for the purpose of delivering the website to you. These logs are retained per the hosting provider's standard retention policy and then automatically deleted.",
+        "serverLogs": "Server and security logs: When you visit this website, our hosting provider (Vercel) automatically processes limited technical request data such as your IP address, requested page, timestamp, user-agent/browser details, and basic security or event logs for the purpose of delivering, securing, and troubleshooting the website.",
         "language": "Language preference: We store your language preference (Greek or English) in your browser's localStorage. This is a strictly necessary functional storage that allows the website to display content in your chosen language. This data remains on your device, is not transmitted to our servers, and can be deleted at any time by clearing your browser data.",
         "theme": "Theme preference: We store your chosen colour theme (dark or light) in your browser's localStorage. Like the language preference, this is strictly necessary functional storage that remains on your device and is never transmitted to our servers.",
-        "noCookies": "We do not use cookies for tracking, analytics, or advertising. We do not use any third-party analytics services. We do not serve advertisements. We do not create user accounts or profiles."
+        "emailContact": "Email contact: If you email us, we receive your email address, name or alias, message content, and any attachments or other information you choose to include. Please do not send special-category personal data, tax identification numbers, copies of IDs, bank details, or detailed payroll documents unless strictly necessary.",
+        "sponsorships": "Voluntary sponsorships: If you choose to support the project through the external Revolut link, we may see limited transaction information made available by Revolut, such as your display name or username, payment reference, amount, currency, and the date of the payment. We do not collect or store your full card or bank details on this website.",
+        "noCookies": "We do not use cookies or similar technologies for tracking, analytics, profiling, or advertising. We do not run third-party analytics, remarketing pixels, or ad-tech scripts. We do not create user accounts or user profiles."
       },
       "legalBasis": {
         "heading": "3. Legal basis for processing",
-        "text": "We process the limited personal data described above on the following legal bases under GDPR Article 6(1):",
-        "serverLogs": "Server logs: Legitimate interest (Art. 6(1)(f)) in operating and securing the website.",
-        "localStorage": "Language and theme preferences (localStorage): Strictly necessary for the service functionality as requested by you, exempt from consent under Art. 5(3) of the ePrivacy Directive (Greek Law 3471/2006, Art. 4(5))."
+        "text": "We process the limited personal data described above on the following legal bases under GDPR Article 6(1) and the applicable Greek ePrivacy rules:",
+        "serverLogs": "Server and security logs: Legitimate interest (Art. 6(1)(f)) in operating, securing, monitoring, and troubleshooting the website.",
+        "localStorage": "Language and theme preferences (localStorage): Strictly necessary for the service functionality as requested by you, exempt from consent under Art. 5(3) of the ePrivacy Directive (Greek Law 3471/2006, Art. 4(5)).",
+        "emailContact": "Emails you send us: Legitimate interest (Art. 6(1)(f)) in replying to your message, handling legal or privacy requests, and maintaining the project.",
+        "sponsorships": "Voluntary sponsorships via Revolut: Processing of limited transaction information visible to us is necessary to receive and administer the payment you choose to make (Art. 6(1)(b)) and, where needed, for legitimate interests in fraud prevention, record-keeping, and resolving disputes (Art. 6(1)(f))."
       },
       "dataSharing": {
         "heading": "4. Data sharing and international transfers",
-        "text": "We do not sell, trade, or share your personal data with third parties. Our hosting provider (Cloudflare Pages, based in the EU with processing within the EEA) processes server logs as a data processor on our behalf. When you click external donation links (e.g. Revolut) in our footer, you leave our website and are subject to those services' own privacy policies. We have no control over their data practices."
+        "text": "We do not sell or rent your personal data. Limited technical log data may be processed by Vercel, our hosting provider, to host and secure the site. If you email us, Google/Gmail may process your message and related metadata as part of the email service. If you choose to sponsor the project, Revolut processes the payment under its own terms and privacy policy; we do not receive your full card or bank details through this website. These providers may process data outside Greece and, in some cases, outside the EEA/UK. Where applicable, we rely on the provider's contractual and statutory transfer safeguards for such transfers."
       },
       "retention": {
         "heading": "5. Data retention",
-        "serverLogs": "Server logs: Per hosting provider's standard retention policy (typically no more than 30 days).",
-        "localStorage": "localStorage preferences (language, theme): Until you clear your browser data or change the setting."
+        "serverLogs": "Server and security logs: For the period determined by Vercel's operational and security retention schedule, and only for as long as reasonably necessary for hosting, security, and abuse prevention.",
+        "localStorage": "localStorage preferences (language, theme): Until you clear your browser data or change the setting.",
+        "contactEmails": "Contact emails: Usually until the matter is closed and for up to 24 months afterwards, unless a longer retention period is needed to document a legal or privacy request or defend against claims.",
+        "sponsorships": "Sponsorship records visible to us: For as long as reasonably necessary for bookkeeping, fraud prevention, dispute handling, and compliance with applicable tax or accounting obligations."
       },
       "rights": {
         "heading": "6. Your rights",
         "intro": "Under the GDPR and Greek Law 4624/2019, you have the right to:",
         "list": "Access information about what personal data we process; request correction of inaccurate data; request deletion of your personal data; request limitation of processing; object to processing based on legitimate interest; lodge a complaint with the Hellenic Data Protection Authority (HDPA/APDPX).",
-        "howTo": "To exercise any of these rights, contact us at privacy@pocketmath.gr. We will respond within 30 days.",
+        "howTo": "To exercise any of these rights, contact us at tsatsarisgiorgos@gmail.com. We will respond within 30 days.",
         "hdpa": "Hellenic Data Protection Authority — Kifissias 1-3, 115 23 Athens, Greece — Tel: +30 210 6475600 — contact@dpa.gr — www.dpa.gr"
       },
       "children": {
@@ -178,7 +184,7 @@
       },
       "nature": {
         "heading": "2. Nature of this service",
-        "text": "PocketMath.gr is a free informational tool that provides estimated calculations of income tax, social security contributions, and net income based on Greek tax legislation. This website is NOT a tax advisory service, accounting service, or financial advisory service. The operator of this website is not a certified accountant, tax advisor, or licensed professional within the meaning of Greek Law 4152/2013."
+        "text": "PocketMath.gr is a free educational and informational tool, operated as a personal learning project, that helps users estimate gross-to-net income, tax, social-security contributions, and comparable outcomes under Greek tax legislation. Its purpose is to help people better understand their payslips and stop thinking only in terms of desired monthly net income. This website is NOT a tax advisory service, accounting service, payroll outsourcing service, legal service, employment service, or financial advisory service. Use of the website does not create an accountant-client, adviser-client, fiduciary, employment, or other professional relationship."
       },
       "noAdvice": {
         "heading": "3. No tax advice",
@@ -188,6 +194,8 @@
           "Do NOT constitute tax advice, financial advice, legal advice, or any form of professional advice",
           "Do NOT replace consultation with a qualified certified accountant or tax advisor",
           "Should NOT be used as the sole basis for any financial decision, tax filing, tax payment, or legal action",
+          "May differ from your actual payslip, withholding, bonuses, benefits, social-security classification, or case-specific facts",
+          "Do NOT create any obligation for the operator to review your individual case or answer questions",
           "May contain errors, inaccuracies, or omissions despite our reasonable efforts to ensure accuracy"
         ],
         "responsibility": "You are solely responsible for verifying all calculations with a qualified professional before making any financial or tax-related decisions."
@@ -203,27 +211,32 @@
         "list": [
           "The website is provided \"as is\" and \"as available\" without any warranty, express or implied, regarding accuracy, completeness, reliability, or fitness for any particular purpose",
           "The operator shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from or related to any errors in calculations, any reliance placed on the results, any financial decisions made based on information from this website, or any tax penalties resulting from use of this tool",
+          "The operator is not liable for downtime, hosting failures, email delivery issues, payment-provider issues, or third-party service interruptions outside the operator's reasonable control",
           "This limitation applies regardless of the legal theory under which liability is asserted, including tort or contract"
         ]
       },
+      "sponsorships": {
+        "heading": "6. Voluntary sponsorships",
+        "text": "The Revolut link in the footer allows voluntary sponsorships to support the project. Any sponsorship is optional, is not a purchase of digital content or professional services, and does not entitle you to premium features, priority support, a response, consulting, or any ongoing obligation. Any payment is processed entirely by Revolut under its own terms and privacy policy."
+      },
       "ip": {
-        "heading": "6. Intellectual property",
+        "heading": "7. Intellectual property",
         "text": "All content, code, design, and calculations on this website are the property of the operator unless otherwise stated. Greek tax legislation referenced herein is public law and is not claimed as proprietary content."
       },
       "externalLinks": {
-        "heading": "7. External links",
-        "text": "This website contains links to third-party websites (e.g. Revolut) for voluntary donations. We are not responsible for the content, privacy practices, or availability of these external sites. Accessing them is at your own risk and subject to their own terms."
+        "heading": "8. External links",
+        "text": "This website contains links to third-party websites and services, including Revolut for voluntary sponsorships. We are not responsible for the content, privacy practices, availability, security, or terms of those external services. Accessing them is at your own risk and subject to their own terms."
       },
       "availability": {
-        "heading": "8. Service availability",
+        "heading": "9. Service availability",
         "text": "PocketMath is provided on an 'as available' basis. We may modify, suspend, or discontinue any part of the service at any time without notice. We are not liable for any interruption or unavailability of the service."
       },
       "law": {
-        "heading": "9. Governing law and jurisdiction",
+        "heading": "10. Governing law and jurisdiction",
         "text": "These terms are governed by the laws of the Hellenic Republic. Any disputes shall be subject to the exclusive jurisdiction of the courts of Athens, Greece."
       },
       "changes": {
-        "heading": "10. Changes to these terms",
+        "heading": "11. Changes to these terms",
         "text": "We reserve the right to modify these terms at any time. Continued use of the website after changes constitutes acceptance of the modified terms."
       }
     }

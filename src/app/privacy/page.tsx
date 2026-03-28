@@ -59,6 +59,24 @@ export default function PrivacyPage() {
             <strong>{t("legal.privacy.whatData.theme").split(":")[0]}:</strong>{" "}
             {t("legal.privacy.whatData.theme").split(":").slice(1).join(":")}
           </li>
+          <li>
+            <strong>
+              {t("legal.privacy.whatData.emailContact").split(":")[0]}:
+            </strong>{" "}
+            {t("legal.privacy.whatData.emailContact")
+              .split(":")
+              .slice(1)
+              .join(":")}
+          </li>
+          <li>
+            <strong>
+              {t("legal.privacy.whatData.sponsorships").split(":")[0]}:
+            </strong>{" "}
+            {t("legal.privacy.whatData.sponsorships")
+              .split(":")
+              .slice(1)
+              .join(":")}
+          </li>
         </ul>
         <p className="mt-3">{t("legal.privacy.whatData.noCookies")}</p>
       </Section>
@@ -68,6 +86,8 @@ export default function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-2">
           <li>{t("legal.privacy.legalBasis.serverLogs")}</li>
           <li>{t("legal.privacy.legalBasis.localStorage")}</li>
+          <li>{t("legal.privacy.legalBasis.emailContact")}</li>
+          <li>{t("legal.privacy.legalBasis.sponsorships")}</li>
         </ul>
       </Section>
 
@@ -79,6 +99,8 @@ export default function PrivacyPage() {
         <ul className="list-disc pl-5 space-y-2">
           <li>{t("legal.privacy.retention.serverLogs")}</li>
           <li>{t("legal.privacy.retention.localStorage")}</li>
+          <li>{t("legal.privacy.retention.contactEmails")}</li>
+          <li>{t("legal.privacy.retention.sponsorships")}</li>
         </ul>
       </Section>
 

@@ -62,6 +62,10 @@ export default function TermsPage() {
         </ul>
       </Section>
 
+      <Section heading={t("legal.terms.sponsorships.heading")}>
+        <p>{t("legal.terms.sponsorships.text")}</p>
+      </Section>
+
       <Section heading={t("legal.terms.ip.heading")}>
         <p>{t("legal.terms.ip.text")}</p>
       </Section>

@@ -28,7 +28,7 @@ export function Footer() {
           </Link>
           <span className="text-muted-foreground/30">&middot;</span>
           <a
-            href="https://revolut.me/pocketmath"
+            href="https://revolut.me/tsatsarisg"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
