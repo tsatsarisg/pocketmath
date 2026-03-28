@@ -31,15 +31,27 @@ export const metadata: Metadata = {
     locale: "el_GR",
     alternateLocale: "en_US",
     siteName: "PocketMath",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "PocketMath – Υπολογιστής Καθαρού Μισθού 2026",
+      },
+    ],
   },
   twitter: {
     card: "summary",
     title: "PocketMath – Υπολογιστής Καθαρού Μισθού 2026",
     description:
       "Δωρεάν υπολογιστής καθαρού μισθού για Ελλάδα 2026. Σύγκριση μισθωτού, ελεύθερου επαγγελματία και μπλοκάκι.",
+    images: ["/og-image.png"],
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
     apple: "/apple-touch-icon.png",
   },
   robots: "index, follow",

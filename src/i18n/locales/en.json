@@ -147,7 +147,7 @@
       },
       "dataSharing": {
         "heading": "4. Data sharing and international transfers",
-        "text": "We do not sell, trade, or share your personal data with third parties. Our hosting provider (Cloudflare Pages, based in the EU with processing within the EEA) processes server logs as a data processor on our behalf. When you click external donation links (e.g. Ko-fi, Revolut) in our footer, you leave our website and are subject to those services' own privacy policies. We have no control over their data practices."
+        "text": "We do not sell, trade, or share your personal data with third parties. Our hosting provider (Cloudflare Pages, based in the EU with processing within the EEA) processes server logs as a data processor on our behalf. When you click external donation links (e.g. Revolut) in our footer, you leave our website and are subject to those services' own privacy policies. We have no control over their data practices."
       },
       "retention": {
         "heading": "5. Data retention",
@@ -212,7 +212,7 @@
       },
       "externalLinks": {
         "heading": "7. External links",
-        "text": "This website contains links to third-party websites (e.g. Ko-fi, Revolut) for voluntary donations. We are not responsible for the content, privacy practices, or availability of these external sites. Accessing them is at your own risk and subject to their own terms."
+        "text": "This website contains links to third-party websites (e.g. Revolut) for voluntary donations. We are not responsible for the content, privacy practices, or availability of these external sites. Accessing them is at your own risk and subject to their own terms."
       },
       "availability": {
         "heading": "8. Service availability",
