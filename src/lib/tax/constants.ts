@@ -12,7 +12,7 @@ export const TAX_YEAR = 2026;
 
 export const STANDARD_BRACKETS: readonly TaxBracket[] = [
   { limit: 10_000, rate: 0.09 },
-  { limit: 20_000, rate: 0.20 },
+  { limit: 20_000, rate: 0.2 },
   { limit: 30_000, rate: 0.26 },
   { limit: 40_000, rate: 0.34 },
   { limit: 60_000, rate: 0.39 },
@@ -25,7 +25,7 @@ export const STANDARD_BRACKETS: readonly TaxBracket[] = [
 // ---------------------------------------------------------------------------
 
 export const FAMILY_RATES_BRACKET_2: Readonly<Record<number, number>> = {
-  0: 0.20,
+  0: 0.2,
   1: 0.18,
   2: 0.16,
   3: 0.09,
@@ -35,7 +35,7 @@ export const FAMILY_RATES_BRACKET_2: Readonly<Record<number, number>> = {
 /** Get the 2nd-bracket rate based on number of children. 4+ children = 0%. */
 export function getBracket2Rate(children: number): number {
   if (children >= 4) return 0;
-  return FAMILY_RATES_BRACKET_2[children] ?? 0.20;
+  return FAMILY_RATES_BRACKET_2[children] ?? 0.2;
 }
 
 // ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ export const FAMILY_RATES_BRACKET_3: Readonly<Record<number, number>> = {
   0: 0.26,
   1: 0.24,
   2: 0.22,
-  3: 0.20,
+  3: 0.2,
   4: 0.18,
   // 5+ → 16%
 };
@@ -100,8 +100,8 @@ export const EFKA_CATEGORIES: readonly EfkaCategory[] = [
     id: "special",
     label: "Ειδική",
     pension: 111.06,
-    health: 39.40,
-    monthly: 150.46,
+    health: 39.4,
+    monthly: 160.46,
     note: "First 5 years only",
   },
   {
@@ -171,7 +171,7 @@ export function getPrepaymentRate(yearsInBusiness: number): number {
 // Mplokaki withholding rate
 // ---------------------------------------------------------------------------
 
-export const MPLOKAKI_WITHHOLDING_RATE = 0.20;
+export const MPLOKAKI_WITHHOLDING_RATE = 0.2;
 
 // ---------------------------------------------------------------------------
 // First-year entrepreneur benefit

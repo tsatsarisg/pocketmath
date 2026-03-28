@@ -23,13 +23,6 @@ if (!isServer) {
     document.documentElement.lang = lang;
     localStorage.setItem('i18nextLng', lang);
   });
-
-  // Restore saved language preference after hydration
-  const saved = localStorage.getItem('i18nextLng') as 'el' | 'en' | null;
-  if (saved && saved !== i18n.language) {
-    i18n.changeLanguage(saved);
-  }
-  document.documentElement.lang = i18n.language?.startsWith('en') ? 'en' : 'el';
 }
 
 export default i18n;

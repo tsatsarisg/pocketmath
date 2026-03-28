@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Header } from "./header";
 import { Footer } from "./footer";
+import { safeJsonStringify } from "@/lib/safe-json";
 
 export const metadata: Metadata = {
   title: "PocketMath – Υπολογιστής Καθαρού Μισθού 2026 | Net Salary Calculator Greece",
@@ -125,11 +126,11 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebApp) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonStringify(jsonLdWebApp) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonStringify(jsonLdFaq) }}
         />
       </head>
       <body>
