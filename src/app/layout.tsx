@@ -112,17 +112,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="el" suppressHydrationWarning>
+    <html lang="el" className="dark" suppressHydrationWarning>
       <head>
-        <meta
-          name="theme-color"
-          content="#faf8f5"
-          media="(prefers-color-scheme: light)"
+        {/*
+          Inline theme-init script — runs synchronously before paint so there
+          is never a flash of the wrong theme.  Dark is the app default.
+          If the user has previously chosen light (stored in localStorage as
+          "theme": "light") we honour that; otherwise we keep dark.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){}})();`,
+          }}
         />
         <meta
           name="theme-color"
-          content="#09090b"
+          content="#141826"
           media="(prefers-color-scheme: dark)"
+        />
+        <meta
+          name="theme-color"
+          content="#f7f8fb"
+          media="(prefers-color-scheme: light)"
         />
         <script
           type="application/ld+json"

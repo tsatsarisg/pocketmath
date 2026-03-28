@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 function LanguageToggle() {
   const { i18n } = useTranslation();
@@ -54,7 +55,10 @@ export function Header() {
             {t("nav.compare")}
           </Link>
         </div>
-        <LanguageToggle />
+        <div className="flex items-center gap-1">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

@@ -7,18 +7,57 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Next.js
 .next
 next-env.d.ts
 *.local
+
+# Build artifacts
+dist
+out
+build
+tsconfig.tsbuildinfo
+
+# Testing
+coverage
+.nyc_output
+
+# Environment variables
+.env
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Claude Code local config
+.claude/
+
+# Prettier cache
+.prettier-cache
+.prettiercache
+
+# Cache directories
+.cache
+.turbo
+.eslintcache
