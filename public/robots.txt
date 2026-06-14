@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pocketmath.gr/sitemap.xml
+Sitemap: https://tsatsarisg.github.io/pocketmath/sitemap.xml

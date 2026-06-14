@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://pocketmath.gr/compare",
+    url: "https://tsatsarisg.github.io/pocketmath/compare",
     title: "PocketMath Σύγκριση 2026 | Μισθωτός, Ελ. Επαγγελματίας, Μπλοκάκι",
     description:
       "Δες ποια μορφή απασχόλησης συμφέρει περισσότερο με σύγκριση καθαρού ετήσιου εισοδήματος.",

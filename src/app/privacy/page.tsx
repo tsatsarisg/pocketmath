@@ -51,6 +51,12 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong>
+              {t("legal.privacy.whatData.hosting").split(":")[0]}:
+            </strong>{" "}
+            {t("legal.privacy.whatData.hosting").split(":").slice(1).join(":")}
+          </li>
+          <li>
+            <strong>
               {t("legal.privacy.whatData.language").split(":")[0]}:
             </strong>{" "}
             {t("legal.privacy.whatData.language").split(":").slice(1).join(":")}

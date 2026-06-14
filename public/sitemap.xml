@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pocketmath.gr/</loc>
+    <loc>https://tsatsarisg.github.io/pocketmath/</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pocketmath.gr/compare</loc>
+    <loc>https://tsatsarisg.github.io/pocketmath/compare</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pocketmath.gr/privacy</loc>
+    <loc>https://tsatsarisg.github.io/pocketmath/privacy</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://pocketmath.gr/terms</loc>
+    <loc>https://tsatsarisg.github.io/pocketmath/terms</loc>
     <lastmod>2026-03-01</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
