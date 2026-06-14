@@ -188,10 +188,10 @@ describe("calculateTax — family reductions (age=35, isEmployee=true)", () => {
     expect(result.brackets[2]!.rate).toBe(0.16);
   });
 
-  it("6 children: bracket 3 drops to 14% (continues -2pp per child beyond 4)", () => {
+  it("6 children: bracket 3 stays at the 16% floor (does NOT drop below 5-child rate)", () => {
     const result = calculateTax(30_000, 6, 35, true);
     expect(result.brackets[1]!.rate).toBe(0);
-    expect(result.brackets[2]!.rate).toBe(0.14);
+    expect(result.brackets[2]!.rate).toBe(0.16);
   });
 
   it("family reductions only affect brackets 2 and 3; bracket 4+ stays unchanged", () => {

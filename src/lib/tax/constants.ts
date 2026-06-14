@@ -38,6 +38,9 @@ export function getBracket2Rate(children: number): number {
   return FAMILY_RATES_BRACKET_2[children] ?? 0.2;
 }
 
+// Note (Law 5246/2025): the 3rd-bracket reduction stops at the 5-children level —
+// 4 children → 18%, 5 or more → a flat 16% (it does NOT keep decreasing).
+
 // ---------------------------------------------------------------------------
 // Family-based reductions — 3rd bracket (20,001–30,000)
 // ---------------------------------------------------------------------------
@@ -51,10 +54,9 @@ export const FAMILY_RATES_BRACKET_3: Readonly<Record<number, number>> = {
   // 5+ → 16%
 };
 
-/** Get the 3rd-bracket rate based on number of children. Decreases by 2pp per child beyond 4. */
+/** Get the 3rd-bracket rate based on number of children. Floors at 16% for 5+ children. */
 export function getBracket3Rate(children: number): number {
-  if (children >= 5)
-    return Math.max(0, Math.round((0.18 - (children - 4) * 0.02) * 100) / 100);
+  if (children >= 5) return 0.16;
   return FAMILY_RATES_BRACKET_3[children] ?? 0.26;
 }
 
@@ -62,16 +64,16 @@ export function getBracket3Rate(children: number): number {
 // Tax credit amounts (employees & mplokaki only)
 // ---------------------------------------------------------------------------
 
+// Article 16 KFE amounts (Law 5246/2025, tax year 2026).
 export const TAX_CREDIT_BASE: Readonly<Record<number, number>> = {
   0: 777,
-  1: 900,
-  2: 1_120,
-  3: 1_340,
-  4: 1_580,
-  5: 1_780,
+  1: 810,
+  2: 900,
+  3: 1_120,
+  4: 1_340,
 };
 
-/** Additional credit per child beyond 5. */
+/** Additional credit per child beyond 4 (e.g. 5 children = 1,340 + 220 = 1,560). */
 export const TAX_CREDIT_EXTRA_PER_CHILD = 220;
 
 /** Income threshold above which the credit phases out. */

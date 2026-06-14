@@ -8,15 +8,15 @@ import {
 /**
  * Get the base credit amount before phase-out.
  *
- * 0 children: 777, 1: 900, 2: 1,120, 3: 1,340, 4: 1,580, 5: 1,780, 6+: +220 per additional.
+ * 0 children: 777, 1: 810, 2: 900, 3: 1,120, 4: 1,340, 5+: +220 per child beyond 4.
  */
 function getBaseCredit(children: number): number {
-  if (children <= 5) {
+  if (children <= 4) {
     return TAX_CREDIT_BASE[children] ?? 777;
   }
-  // 5 children = 1780, each additional child adds 220
-  const base5 = TAX_CREDIT_BASE[5] ?? 1_780;
-  return base5 + (children - 5) * TAX_CREDIT_EXTRA_PER_CHILD;
+  // 4 children = 1,340; each additional child adds 220.
+  const base4 = TAX_CREDIT_BASE[4] ?? 1_340;
+  return base4 + (children - 4) * TAX_CREDIT_EXTRA_PER_CHILD;
 }
 
 /**

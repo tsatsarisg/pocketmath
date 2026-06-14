@@ -38,9 +38,7 @@ Quick check: Tax on 60,000 = 900 + 2,000 + 2,600 + 3,400 + 7,800 = 16,700
 | 2        | 22%                   |
 | 3        | 20%                   |
 | 4        | 18%                   |
-| 5        | 16%                   |
-| 6        | 14%                   |
-| n (>4)   | 18% - (n-4)×2%        |
+| 5+       | 16% (floor)           |
 
 ### Youth Rates
 
@@ -68,12 +66,11 @@ Quick check: Tax on 60,000 = 900 + 2,000 + 2,600 + 3,400 + 7,800 = 16,700
 | Children | Credit (EUR)                 |
 | -------- | ---------------------------- |
 | 0        | 777                          |
-| 1        | 900                          |
-| 2        | 1,120                        |
-| 3        | 1,340                        |
-| 4        | 1,580                        |
-| 5        | 1,780                        |
-| 6+       | +220 per additional beyond 5 |
+| 1        | 810                          |
+| 2        | 900                          |
+| 3        | 1,120                        |
+| 4        | 1,340                        |
+| 5+       | +220 per additional beyond 4 |
 
 Phase-out: For income > 12,000 EUR, credit reduces by 20 EUR per 1,000 EUR above 12,000 (2% of excess).
 **Phase-out does NOT apply for 5+ children.**
