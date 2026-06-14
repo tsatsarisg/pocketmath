@@ -2,8 +2,7 @@ import * as React from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-
-type Period = "monthly" | "annual";
+import type { Period } from "@/types/calculator";
 
 export function PeriodToggle({
   value,

@@ -2,20 +2,14 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Mode } from "@/types/calculator";
+import type { Mode, Period } from "@/types/calculator";
 import { useCalculator } from "@/hooks/use-calculator";
+import { MODE_REGISTRY } from "@/components/calculator/mode-registry";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { PeriodToggle } from "@/components/ui/period-toggle";
 import { StatCard } from "@/components/ui/stat-card";
-import { EmployeeInputs } from "@/components/calculator/employee-inputs";
-import { SelfEmployedInputs } from "@/components/calculator/self-employed-inputs";
-import { MplokakiInputs } from "@/components/calculator/mplokaki-inputs";
-import { EmployeeBreakdown } from "@/components/calculator/employee-breakdown";
-import { SelfEmployedBreakdown } from "@/components/calculator/self-employed-breakdown";
-import { MplokakiBreakdown } from "@/components/calculator/mplokaki-breakdown";
-
-type Period = "monthly" | "annual";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -24,8 +18,9 @@ export default function HomePage() {
   const [period, setPeriod] = useState<Period>("monthly");
   const [breakdownOpen, setBreakdownOpen] = useState(false);
 
-  const { emp, se, mp, empResult, seResult, mpResult, stats, hasUserInput, hasResult } =
-    useCalculator(mode, period);
+  const calc = useCalculator(mode, period);
+  const { stats, hasUserInput, hasResult } = calc;
+  const modeConfig = MODE_REGISTRY[mode];
 
   const MODES: { id: Mode; label: string }[] = [
     { id: "employee", label: t("modes.employee") },
@@ -65,49 +60,12 @@ export default function HomePage() {
           />
         </div>
         <div aria-live="polite" className="sr-only" aria-atomic="true">
-          {mode === "employee" ? t("a11y.modeEmployee")
-           : mode === "self-employed" ? t("a11y.modeSelfEmployed")
-           : t("a11y.modeMplokaki")}
+          {t(modeConfig.a11yKey)}
         </div>
 
         {/* Inputs */}
         <div className="rounded-2xl bg-secondary/40 p-5 sm:p-6">
-          {mode === "employee" && (
-            <EmployeeInputs
-              monthly={emp.monthly}
-              setMonthly={emp.setMonthly}
-              children={emp.children}
-              setChildren={emp.setChildren}
-              age={emp.age}
-              setAge={emp.setAge}
-            />
-          )}
-          {mode === "self-employed" && (
-            <SelfEmployedInputs
-              monthly={se.monthly}
-              setMonthly={se.setMonthly}
-              expenses={se.expenses}
-              setExpenses={se.setExpenses}
-              efka={se.efka}
-              setEfka={se.setEfka}
-              years={se.years}
-              setYears={se.setYears}
-              age={se.age}
-              setAge={se.setAge}
-            />
-          )}
-          {mode === "mplokaki" && (
-            <MplokakiInputs
-              monthly={mp.monthly}
-              setMonthly={mp.setMonthly}
-              efka={mp.efka}
-              setEfka={mp.setEfka}
-              children={mp.children}
-              setChildren={mp.setChildren}
-              age={mp.age}
-              setAge={mp.setAge}
-            />
-          )}
+          {modeConfig.renderInputs(calc)}
         </div>
 
         {/* Empty state */}
@@ -159,24 +117,16 @@ export default function HomePage() {
                   className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors duration-200"
                 >
                   <span>{breakdownOpen ? t("results.hideBreakdown") : t("results.showBreakdown")}</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  <ChevronDown
+                    width={16}
+                    height={16}
+                    strokeWidth={2.5}
                     className={cn(
                       "text-muted-foreground/60 transition-transform duration-300 ease-out",
                       breakdownOpen && "rotate-180",
                     )}
                     aria-hidden="true"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
+                  />
                 </button>
 
                 <div
@@ -186,15 +136,7 @@ export default function HomePage() {
                   )}
                 >
                   <div className="px-5 pb-5 pt-1">
-                    {mode === "employee" && empResult && (
-                      <EmployeeBreakdown result={empResult} period={period} />
-                    )}
-                    {mode === "self-employed" && seResult && (
-                      <SelfEmployedBreakdown result={seResult} period={period} />
-                    )}
-                    {mode === "mplokaki" && mpResult && (
-                      <MplokakiBreakdown result={mpResult} period={period} />
-                    )}
+                    {modeConfig.renderBreakdown(calc, period)}
                   </div>
                 </div>
               </div>

@@ -3,22 +3,10 @@ import { useTranslation } from "react-i18next";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { EuroInput, FieldRow } from "@/components/ui/euro-input";
+import type { EmployeeState } from "@/hooks/use-calculator";
 
-export function EmployeeInputs({
-  monthly,
-  setMonthly,
-  children,
-  setChildren,
-  age,
-  setAge,
-}: {
-  monthly: string;
-  setMonthly: (v: string) => void;
-  children: string;
-  setChildren: (v: string) => void;
-  age: string;
-  setAge: (v: string) => void;
-}) {
+export function EmployeeInputs({ state }: { state: EmployeeState }) {
+  const { monthly, setMonthly, children, setChildren, age, setAge } = state;
   const { t } = useTranslation();
   const monthlyId = useId();
   const childrenId = useId();

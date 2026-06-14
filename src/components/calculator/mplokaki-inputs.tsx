@@ -12,29 +12,14 @@ import {
 import { EuroInput, FieldRow } from "@/components/ui/euro-input";
 import { getAllEfkaCategories } from "@/lib/tax/efka";
 import type { EfkaCategoryId } from "@/lib/tax/types";
+import type { MplokakiState } from "@/hooks/use-calculator";
 import { fmt } from "@/lib/format";
 
 const EFKA_CATEGORIES = getAllEfkaCategories();
 
-export function MplokakiInputs({
-  monthly,
-  setMonthly,
-  efka,
-  setEfka,
-  children,
-  setChildren,
-  age,
-  setAge,
-}: {
-  monthly: string;
-  setMonthly: (v: string) => void;
-  efka: EfkaCategoryId;
-  setEfka: (v: EfkaCategoryId) => void;
-  children: string;
-  setChildren: (v: string) => void;
-  age: string;
-  setAge: (v: string) => void;
-}) {
+export function MplokakiInputs({ state }: { state: MplokakiState }) {
+  const { monthly, setMonthly, efka, setEfka, children, setChildren, age, setAge } =
+    state;
   const { t } = useTranslation();
   const monthlyId = useId();
   const childrenId = useId();

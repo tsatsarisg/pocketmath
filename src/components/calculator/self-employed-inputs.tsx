@@ -12,31 +12,22 @@ import {
 import { EuroInput, FieldRow } from "@/components/ui/euro-input";
 import { getAvailableCategories } from "@/lib/tax/efka";
 import type { EfkaCategoryId } from "@/lib/tax/types";
+import type { SelfEmployedState } from "@/hooks/use-calculator";
 import { fmt } from "@/lib/format";
 
-export function SelfEmployedInputs({
-  monthly,
-  setMonthly,
-  expenses,
-  setExpenses,
-  efka,
-  setEfka,
-  years,
-  setYears,
-  age,
-  setAge,
-}: {
-  monthly: string;
-  setMonthly: (v: string) => void;
-  expenses: string;
-  setExpenses: (v: string) => void;
-  efka: EfkaCategoryId;
-  setEfka: (v: EfkaCategoryId) => void;
-  years: string;
-  setYears: (v: string) => void;
-  age: string;
-  setAge: (v: string) => void;
-}) {
+export function SelfEmployedInputs({ state }: { state: SelfEmployedState }) {
+  const {
+    monthly,
+    setMonthly,
+    expenses,
+    setExpenses,
+    efka,
+    setEfka,
+    years,
+    setYears,
+    age,
+    setAge,
+  } = state;
   const { t } = useTranslation();
   const monthlyId = useId();
   const expensesId = useId();

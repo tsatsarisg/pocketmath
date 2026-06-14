@@ -2,8 +2,7 @@ import { useTranslation } from "react-i18next";
 import { BreakdownRow } from "@/components/ui/breakdown-row";
 import { calculateMplokaki } from "@/lib/tax/mplokaki";
 import { fmt, fmtPct } from "@/lib/format";
-
-type Period = "monthly" | "annual";
+import type { Period } from "@/types/calculator";
 
 export function MplokakiBreakdown({
   result,
