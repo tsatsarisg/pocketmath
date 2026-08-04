@@ -1,1 +1,36 @@
-onlyBuiltDependencies: esbuild
+# ── Supply-chain hardening (https://pnpm.io/supply-chain-security) ──
+# Single source of truth — the old .npmrc allowlist was merged in here.
+
+# Refuse any version published to the registry less than 7 days ago,
+# giving the ecosystem time to detect and unpublish malicious releases
+# (the 2026-08-04 keyv/Shai-Hulud attack was flagged within hours).
+minimumReleaseAge: 10080
+
+# Dependency lifecycle scripts (postinstall etc.) are blocked. Every
+# entry below was audited and none is required, so all are false:
+#   esbuild    → swaps its JS shim for the native binary; a startup
+#                optimization only — falls back to @esbuild/* packages
+#   @swc/core  → binding check/download, unneeded when the platform
+#                package (@swc/core-darwin-arm64 etc.) is present
+#   sharp      → install/check.js only matters when no prebuilt binary
+#                exists; darwin-arm64 and linux-x64 (CI) get prebuilds
+#                via @img/* optional dependencies
+allowBuilds:
+  '@swc/core': false
+  esbuild: false
+  msw: false # copies its worker file only when an "msw" config key exists — none here
+  sharp: false
+
+# `pnpm add` saves exact versions — no ^/~ ranges in package.json.
+savePrefix: ''
+
+# Transitive dependencies must resolve from the registry — never from
+# git/tarball/URL sources injected by a compromised intermediate.
+blockExoticSubdeps: true
+
+# Refuse a version published with weaker provenance than the previous
+# release (a common account-takeover signature). Versions older than a
+# year (pre-provenance era) are exempt — takeovers are caught within
+# days, not months.
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 525600
