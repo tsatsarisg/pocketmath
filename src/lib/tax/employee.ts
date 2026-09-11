@@ -9,13 +9,13 @@ import { calculateTax } from "./calculate-tax";
 import { taxCredit } from "./tax-credit";
 
 /**
- * Calculate the full tax breakdown for a private-sector employee.
+ * Calculate the full tax breakdown for a private-sector employee under KPK 101.
  *
  * Formula (2026):
  *   annualGross      = monthlyGross x 14
- *   annualEmployeeSS = annualGross x 13.87% (capped at ceiling x 14)
+ *   annualEmployeeSS = annualGross x 13.37% (capped at ceiling x 14)
  *   taxableIncome    = annualGross - annualEmployeeSS
- *   grossTax         = calculateTax(taxableIncome, children, age, isEmployee=true)
+ *   grossTax         = calculateTax(taxableIncome, children, age)
  *   credit           = taxCredit(taxableIncome, children)
  *   annualTax        = max(0, grossTax - credit)
  *   annualNet        = annualGross - annualEmployeeSS - annualTax
@@ -35,9 +35,9 @@ export function calculateEmployee(input: EmployeeInput): EmployeeResult {
   const taxableIncome =
     Math.round((annualGross - annualEmployeeSS) * 100) / 100;
 
-  const taxBreakdown = calculateTax(taxableIncome, children, age, true);
+  const taxBreakdown = calculateTax(taxableIncome, children, age);
   const grossTax = taxBreakdown.grossTax;
-  const credit = taxCredit(taxableIncome, children);
+  const credit = Math.min(grossTax, taxCredit(taxableIncome, children));
   const annualTax = Math.round(Math.max(0, grossTax - credit) * 100) / 100;
 
   const annualNet =

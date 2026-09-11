@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ import { StatCard } from "@/components/ui/stat-card";
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const breakdownId = useId();
 
   const [mode, setMode] = useState<Mode>("employee");
   const [period, setPeriod] = useState<Period>("monthly");
@@ -20,13 +21,10 @@ export default function HomePage() {
 
   const calc = useCalculator(mode, period);
   const { stats, hasUserInput, hasResult } = calc;
+  const errorMessage = mode === "mplokaki" && !calc.mp.qualified ? t("inputs.article12Required") : t("results.invalid");
   const modeConfig = MODE_REGISTRY[mode];
 
-  const MODES: { id: Mode; label: string }[] = [
-    { id: "employee", label: t("modes.employee") },
-    { id: "self-employed", label: t("modes.selfEmployed") },
-    { id: "mplokaki", label: t("modes.mplokaki") },
-  ];
+  const modes = (Object.keys(MODE_REGISTRY) as Mode[]).map((id) => ({ id, label: t(MODE_REGISTRY[id].labelKey) }));
 
   return (
     <>
@@ -51,7 +49,8 @@ export default function HomePage() {
         {/* Mode selector */}
         <div className="flex justify-center">
           <SegmentedControl
-            options={MODES}
+            label={t("a11y.employment")}
+            options={modes}
             value={mode}
             onChange={(v) => {
               setMode(v);
@@ -71,14 +70,18 @@ export default function HomePage() {
         {/* Empty state */}
         {!hasUserInput && (
           <div className="rounded-2xl bg-secondary/20 py-12 text-center">
-            <p className="text-sm text-muted-foreground/60">
+            <p className="text-sm text-muted-foreground">
               {t("results.emptyState")}
             </p>
           </div>
         )}
 
         {/* Results */}
-        <div aria-live="polite" aria-atomic="true">
+        <div role="status" className="sr-only" aria-atomic="true">
+          {hasResult && stats ? `${stats.netLabel}: ${stats.netValue} ${stats.netSub}` : hasUserInput ? errorMessage : ""}
+        </div>
+        {hasUserInput && !hasResult && <p className="text-sm text-destructive">{errorMessage}</p>}
+        <div>
           {hasResult && stats && (
             <section className="space-y-4" aria-label={t("results.headline")}>
               <div className="flex items-center justify-between">
@@ -88,14 +91,14 @@ export default function HomePage() {
                 <PeriodToggle value={period} onChange={setPeriod} />
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <StatCard
                   label={stats.netLabel}
                   amount={stats.netValue}
                   sub={stats.netSub}
                   badge={mode === "employee" && period === "monthly" ? t("results.paycheckBadge") : undefined}
                   hero
-                  className="order-first sm:order-last"
+                  className="sm:col-span-2"
                 />
                 <StatCard
                   label={stats.grossLabel}
@@ -114,6 +117,7 @@ export default function HomePage() {
                 <button
                   onClick={() => setBreakdownOpen((o) => !o)}
                   aria-expanded={breakdownOpen}
+                  aria-controls={breakdownId}
                   className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors duration-200"
                 >
                   <span>{breakdownOpen ? t("results.hideBreakdown") : t("results.showBreakdown")}</span>
@@ -122,26 +126,21 @@ export default function HomePage() {
                     height={16}
                     strokeWidth={2.5}
                     className={cn(
-                      "text-muted-foreground/60 transition-transform duration-300 ease-out",
+                      "text-muted-foreground transition-transform duration-300 ease-out",
                       breakdownOpen && "rotate-180",
                     )}
                     aria-hidden="true"
                   />
                 </button>
 
-                <div
-                  className={cn(
-                    "overflow-hidden transition-all duration-300 ease-in-out",
-                    breakdownOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0",
-                  )}
-                >
+                <div id={breakdownId} hidden={!breakdownOpen}>
                   <div className="px-5 pb-5 pt-1">
                     {modeConfig.renderBreakdown(calc, period)}
                   </div>
                 </div>
               </div>
 
-              <p className="text-[0.6875rem] text-muted-foreground/50 text-center px-2">
+              <p className="text-sm text-muted-foreground text-center px-2">
                 {t("disclaimer")}
               </p>
             </section>

@@ -11,7 +11,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Restore saved language after hydration to avoid SSR/client mismatch.
     // Runs once on mount — server always renders 'el', client switches if needed.
-    const raw = localStorage.getItem("i18nextLng");
+    let raw: string | null = null;
+    try { raw = localStorage.getItem("i18nextLng"); } catch { return; }
     const saved = raw !== null && SUPPORTED_LANGS.has(raw) ? (raw as "el" | "en") : null;
     if (saved && saved !== i18n.language) {
       i18n.changeLanguage(saved);

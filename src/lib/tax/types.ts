@@ -46,7 +46,6 @@ export const CalculateTaxInputSchema = z.object({
   income: z.number().min(0),
   children: z.number().int().min(0).default(0),
   age: z.number().int().min(16).max(120).default(35),
-  isEmployee: z.boolean().default(true),
 });
 
 export type CalculateTaxInput = z.infer<typeof CalculateTaxInputSchema>;
@@ -112,11 +111,19 @@ export const SelfEmployedInputSchema = z.object({
   efkaCategory: EfkaCategoryIdSchema.default("1st"),
   age: z.number().int().min(16).max(120).default(35),
   yearsInBusiness: z.number().int().min(1).default(4),
+  children: z.number().int().min(0).optional(),
+  // Final applicable minimum after exemptions/reductions. Required beyond year three.
+  minimumTaxableIncome: z.number().min(0).optional(),
+  additionalMonthlyInsurance: z.number().min(0).optional(),
+  firstIncomeDeclaration: z.boolean().optional(),
 });
 
 export type SelfEmployedInput = z.infer<typeof SelfEmployedInputSchema>;
 
 export interface SelfEmployedResult {
+  actualProfit: number;
+  minimumTaxableIncome: number;
+  netAfterPrepayment: number;
   annualRevenue: number;
   annualExpenses: number;
   annualEFKA: number;
@@ -137,7 +144,17 @@ export interface SelfEmployedResult {
 // Mplokaki mode
 // ---------------------------------------------------------------------------
 
+export const MplokakiInsuranceSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("category"), additionalMonthly: z.number().min(0).default(0) }),
+  z.object({ kind: z.literal("article39"), annualWorkerContributions: z.number().min(0) }),
+]);
+export type MplokakiInsurance = z.infer<typeof MplokakiInsuranceSchema>;
+
 export const MplokakiInputSchema = z.object({
+  // This calculator is only for confirmed Article 12(2)(f) tax treatment.
+  qualifiesForEmployeeTax: z.literal(true),
+  insurance: MplokakiInsuranceSchema.optional(),
+  annualWithheld: z.number().min(0).optional(),
   annualGrossInvoiced: z.number().min(0),
   efkaCategory: EfkaCategoryIdSchema.default("1st"),
   children: z.number().int().min(0).default(0),

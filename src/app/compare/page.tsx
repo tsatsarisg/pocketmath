@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { compareAll } from "@/lib/tax/compare";
 import type { CompareEntry } from "@/lib/tax/compare";
-import { EuroInput } from "@/components/ui/euro-input";
-import { Label } from "@/components/ui/label";
+import { NumberField } from "@/components/calculator/number-field";
+import { parseField } from "@/lib/parse";
 import { WinnerCard } from "@/components/compare/winner-card";
 import { RunnerCard } from "@/components/compare/runner-card";
 import { NetBar } from "@/components/compare/net-bar";
@@ -15,24 +15,22 @@ import type { ModeKey, RankedEntry } from "@/types/compare";
 export default function ComparePage() {
   const { t } = useTranslation();
   const [gross, setGross] = useState("");
+  const [minimumIncome, setMinimumIncome] = useState("");
+  const minimumTaxableIncome = parseField(minimumIncome, "amount");
 
-  const grossNum = Math.max(0, parseFloat(gross) || 0);
-  const hasInput = gross !== "" && gross !== "0" && grossNum > 0;
+  const grossNum = parseField(gross, "monthly");
+  const hasInput = gross !== "";
 
   const result = useMemo(() => {
-    if (!hasInput) return null;
-    try {
-      return compareAll(grossNum);
-    } catch {
-      return null;
-    }
-  }, [grossNum, hasInput]);
+    if (grossNum === null || minimumTaxableIncome === null) return null;
+    return compareAll(grossNum, minimumTaxableIncome);
+  }, [grossNum, minimumTaxableIncome]);
 
   const ranked: RankedEntry[] = useMemo(() => {
     if (!result) return [];
     const labels: Record<ModeKey, string> = {
       employee: t("compare.employee"),
-      selfEmployed: t("compare.selfEmployed"),
+      "self-employed": t("compare.selfEmployed"),
       mplokaki: t("compare.mplokaki"),
     };
     const entries = (Object.entries(result) as [ModeKey, CompareEntry][])
@@ -44,7 +42,7 @@ export default function ComparePage() {
       ...e,
       label: labels[e.key],
       rank: i,
-      barWidth: maxNet > 0 ? Math.round((e.data.annualNet / maxNet) * 100) : 0,
+      barWidth: maxNet > 0 ? Math.max(0, Math.round((e.data.annualNet / maxNet) * 100)) : 0,
     }));
   }, [result, t]);
 
@@ -64,21 +62,23 @@ export default function ComparePage() {
 
       <div className="rounded-2xl bg-secondary/40 p-5 sm:p-6">
         <div className="max-w-sm mx-auto space-y-2 text-center">
-          <Label htmlFor="compare-gross" className="justify-center">
-            {t("compare.grossMonthly")}
-          </Label>
-          <EuroInput
-            id="compare-gross"
-            value={gross}
-            onChange={setGross}
-            placeholder="2000"
-          />
+          <NumberField field="monthly" label={t("compare.grossMonthly")} value={gross} onChange={setGross} placeholder="2000" />
+          <NumberField field="amount" label={t("inputs.minimumIncome")} value={minimumIncome} onChange={setMinimumIncome} />
+          <p className="text-sm text-muted-foreground text-left">{t("inputs.minimumHelp")}</p>
         </div>
+      </div>
+
+      <div className="space-y-2 text-sm text-muted-foreground">
+        <p>{t("compare.basis")}</p>
+        <p>{t("compare.defaults")}</p>
+      </div>
+      <div role="status" className="sr-only" aria-atomic="true">
+        {winner ? `${winner.label}: ${t("compare.bestNet")}` : hasInput ? t("results.invalid") : ""}
       </div>
 
       {!hasInput && (
         <div className="rounded-2xl bg-secondary/20 py-12 text-center">
-          <p className="text-sm text-muted-foreground/60">{t("compare.emptyState")}</p>
+          <p className="text-sm text-muted-foreground">{t("compare.emptyState")}</p>
         </div>
       )}
 
@@ -105,9 +105,6 @@ export default function ComparePage() {
             </p>
           </div>
 
-          <p className="text-[0.6875rem] text-muted-foreground/50 text-center px-2">
-            {t("compare.defaults")}
-          </p>
           <div className="text-center">
             <p className="text-[0.8125rem] text-muted-foreground">
               {t("compare.detailedCalc")}{" "}

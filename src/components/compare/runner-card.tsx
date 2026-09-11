@@ -12,10 +12,10 @@ export function RunnerCard({ entry }: { entry: RankedEntry }) {
       <p className="text-[0.8125rem] font-semibold text-foreground mb-3">{entry.label}</p>
 
       <div className="mb-3">
-        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+        <p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
           {t("compare.annualNet")}
         </p>
-        <p className="text-[1.5rem] font-bold tabular-nums leading-tight tracking-tight text-foreground mt-0.5">
+        <p className="text-[1.5rem] font-bold tabular-nums [overflow-wrap:anywhere] leading-tight tracking-tight text-foreground mt-0.5">
           {fmt(entry.data.annualNet)}
         </p>
       </div>

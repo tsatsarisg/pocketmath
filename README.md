@@ -16,13 +16,13 @@ pnpm install
 pnpm dev
 ```
 
-Open http://localhost:5173 in your browser.
+Open http://localhost:3000 in your browser.
 
 ## Project Structure
 
 - `src/components/` - React UI components
 - `src/lib/tax/` - Tax calculation logic and tests
-- `src/routes/` - Page routes for different calculator types
+- `src/app/` - Page routes for different calculator types
 - `src/i18n/` - Translations
 
 ## Testing

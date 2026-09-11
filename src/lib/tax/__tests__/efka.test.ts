@@ -1,22 +1,3 @@
-/**
- * Tests for the EFKA (self-employed social insurance) helpers.
- *
- * The 7 categories in order are:
- *   "special"  (first 5 years only) — monthly: 150.46
- *   "1st"      (default)            — monthly: 250.77
- *   "2nd"                           — monthly: 300.93
- *   "3rd"                           — monthly: 360.63
- *   "4th"                           — monthly: 433.47
- *   "5th"                           — monthly: 519.45
- *   "6th"                           — monthly: 675.87
- *
- * Rules:
- *   getAvailableCategories(years):
- *     years <= 5 → all 7 categories (including "special")
- *     years > 5  → 6 categories (excluding "special")
- *
- * Annual EFKA = monthly × 12 (rounded to 2 dp)
- */
 import { describe, it, expect } from "vitest";
 import {
   getAvailableCategories,
@@ -116,16 +97,16 @@ describe("getAllEfkaCategories", () => {
 // ---------------------------------------------------------------------------
 
 describe("getMonthlyEfka — spot-check monthly amounts", () => {
-  it("'special' category: monthly = 150.46", () => {
-    expect(getMonthlyEfka("special")).toBe(150.46);
+  it("'special' category: monthly = 160.46", () => {
+    expect(getMonthlyEfka("special")).toBe(160.46);
   });
 
-  it("'1st' category: monthly = 250.77", () => {
-    expect(getMonthlyEfka("1st")).toBe(250.77);
+  it("'1st' category: monthly = 260.77", () => {
+    expect(getMonthlyEfka("1st")).toBe(260.77);
   });
 
-  it("'6th' category: monthly = 675.87", () => {
-    expect(getMonthlyEfka("6th")).toBe(675.87);
+  it("'6th' category: monthly = 685.87", () => {
+    expect(getMonthlyEfka("6th")).toBe(685.87);
   });
 
   it("categories are monotonically increasing by monthly contribution", () => {
@@ -141,25 +122,25 @@ describe("getMonthlyEfka — spot-check monthly amounts", () => {
 // ---------------------------------------------------------------------------
 
 describe("getAnnualEfka — annual cost is monthly × 12", () => {
-  it("'special' category: annual = round(150.46 * 12 * 100) / 100 = 1,805.52", () => {
-    const expected = Math.round(150.46 * 12 * 100) / 100;
+  it("'special' category: annual = round(160.46 * 12 * 100) / 100 = 1,925.52", () => {
+    const expected = Math.round(160.46 * 12 * 100) / 100;
     expect(getAnnualEfka("special")).toBeCloseTo(expected, 2);
   });
 
-  it("'1st' category: annual = round(250.77 * 12 * 100) / 100 = 3,009.24", () => {
-    const expected = Math.round(250.77 * 12 * 100) / 100;
+  it("'1st' category: annual = round(260.77 * 12 * 100) / 100 = 3,129.24", () => {
+    const expected = Math.round(260.77 * 12 * 100) / 100;
     expect(getAnnualEfka("1st")).toBeCloseTo(expected, 2);
   });
 
-  it("'6th' category: annual = round(675.87 * 12 * 100) / 100 = 8,110.44", () => {
-    const expected = Math.round(675.87 * 12 * 100) / 100;
+  it("'6th' category: annual = round(685.87 * 12 * 100) / 100 = 8,230.44", () => {
+    const expected = Math.round(685.87 * 12 * 100) / 100;
     expect(getAnnualEfka("6th")).toBeCloseTo(expected, 2);
   });
 
   it("all annual amounts are exactly monthly × 12 (within floating-point tolerance)", () => {
     const all = getAllEfkaCategories();
     for (const cat of all) {
-      const expected = Math.round(cat.monthly * 12 * 100) / 100;
+      const expected = Math.round((cat.monthly + 10) * 12 * 100) / 100;
       expect(getAnnualEfka(cat.id)).toBeCloseTo(expected, 2);
     }
   });

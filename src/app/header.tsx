@@ -2,37 +2,15 @@
 
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import { cn } from "@/lib/utils";
+import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 function LanguageToggle() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const current = i18n.language.startsWith("en") ? "en" : "el";
-
-  return (
-    <div
-      role="radiogroup"
-      aria-label="Language / Γλώσσα"
-      className="inline-flex rounded-xl bg-secondary/60 p-0.5 gap-0.5"
-    >
-      {(["el", "en"] as const).map((lang) => (
-        <button
-          key={lang}
-          role="radio"
-          aria-checked={current === lang}
-          onClick={() => void i18n.changeLanguage(lang)}
-          className={cn(
-            "rounded-lg px-2.5 py-1 text-xs font-medium transition-all duration-150",
-            current === lang
-              ? "bg-background text-foreground shadow-sm ring-1 ring-border/60"
-              : "text-muted-foreground hover:text-foreground",
-          )}
-        >
-          {lang === "el" ? "ΕΛ" : "EN"}
-        </button>
-      ))}
-    </div>
-  );
+  return <SegmentedControl compact label={t("a11y.language")} value={current}
+    onChange={(language) => void i18n.changeLanguage(language)}
+    options={[{ id: "el", label: "ΕΛ" }, { id: "en", label: "EN" }]} />;
 }
 
 export function Header() {

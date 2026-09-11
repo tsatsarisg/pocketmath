@@ -23,7 +23,24 @@
     "expenses": "Expenses / month",
     "efkaCategory": "EFKA Category",
     "yearsInBusiness": "Years in business",
-    "invoiced": "Invoiced / month"
+    "invoiced": "Invoiced / month",
+    "additionalInsurance": "Additional insurance / month",
+    "minimumIncome": "Applicable minimum taxable income / year",
+    "minimumHelp": "Enter your final minimum under Articles 28A–28C, after all reductions, offsets and exemptions. Enter 0 only if exempt. This amount is not calculated automatically.",
+    "minimumSource": "Official minimum-income guide",
+    "firstDeclaration": "First-ever declaration of business income",
+    "businessScope": "Full-year estimate for business income only. Enter amounts excluding VAT and expenses excluding insurance entered separately.",
+    "article12Confirmed": "I qualify for employee taxation under Article 12(2)(f)",
+    "article12Help": "Confirm eligibility: written service contracts with up to 3 clients, or at least 75% of revenue from one; no commercial status, no separate business premises from your home, and no disqualifying concurrent salaried income. Insurance eligibility is assessed separately.",
+    "article12Required": "Confirm Article 12 eligibility to calculate this scenario, or use Self-Employed.",
+    "insuranceMethod": "Insurance arrangement",
+    "categoryInsurance": "EFKA category",
+    "article39Insurance": "Article 39(9)",
+    "workerInsurance": "Actual worker contributions / year",
+    "article39Help": "Enter only your own annual contributions from your insurance records, including any additional contributions. Do not include the client/employer share.",
+    "actualWithholding": "Use actual tax withheld",
+    "withheld": "Actual income tax withheld / year",
+    "withholdingHelp": "Otherwise assumes 20% of all invoiced revenue. This is not universal: use the actual amount (including 0) when different. Withholding changes the settlement, not final income tax."
   },
   "results": {
     "headline": "Results",
@@ -38,7 +55,8 @@
     "paycheckBadge": "1 of 14 paychecks / year",
     "showBreakdown": "Show detailed breakdown",
     "hideBreakdown": "Hide detailed breakdown",
-    "emptyState": "Enter your salary above to see the result"
+    "emptyState": "Enter your salary above to see the result",
+    "invalid": "Correct the highlighted fields to see your result."
   },
   "disclaimer": "Results are approximate estimates for informational and educational purposes only. They do not constitute tax, financial, or legal advice and should not be used as the sole basis for any financial decision. Consult a qualified accountant for professional tax advice. Based on Law 5246/2025.",
   "breakdown": {
@@ -46,29 +64,33 @@
       "grossSalary": "Gross salary",
       "salaries": "x14 salaries",
       "employeeSs": "Employee SS contributions",
-      "ssRate": "13.87%",
+      "ssRate": "13.37%",
       "taxableIncome": "Taxable income",
       "grossTax": "Income tax (gross)",
       "taxCredit": "Tax credit",
       "netTax": "Income tax (net)",
       "netIncome": "Net income",
-      "effectiveTaxRate": "Effective tax rate",
+      "effectiveTaxRate": "Effective tax & contribution rate",
       "employerCost": "Employer cost (21.79% SS)"
     },
     "selfEmployed": {
-      "annualRevenue": "Annual revenue",
+      "annualRevenue": "Revenue",
       "annualExpenses": "Expenses",
       "annualEfka": "EFKA",
       "taxableIncome": "Taxable income",
       "grossTax": "Income tax (gross)",
       "firstYearBenefit": "First 3-year discount",
-      "firstYearBenefitSub": "50% first bracket discount",
+      "firstYearBenefitSub": "First 3 years, revenue up to €10,000",
       "annualTax": "Income tax (net)",
       "prepayment": "Tax prepayment",
       "prepaymentSub": "of tax",
       "totalTaxWithPrepayment": "Total tax + prepayment",
       "netIncome": "Net income",
-      "effectiveTaxRate": "Effective tax rate"
+      "effectiveTaxRate": "Effective tax & contribution rate",
+      "actualProfit": "Actual profit after insurance",
+      "minimumIncome": "Applicable minimum taxable income",
+      "netAfterPrepayment": "Net after new tax prepayment",
+      "cashHelp": "Net income excludes the new tax advance. The amount after prepayment is before credits for previous advances or withholding; it is not the final tax settlement."
     },
     "mplokaki": {
       "grossInvoiced": "Total invoiced",
@@ -77,15 +99,15 @@
       "grossTax": "Income tax (gross)",
       "taxCredit": "Tax credit",
       "annualTax": "Income tax (net)",
-      "totalWithheld": "20% withholding from clients",
+      "totalWithheld": "Income tax withheld",
       "balanceDue": "Balance due",
       "refund": "Tax refund",
       "netIncome": "Net income",
-      "effectiveTaxRate": "Effective tax rate"
+      "effectiveTaxRate": "Effective tax & contribution rate"
     }
   },
   "footer": {
-    "taxYear": "Calculation parameters verified as of March 2026 · Based on Law 5246/2025 · Not tax advice",
+    "taxYear": "Tax year 2026 · Parameters reviewed September 2026 · Scenario estimates, not tax advice",
     "legal": "Legal",
     "privacy": "Privacy",
     "terms": "Terms"
@@ -109,15 +131,20 @@
     "annualComparison": "Annual comparison",
     "whyDifferent": "Why is the employee monthly paycheck lower?",
     "whyDifferentBody": "Greek employees receive 14 salaries per year — 12 regular + Christmas bonus + Easter bonus + summer leave bonus. The annual total is higher, but each paycheck is 1/14 of that, not 1/12. The monthly equivalent rows above divide the annual net by 12 so all three options are on the same footing.",
-    "defaults": "Comparison uses: 0 children, age 35, 1st EFKA category, 4 years in business, no expenses.",
+    "defaults": "Assumptions: age 35, no children or expenses, 4th business year, 1st EFKA category including €10 unemployment, no additional contributions. Block Invoice assumes Article 12 eligibility and category insurance. Your minimum applies to Self-Employed. Net excludes tax prepayment.",
     "detailedCalc": "Need a detailed breakdown?",
-    "goToCalculator": "Go to calculator"
+    "goToCalculator": "Go to calculator",
+    "basis": "The same monthly amount means 14 employee paychecks or 12 monthly invoices per year. Annual gross totals therefore differ."
   },
   "a11y": {
     "skipToContent": "Skip to main content",
     "modeEmployee": "Mode: Employee",
     "modeSelfEmployed": "Mode: Self-employed",
-    "modeMplokaki": "Mode: Block invoice"
+    "modeMplokaki": "Mode: Block invoice",
+    "employment": "Employment type",
+    "period": "Period",
+    "language": "Language",
+    "theme": "Dark mode"
   },
   "legal": {
     "privacyPolicy": "Privacy Policy",
@@ -203,7 +230,7 @@
       },
       "accuracy": {
         "heading": "4. Legislative basis and accuracy",
-        "text": "Calculations are based on the provisions of Greek Law 5246/2025 and related tax and social security legislation, as understood and interpreted by the website operator at the time of implementation. The tax rates, brackets, social security contribution rates, tax credits, and other parameters reflected in this tool are accurate as of March 2026. Tax legislation may change, and these parameters may be amended, replaced, or reinterpreted by Greek authorities at any time. We endeavour to update this tool when legislative changes occur, but we do not guarantee that the tool reflects the current state of the law at any given time.",
+        "text": "Calculations are based on the provisions of Greek Law 5246/2025 and related tax and social security legislation, as understood and interpreted by the website operator at the time of implementation. The tax rates, brackets, social security contribution rates, tax credits, and other parameters reflected in this tool were reviewed in September 2026 for the supported scenarios. Tax legislation may change, and these parameters may be amended, replaced, or reinterpreted by Greek authorities at any time. We endeavour to update this tool when legislative changes occur, but we do not guarantee that the tool reflects the current state of the law at any given time.",
         "asOf": "The phrase \"as of [date]\" indicates the date on which the legislative parameters were last verified by the operator. It does not guarantee accuracy for any subsequent period, even if the underlying legislation has not changed."
       },
       "liability": {
@@ -241,5 +268,24 @@
         "text": "We reserve the right to modify these terms at any time. Continued use of the website after changes constitutes acceptance of the modified terms."
       }
     }
+  },
+  "validation": {
+    "required": "Enter a value.",
+    "amount": "Enter an amount from 0 to 10,000,000 (no thousands separators).",
+    "age": "Enter a whole-number age from 16 to 120.",
+    "children": "Enter a whole number from 0 to 10.",
+    "years": "Enter a whole number of years, at least 1."
+  },
+  "efka": {
+    "special": "Special",
+    "1st": "1st",
+    "2nd": "2nd",
+    "3rd": "3rd",
+    "4th": "4th",
+    "5th": "5th",
+    "6th": "6th",
+    "specialNote": "First 5 years only",
+    "includesUnemployment": "Includes €10/month unemployment contribution.",
+    "additionalHelp": "Add any supplementary, lump-sum or other mandatory contributions not included in the category."
   }
 }

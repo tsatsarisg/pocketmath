@@ -12,7 +12,7 @@ export interface CompareEntry {
 
 export interface CompareResult {
   employee: CompareEntry;
-  selfEmployed: CompareEntry;
+  "self-employed": CompareEntry;
   mplokaki: CompareEntry;
 }
 
@@ -28,14 +28,14 @@ const DEFAULTS = {
  * Compare net income across all three employment types for the same
  * gross monthly income, using sensible defaults for other parameters.
  */
-export function compareAll(monthlyGross: number): CompareResult {
+export function compareAll(monthlyGross: number, minimumTaxableIncome: number): CompareResult {
   const emp = calculateEmployee({
     monthlyGross,
     children: DEFAULTS.children,
     age: DEFAULTS.age,
   });
 
-  const se = calculateSelfEmployed({
+  const se = calculateSelfEmployed({ minimumTaxableIncome,
     annualRevenue: monthlyGross * 12,
     annualExpenses: DEFAULTS.annualExpenses,
     efkaCategory: DEFAULTS.efkaCategory,
@@ -43,7 +43,7 @@ export function compareAll(monthlyGross: number): CompareResult {
     yearsInBusiness: DEFAULTS.yearsInBusiness,
   });
 
-  const mp = calculateMplokaki({
+  const mp = calculateMplokaki({ qualifiesForEmployeeTax: true,
     annualGrossInvoiced: monthlyGross * 12,
     efkaCategory: DEFAULTS.efkaCategory,
     children: DEFAULTS.children,
@@ -57,11 +57,11 @@ export function compareAll(monthlyGross: number): CompareResult {
       effectiveTaxRate: emp.effectiveTaxRate,
       totalTaxesAnnual: emp.annualTax + emp.annualEmployeeSS,
     },
-    selfEmployed: {
+    "self-employed": {
       monthlyNet: se.monthlyNet,
       annualNet: se.annualNet,
       effectiveTaxRate: se.effectiveTaxRate,
-      totalTaxesAnnual: se.annualTax + se.annualEFKA + se.prepayment,
+      totalTaxesAnnual: se.annualTax + se.annualEFKA,
     },
     mplokaki: {
       monthlyNet: mp.monthlyNet,

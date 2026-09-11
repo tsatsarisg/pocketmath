@@ -38,9 +38,6 @@ export function getBracket2Rate(children: number): number {
   return FAMILY_RATES_BRACKET_2[children] ?? 0.2;
 }
 
-// Note (Law 5246/2025): the 3rd-bracket reduction stops at the 5-children level —
-// 4 children → 18%, 5 or more → a flat 16% (it does NOT keep decreasing).
-
 // ---------------------------------------------------------------------------
 // Family-based reductions — 3rd bracket (20,001–30,000)
 // ---------------------------------------------------------------------------
@@ -51,12 +48,12 @@ export const FAMILY_RATES_BRACKET_3: Readonly<Record<number, number>> = {
   2: 0.22,
   3: 0.2,
   4: 0.18,
-  // 5+ → 16%
+  // Each child above four reduces this rate by another two percentage points.
 };
 
-/** Get the 3rd-bracket rate based on number of children. Floors at 16% for 5+ children. */
+/** Article 15: two percentage points per additional child, never below zero. */
 export function getBracket3Rate(children: number): number {
-  if (children >= 5) return 0.16;
+  if (children >= 5) return Math.max(0, (26 - 2 * children) / 100);
   return FAMILY_RATES_BRACKET_3[children] ?? 0.26;
 }
 
@@ -67,13 +64,14 @@ export function getBracket3Rate(children: number): number {
 // Article 16 KFE amounts (Law 5246/2025, tax year 2026).
 export const TAX_CREDIT_BASE: Readonly<Record<number, number>> = {
   0: 777,
-  1: 810,
-  2: 900,
-  3: 1_120,
-  4: 1_340,
+  1: 900,
+  2: 1_120,
+  3: 1_340,
+  4: 1_580,
+  5: 1_780,
 };
 
-/** Additional credit per child beyond 4 (e.g. 5 children = 1,340 + 220 = 1,560). */
+/** Additional credit per child beyond five. */
 export const TAX_CREDIT_EXTRA_PER_CHILD = 220;
 
 /** Income threshold above which the credit phases out. */
@@ -83,10 +81,11 @@ export const TAX_CREDIT_PHASE_OUT_THRESHOLD = 12_000;
 export const TAX_CREDIT_PHASE_OUT_PER_1000 = 20;
 
 // ---------------------------------------------------------------------------
-// Employee EFKA rates
+// Employee EFKA rates — standard private-sector coverage (KPK 101)
 // ---------------------------------------------------------------------------
 
-export const EMPLOYEE_SS_RATE = 0.1387;
+// e-EFKA Circular 38/2024, KPK 101: effective 1 January 2025 and applicable in 2026.
+export const EMPLOYEE_SS_RATE = 0.1337;
 export const EMPLOYER_SS_RATE = 0.2179;
 
 /** Monthly contribution ceiling (EUR). */
@@ -99,6 +98,9 @@ export const SALARY_MONTHS = 14;
 // Self-employed EFKA categories (2026, +2.5% from 2025)
 // ---------------------------------------------------------------------------
 
+export const UNEMPLOYMENT_CONTRIBUTION_MONTHLY = 10;
+
+/** Pension and health only; use getMonthlyEfka/getAnnualEfka for payable totals. */
 export const EFKA_CATEGORIES: readonly EfkaCategory[] = [
   {
     id: "special",
@@ -165,9 +167,9 @@ export const EFKA_CATEGORIES: readonly EfkaCategory[] = [
 export const PREPAYMENT_RATE_FIRST_YEAR = 0.275; // 55% × 50% discount
 export const PREPAYMENT_RATE_STANDARD = 0.55;
 
-/** Get prepayment rate based on years in business. */
-export function getPrepaymentRate(yearsInBusiness: number): number {
-  if (yearsInBusiness <= 1) return PREPAYMENT_RATE_FIRST_YEAR;
+/** Half the standard advance for the first declaration of business income. */
+export function getPrepaymentRate(firstIncomeDeclaration: boolean): number {
+  if (firstIncomeDeclaration) return PREPAYMENT_RATE_FIRST_YEAR;
   return PREPAYMENT_RATE_STANDARD;
 }
 

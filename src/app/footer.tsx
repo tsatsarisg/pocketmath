@@ -9,20 +9,20 @@ export function Footer() {
   return (
     <footer className="mt-auto">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-6 sm:py-4">
-        <p className="text-[0.6875rem] text-muted-foreground/50 text-center">
+        <p className="text-xs text-muted-foreground text-center">
           {t("footer.taxYear")}
         </p>
-        <div className="flex items-center gap-3 text-[0.6875rem]">
+        <div className="flex items-center gap-3 text-xs">
           <Link
             href="/privacy"
-            className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
+            className="text-muted-foreground hover:text-foreground transition-colors duration-150"
           >
             {t("footer.privacy")}
           </Link>
           <span className="text-muted-foreground/30">&middot;</span>
           <Link
             href="/terms"
-            className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
+            className="text-muted-foreground hover:text-foreground transition-colors duration-150"
           >
             {t("footer.terms")}
           </Link>
@@ -31,7 +31,7 @@ export function Footer() {
             href="https://revolut.me/tsatsarisg"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground/50 hover:text-foreground transition-colors duration-150"
+            className="text-muted-foreground hover:text-foreground transition-colors duration-150"
           >
             ⚡ Revolut
           </a>

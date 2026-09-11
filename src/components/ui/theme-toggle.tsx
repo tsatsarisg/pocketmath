@@ -1,51 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
+import { useTranslation } from "react-i18next";
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  return () => observer.disconnect();
+}
+const getSnapshot = () => document.documentElement.classList.contains("dark");
+const getServerSnapshot = () => true;
+
 export function ThemeToggle({ className }: { className?: string }) {
-  // Sync state with the actual DOM class on mount — the inline script in
-  // <head> has already applied the correct class before React hydrates.
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document === "undefined") return true;
-    return document.documentElement.classList.contains("dark");
-  });
-
+  const { t } = useTranslation();
+  const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   function toggle() {
-    const html = document.documentElement;
-    const next = !isDark;
-
-    if (next) {
-      html.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      html.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-
-    setIsDark(next);
+    const next = !getSnapshot();
+    document.documentElement.classList.toggle("dark", next);
+    try { localStorage.setItem("theme", next ? "dark" : "light"); } catch { /* Theme still works when storage is unavailable. */ }
   }
-
-  return (
-    <button
-      type="button"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      aria-pressed={isDark}
-      onClick={toggle}
-      className={cn(
-        "inline-flex h-8 w-8 items-center justify-center rounded-xl",
-        "text-muted-foreground hover:text-foreground hover:bg-secondary/70",
-        "transition-all duration-150",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        className,
-      )}
-    >
-      {isDark ? (
-        <Sun size={16} strokeWidth={2} aria-hidden="true" />
-      ) : (
-        <Moon size={16} strokeWidth={2} aria-hidden="true" />
-      )}
-    </button>
-  );
+  return <button type="button" aria-label={t("a11y.theme")} aria-pressed={isDark} onClick={toggle}
+    className={cn("inline-flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring", className)}>
+    <Sun size={16} aria-hidden="true" className="hidden dark:block" />
+    <Moon size={16} aria-hidden="true" className="block dark:hidden" />
+  </button>;
 }

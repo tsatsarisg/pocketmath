@@ -21,7 +21,7 @@ if (!isServer) {
   i18n.on('languageChanged', (lng) => {
     const lang = lng.startsWith('en') ? 'en' : 'el';
     document.documentElement.lang = lang;
-    localStorage.setItem('i18nextLng', lang);
+    try { localStorage.setItem('i18nextLng', lang); } catch { /* Language still works without persistence. */ }
   });
 }
 

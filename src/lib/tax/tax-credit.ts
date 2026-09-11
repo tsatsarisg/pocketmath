@@ -5,18 +5,10 @@ import {
   TAX_CREDIT_PHASE_OUT_PER_1000,
 } from "./constants";
 
-/**
- * Get the base credit amount before phase-out.
- *
- * 0 children: 777, 1: 810, 2: 900, 3: 1,120, 4: 1,340, 5+: +220 per child beyond 4.
- */
+/** Article 16 base credit, before the income taper and liability cap. */
 function getBaseCredit(children: number): number {
-  if (children <= 4) {
-    return TAX_CREDIT_BASE[children] ?? 777;
-  }
-  // 4 children = 1,340; each additional child adds 220.
-  const base4 = TAX_CREDIT_BASE[4] ?? 1_340;
-  return base4 + (children - 4) * TAX_CREDIT_EXTRA_PER_CHILD;
+  if (children <= 5) return TAX_CREDIT_BASE[children] ?? 777;
+  return TAX_CREDIT_BASE[5]! + (children - 5) * TAX_CREDIT_EXTRA_PER_CHILD;
 }
 
 /**
@@ -40,7 +32,7 @@ export function taxCredit(taxableIncome: number, children = 0): number {
   }
 
   const excess = taxableIncome - TAX_CREDIT_PHASE_OUT_THRESHOLD;
-  const reduction = Math.floor(excess / 1_000) * TAX_CREDIT_PHASE_OUT_PER_1000;
+  const reduction = (excess / 1_000) * TAX_CREDIT_PHASE_OUT_PER_1000;
 
   return Math.max(0, Math.round((base - reduction) * 100) / 100);
 }

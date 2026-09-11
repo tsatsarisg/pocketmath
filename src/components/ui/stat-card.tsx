@@ -22,7 +22,7 @@ export function StatCard({
         "flex-1 min-w-0 rounded-2xl transition-all duration-300",
         hero
           ? "bg-net-accent-muted ring-2 ring-net-accent/30 p-5 sm:p-6"
-          : "bg-card ring-1 ring-border/50 p-4 sm:p-5 hover:shadow-md hover:-translate-y-0.5",
+          : "bg-card ring-1 ring-border/50 p-4 sm:p-5",
         className,
       )}
     >
@@ -36,9 +36,9 @@ export function StatCard({
       </p>
       <p
         className={cn(
-          "tabular-nums leading-none tracking-tight mt-1",
+          "tabular-nums [overflow-wrap:anywhere] leading-tight tracking-tight mt-1",
           hero
-            ? "text-[3rem] sm:text-[2.5rem] font-extrabold text-net-accent"
+            ? "text-[2rem] sm:text-[2.5rem] font-extrabold text-net-accent"
             : "text-[1.75rem] font-bold text-foreground",
         )}
       >
@@ -53,7 +53,7 @@ export function StatCard({
         <p
           className={cn(
             "text-[0.75rem] mt-0.5",
-            hero ? "text-net-accent/60 mt-1" : "text-muted-foreground",
+            hero ? "text-net-accent mt-1" : "text-muted-foreground",
             badge && "mt-1.5",
           )}
         >

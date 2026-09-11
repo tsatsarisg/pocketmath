@@ -1,286 +1,89 @@
-# Greek Tax & Insurance Formulas (2026)
+# Greek tax and insurance calculations — tax year 2026
 
-> Based on **Law 5246/2025** effective 1/1/2026. Sources: taxheaven.gr, e-efka.gov.gr, forin.gr, Ministry of Finance.
+Parameters reviewed September 2026. This is a full-year scenario calculator, not a tax-return engine. Monthly business income assumes 12 equal months; employee salary assumes 14 equal salary units. Amounts exclude VAT. Insurance inputs represent deductible contributions paid for the scenario.
 
----
+## Income tax
 
-## Income Tax Brackets (2026 — NEW 6-bracket system)
+The progressive bands end at €10,000, €20,000, €30,000, €40,000, €60,000 and infinity, at 9%, 20%, 26%, 34%, 39%, 44% respectively. Each rate applies only to income within its band.
 
-### Standard Scale (age > 30, no children)
+Family rates apply to business income too. For zero through four children, second-band rates are 20/18/16/9/0%; third-band rates are 26/24/22/20/18%. Four or more children also zero the first band. Each additional child reduces the third band by two percentage points. Under-26s have zero first and second bands; ages 26–30 receive the lower of 9% and their family rate in the second band.
 
-| Bracket | Income Range (EUR) | Rate |
-| ------- | ------------------ | ---- |
-| 1       | 0 – 10,000         | 9%   |
-| 2       | 10,001 – 20,000    | 20%  |
-| 3       | 20,001 – 30,000    | 26%  |
-| 4       | 30,001 – 40,000    | 34%  |
-| 5       | 40,001 – 60,000    | 39%  |
-| 6       | 60,001+            | 44%  |
+Article 16 credits apply only to employees and qualifying Article 12 invoices: €777/900/1,120/1,340/1,580/1,780 for zero through five children, then €220 per additional child. The credit tapers proportionally by 2% of taxable income above €12,000, except for five or more children; it cannot exceed tax owed or fall below zero.
 
-Quick check: Tax on 60,000 = 900 + 2,000 + 2,600 + 3,400 + 7,800 = 16,700
+Sources: [Ministry income-tax guide](https://minfin.gov.gr/forologiki-politiki/forologikos-odigos/forologia-eisodimatos/), [AADE Law 5246/2025 notification](https://www.aade.gr/egkyklioi-kai-apofaseis/o-3068-18-11-2025), [AADE tax handbook, Article 16 taper exemption](https://www.aade.gr/sites/default/files/2024-07/forol_egxeiridio_erotiseon_apantisewn2024_1.pdf). The older handbook is not the source for current credit amounts.
 
-### Family-Based Reductions on 2nd Bracket (10,001–20,000)
+## Insurance
 
-| Children | Rate (instead of 20%) |
-| -------- | --------------------- |
-| 0        | 20%                   |
-| 1        | 18%                   |
-| 2        | 16%                   |
-| 3        | 9%                    |
-| 4+       | 0%                    |
-
-### Family-Based Reductions on 3rd Bracket (20,001–30,000)
-
-| Children | Rate (instead of 26%) |
-| -------- | --------------------- |
-| 0        | 26%                   |
-| 1        | 24%                   |
-| 2        | 22%                   |
-| 3        | 20%                   |
-| 4        | 18%                   |
-| 5+       | 16% (floor)           |
-
-### Youth Rates
-
-**Age ≤ 25:**
-
-- 0 – 20,000: **0%**
-- 20,001–30,000: family-based reductions on 3rd bracket still apply for employees
-- 30,001+: standard rates apply
-
-**Age 26–30:**
-
-- 0 – 10,000: 9%
-- 10,001 – 20,000: **min(9%, family rate)** — e.g. 4+ children = 0%
-- 20,001–30,000: family-based reductions on 3rd bracket still apply for employees
-- 30,001+: standard rates apply
-
-### First-Year Entrepreneur Benefit
-
-- First 3 years of operation: **50% reduction** on first bracket (9% → 4.5% on income up to 10,000)
-
----
-
-## Tax Credit (Employees & Μπλοκάκι ONLY — NOT self-employed)
-
-| Children | Credit (EUR)                 |
-| -------- | ---------------------------- |
-| 0        | 777                          |
-| 1        | 810                          |
-| 2        | 900                          |
-| 3        | 1,120                        |
-| 4        | 1,340                        |
-| 5+       | +220 per additional beyond 4 |
-
-Phase-out: For income > 12,000 EUR, credit reduces by 20 EUR per 1,000 EUR above 12,000 (2% of excess).
-**Phase-out does NOT apply for 5+ children.**
-
----
-
-## EMPLOYEE MODE
-
-### Social Security (EFKA) Rates — Private Sector
-
-| Side     | Rate    |
-| -------- | ------- |
-| Employee | ~13.87% |
-| Employer | ~21.79% |
-| Total    | ~35.66% |
-
-Contribution ceiling: 7,761.94 EUR/month (from 1/1/2026).
-
-### 14-Month Salary System (unchanged)
-
-- 12 regular monthly salaries
-- Christmas bonus: 1x monthly gross
-- Easter bonus: 0.5x monthly gross
-- Summer leave: 0.5x monthly gross
-- **Annual gross = monthly gross × 14**
-
-### Solidarity Contribution
-
-**Abolished** for private sector since 2023. Set to 0.
-(Still applies to pensioners — not relevant for MVP.)
-
-### Employee Formula
+Standard private-sector employee coverage (KPK 101): employee 13.37%, employer 21.79%, monthly contribution ceiling €7,761.94. Both contribution calculations respect the ceiling. Other coverage packages are outside this scenario.
 
 ```
-annualGross = monthlyGross × 14
-annualEmployeeSS = annualGross × 0.1387
-taxableIncome = annualGross − annualEmployeeSS
-grossTax = calculateTax(taxableIncome, children, age)  // 2026 brackets with family reductions
-credit = taxCredit(taxableIncome, children)
-annualTax = max(0, grossTax − credit)
-annualNet = annualGross − annualEmployeeSS − annualTax
+annualGross = monthlyGross * 14
+annualEmployeeSS = round(min(monthlyGross, 7761.94) * 14 * 0.1337)
+taxableIncome = annualGross - annualEmployeeSS
+annualTax = grossTax - appliedCredit
+annualNet = taxableIncome - annualTax
 monthlyNet = annualNet / 14
-employerCost = annualGross × (1 + 0.2179)
+employerCost = annualGross + round(min(monthlyGross, 7761.94) * 14 * 0.2179)
 ```
 
----
+Source: [e-EFKA Circular 38/2024](https://www.e-efka.gov.gr/sites/default/files/2024-12/%CE%95%CE%93%CE%9A.%2038_2024_%CE%9C%CE%95%CE%99%CE%A9%CE%A3%CE%97%20%CE%91%CE%A3%CE%A6.%20%CE%95%CE%99%CE%A3%CE%A6%CE%9F%CE%A1%CE%A9%CE%9D%20%CE%99%CE%94%CE%99%CE%A9%CE%A4.%20%CE%94%CE%99%CE%9A%CE%91%CE%99%CE%9F%CE%A5%202025%20%28971%CE%A546%CE%9C%CE%91%CE%A0%CE%A3-348%29.pdf).
 
-## SELF-EMPLOYED (Ατομική Επιχείρηση) MODE
+Non-salaried insurance categories:
 
-### EFKA Insurance Categories (2026, +2.5% from 2025)
+| Category | Pension + health / month | With unemployment / month |
+| --- | ---: | ---: |
+| Special | €150.46 | €160.46 |
+| 1st | €250.77 | €260.77 |
+| 2nd | €300.93 | €310.93 |
+| 3rd | €360.63 | €370.63 |
+| 4th | €433.47 | €443.47 |
+| 5th | €519.45 | €529.45 |
+| 6th | €675.87 | €685.87 |
 
-| Category | Pension | Health | Total/month | Note               |
-| -------- | ------- | ------ | ----------- | ------------------ |
-| Special  | 111.06  | 39.40  | **150.46**  | First 5 years only |
-| 1st      | 185.09  | 65.68  | **250.77**  | Default            |
-| 2nd      | 222.12  | 78.81  | **300.93**  |                    |
-| 3rd      | 281.82  | 78.81  | **360.63**  |                    |
-| 4th      | 354.66  | 78.81  | **433.47**  |                    |
-| 5th      | 440.64  | 78.81  | **519.45**  |                    |
-| 6th      | 597.06  | 78.81  | **675.87**  |                    |
+`EFKA_CATEGORIES.monthly` holds pension and health only. All calculations and category labels use the helpers, which add €10 unemployment. Additional monthly insurance is entered separately, including applicable supplementary, lump-sum and other mandatory contributions. Special-category selection requires first-five-year eligibility; the business calculator rejects it after year five. The invoice calculator labels this eligibility condition explicitly.
 
-Plus: OAED surcharge ~10 EUR/month + healthcare housing ~2 EUR/month.
+Source: [e-EFKA non-salaried categories and additional levies](https://www.e-efka.gov.gr/el/asphalismenoi/me-misthotoi/neo-systhma-asfalistikon-eisforon/eleftheroi-epaggelmaties-aftoapasxoloumenoi).
 
-Optional supplementary insurance: 46.57 / 56.13 / 66.88 EUR/month (3 tiers).
-
-EFKA contributions are **tax-deductible**.
-
-### Prepayment of Tax (Προκαταβολή Φόρου)
-
-| Years in Business | Rate                       |
-| ----------------- | -------------------------- |
-| First year        | 27.5% (55% × 50% discount) |
-| Years 2-3         | 55%                        |
-| 4th year onward   | 55%                        |
-
-### Telos Epitideumatos (Professional Chamber Fee)
-
-**ABOLISHED** as of 2026. Set to 0 for all.
-
-### Tekmapto Eisodima (Presumptive Income)
-
-- Still exists but with exemptions
-- Minimum presumptive income based on minimum wage: ~12,320 EUR/year (880 EUR/month × 14)
-- Minimum tax: ~1,410 EUR
-- **Exempt:** first 3 years of operation, new mothers, disability 80%+, μπλοκάκι workers
-- Applies from 4th year onward
-- For MVP: show as informational note, not a calculation input
-
-### Self-Employed Formula
+## Self-employed
 
 ```
-annualEFKA = selectedCategory.monthly × 12
-taxableIncome = max(0, annualRevenue − annualExpenses − annualEFKA)
-annualTax = calculateTax(taxableIncome, 0, age)  // NO tax credit, NO family reductions
-// First 3 years: 50% reduction on first bracket (9% → 4.5% on first 10k)
-prepay = annualTax × prepaymentRate
-annualNet = annualRevenue − annualExpenses − annualEFKA − annualTax
-// First year cash outlay includes prepayment
+annualEFKA = categoryTotal * 12 + additionalMonthlyInsurance * 12
+actualProfit = revenue - deductibleExpenses - annualEFKA
+taxableIncome = max(0, actualProfit, applicableMinimum)
+annualTax = progressiveTax - eligibleNewBusinessRelief
+annualNet = actualProfit - annualTax
+newAdvance = annualTax * (firstIncomeDeclaration ? 0.275 : 0.55)
+netAfterPrepayment = annualNet - newAdvance
 ```
 
----
+Expenses must exclude insurance already entered separately. New-business relief halves the actual first-band tax only in the first three years and only when annual gross revenue is at most €10,000. Zero-rate age/family relief cannot produce a second deduction. Business income receives family bracket reductions but no Article 16 credit.
 
-## ΜΠΛΟΚΑΚΙ MODE
+Sources: [AADE new-business relief](https://www.aade.gr/exypiretisi-enimerosi/hristikoi-odigoi/enarxi-epiheirimatikis-drastiriotitas/forologikes-apallages-elafrynseis), [AADE income-tax guide](https://www.aade.gr/omogeneis-katoikoi-exoterikoy/eisodima/katigories-eisodimatos-kai-forologia-eisodimatos-stin-ellada).
 
-### 5 Conditions for Employee-Style Tax Treatment
+The applicable Articles 28A–28C minimum is **required after year three**. Supply the final annual amount after reductions, exemptions and offsets; zero means an applicable exemption. The app does not derive this from minimum wage, payroll, turnover, residence, disability, family circumstances or other income. It never treats presumed income as cash earned. First-three-year scenarios use zero minimum.
 
-ALL must be met:
+The new tax advance is separate from economic net income. `netAfterPrepayment` is before previous advance credits and withholding; it is not a final assessment. First-declaration relief is an explicit fact, independent of the business-year input. VAT, combined income sources, loss carryforwards, personal living-expense presumptions, electronic-spending penalties and special deductions are outside the model.
 
-1. Written contracts with **max 3 employers** (or 75%+ income from one if more)
-2. At least **75% of gross income** from a single employer
-3. Professional address = **their home** (no separate office)
-4. **No parallel salaried employment**
-5. Activities involve **scientific, artistic, or intellectual work**
+## Qualifying invoice work (μπλοκάκι)
 
-### Tax Treatment (if qualifying)
+Employee-style taxation requires explicit confirmation of Article 12(2)(f) eligibility. The client-count rule is up to three clients **or**, if more, at least 75% of income from one. Written contracts, no commercial status, no separate premises from home and no disqualifying concurrent salary are also relevant. Unconfirmed cases must use the regular business scenario.
 
-- Taxed on **employee scale** (with family-based reductions)
-- Gets **tax credit** (777+ EUR)
-- **Exempt from presumptive income**
-- **No prepayment of tax**
-- **No telos epitideumatos** (abolished for all anyway)
-- Youth under 25: **0% tax up to 20,000**
-- Ages 26-30: **9% on 10,001-20,000** bracket
+Article 12 tax eligibility does not establish Article 39(9) insurance eligibility. For category insurance use the category total plus any extras. For Article 39 enter actual annual **worker** contributions, including extras; do not add the client/employer share or category fees again. This branch does not calculate contribution rates or determine insurance eligibility.
 
-### 20% Withholding at Source
-
-Client withholds 20% of gross invoice → credited against final tax liability.
-
-### EFKA: Same as self-employed (self-paid, choose category)
-
-### Μπλοκάκι Formula
+Source: [e-EFKA Article 39(9) service](https://www.efka.gov.gr/el/elektronikes-yperesies/yperesia-apodoches-symbaseon-par-9-arthroy-39-n-43872016-dpy).
 
 ```
-annualEFKA = selectedCategory.monthly × 12
-taxableIncome = annualGrossInvoiced − annualEFKA
-grossTax = calculateTax(taxableIncome, children, age)  // WITH family reductions
-credit = taxCredit(taxableIncome, children)
-annualTax = max(0, grossTax − credit)
-totalWithheld = annualGrossInvoiced × 0.20
-balanceDue = annualTax − totalWithheld  // negative = refund
-annualNet = annualGrossInvoiced − annualEFKA − annualTax
+taxableIncome = max(0, invoiced - workerInsurance)
+annualTax = progressiveTax - appliedCredit
+withheld = suppliedAnnualWithholding ?? invoiced * 0.20
+balanceDue = annualTax - withheld
+annualNet = invoiced - workerInsurance - annualTax
 ```
 
-### Key Differences Table (2026)
+The 20% withholding default is an explicit scenario assumption, not a universal rule. Actual withholding, including zero, overrides it and affects settlement only. The qualifying invoice scenario does not charge a business tax advance.
 
-| Aspect              | Μπλοκάκι (conditions met)         | Regular Self-Employed           |
-| ------------------- | --------------------------------- | ------------------------------- |
-| Tax scale           | Employee (with family reductions) | Standard (no family reductions) |
-| Tax credit (777+)   | YES                               | NO                              |
-| Prepayment          | NO                                | YES (27.5%/55%)                 |
-| Telos epitideumatos | ABOLISHED                         | ABOLISHED                       |
-| Presumptive income  | EXEMPT                            | From 4th year                   |
-| 20% withholding     | YES (by client)                   | NO                              |
-| Expense deductions  | Limited (mainly EFKA)             | Full business expenses          |
-| First 3yr benefit   | N/A                               | 50% off first bracket           |
+## Presentation and verification
 
----
+Effective rates consistently include income tax and worker insurance, divided by gross income. Summary and comparison totals exclude the new advance, matching economic net income. Comparison assumes age 35, no children, first-category insurance, no extras or expenses, fourth business year and qualifying Article 12 tax treatment. It requires a supplied business minimum. Employee gross uses 14 salary units; business gross uses 12 months, so annual gross amounts differ at the same monthly input.
 
-## Implementation Notes
-
-### calculateTax(income, children, age) pseudocode
-
-```javascript
-function calculateTax(income, children = 0, age = 35, isEmployee = true) {
-  // Define bracket rates based on children and age
-  let brackets = [
-    { limit: 10000, rate: 0.09 },
-    { limit: 20000, rate: 0.2 },
-    { limit: 30000, rate: 0.26 },
-    { limit: 40000, rate: 0.34 },
-    { limit: 60000, rate: 0.39 },
-    { limit: Infinity, rate: 0.44 },
-  ];
-
-  // Youth: age <= 25 → first two brackets at 0%
-  if (age <= 25) {
-    brackets[0].rate = 0;
-    brackets[1].rate = 0;
-  }
-  // Youth: age 26-30 → second bracket at 9%
-  else if (age <= 30) {
-    brackets[1].rate = 0.09;
-  }
-
-  // Family reductions on 2nd bracket (employees/mplokaki only)
-  if (isEmployee && age > 30) {
-    if (children === 1) brackets[1].rate = 0.18;
-    else if (children === 2) brackets[1].rate = 0.16;
-    else if (children === 3) brackets[1].rate = 0.09;
-    else if (children >= 4) brackets[1].rate = 0;
-  }
-
-  // Family reductions on 3rd bracket (employees/mplokaki only)
-  if (isEmployee && age > 30) {
-    if (children === 1) brackets[2].rate = 0.24;
-    else if (children === 2) brackets[2].rate = 0.22;
-    else if (children === 3) brackets[2].rate = 0.2;
-    else if (children === 4) brackets[2].rate = 0.18;
-    else if (children >= 5) brackets[2].rate = 0.16;
-  }
-
-  let tax = 0;
-  let prev = 0;
-  for (const bracket of brackets) {
-    const taxable = Math.min(income, bracket.limit) - prev;
-    if (taxable <= 0) break;
-    tax += taxable * bracket.rate;
-    prev = bracket.limit;
-  }
-
-  return tax;
-}
-```
+Regression tests cover statutory amount tables, family and age boundaries, proportional credit taper and liability cap, revenue eligibility limits, explicit minimum-income handling, worker-only insurance, actual withholding, first-declaration advances, UI validation and reconciliation of comparison totals.

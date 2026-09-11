@@ -1,57 +1,76 @@
-import * as React from "react";
-import { useRef } from "react";
+import { useRef, type KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
-import type { Mode } from "@/types/calculator";
 
-export function SegmentedControl({
+interface SegmentedControlProps<T extends string> {
+  options: readonly { id: T; label: string }[];
+  value: T;
+  onChange: (value: T) => void;
+  label: string;
+  compact?: boolean;
+}
+
+export function SegmentedControl<T extends string>({
   options,
   value,
   onChange,
-}: {
-  options: { id: Mode; label: string }[];
-  value: Mode;
-  onChange: (v: Mode) => void;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  label,
+  compact = false,
+}: SegmentedControlProps<T>) {
+  const ref = useRef<HTMLDivElement>(null);
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-    const currentIndex = options.findIndex((opt) => opt.id === value);
-    let nextIndex: number;
-    if (e.key === "ArrowRight") {
-      nextIndex = (currentIndex + 1) % options.length;
-    } else {
-      nextIndex = (currentIndex - 1 + options.length) % options.length;
+  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    const index = options.findIndex((option) => option.id === value);
+    let next: number;
+    switch (event.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        next = (index + 1) % options.length;
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        next = (index - 1 + options.length) % options.length;
+        break;
+      case "Home":
+        next = 0;
+        break;
+      case "End":
+        next = options.length - 1;
+        break;
+      default:
+        return;
     }
-    onChange(options[nextIndex]!.id);
-    const buttons =
-      containerRef.current?.querySelectorAll<HTMLButtonElement>("button");
-    buttons?.[nextIndex]?.focus();
+    event.preventDefault();
+    const option = options[next];
+    if (!option) return;
+    onChange(option.id);
+    ref.current?.querySelectorAll<HTMLButtonElement>("button")[next]?.focus();
   }
 
   return (
     <div
-      ref={containerRef}
+      ref={ref}
       role="radiogroup"
-      aria-label="Τρόπος απασχόλησης"
-      className="flex w-full sm:w-auto rounded-2xl bg-secondary/60 p-1.5 gap-1"
+      aria-label={label}
       onKeyDown={handleKeyDown}
+      className={cn("flex rounded-xl bg-secondary/60 p-1 gap-0.5", !compact && "w-full sm:w-auto")}
     >
-      {options.map((opt) => (
+      {options.map((option) => (
         <button
-          key={opt.id}
+          key={option.id}
+          type="button"
           role="radio"
-          aria-checked={value === opt.id}
-          tabIndex={value === opt.id ? 0 : -1}
-          onClick={() => onChange(opt.id)}
+          aria-checked={value === option.id}
+          tabIndex={value === option.id ? 0 : -1}
+          onClick={() => onChange(option.id)}
           className={cn(
-            "flex-1 rounded-xl px-4 sm:px-6 py-2.5 text-sm font-medium text-center transition-all duration-200",
-            value === opt.id
-              ? "bg-background text-foreground shadow-sm ring-1 ring-border/80 font-semibold"
+            "min-w-0 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            compact ? "px-2.5 py-1.5 text-xs" : "flex-1 px-2 sm:px-5 py-2.5 text-sm",
+            value === option.id
+              ? "bg-background text-foreground shadow-sm ring-1 ring-border/80"
               : "text-muted-foreground hover:text-foreground hover:bg-background/60",
           )}
         >
-          {opt.label}
+          {option.label}
         </button>
       ))}
     </div>

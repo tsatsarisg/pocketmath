@@ -1,19 +1,19 @@
-// Input sanitization helpers for the calculator delivery layer.
-// These normalize the raw string values from text/number inputs before they
-// reach the pure tax domain. They live here (not in src/lib/tax) so the domain
-// stays free of UI-string concerns.
+export type NumericField = "monthly" | "expenses" | "amount" | "age" | "children" | "years";
+export type FieldError = "required" | "amount" | "age" | "children" | "years";
 
-/** Parse a string to a non-negative float, falling back to `fallback` (default 0). */
-export function parseNonNegative(value: string, fallback = 0): number {
-  return Math.max(0, parseFloat(value) || fallback);
+export function validateField(value: string, field: NumericField): FieldError | undefined {
+  if (!value.trim()) return "required";
+  const normalized = value.trim().replace(",", ".");
+  const number = Number(normalized);
+  const error = field === "monthly" || field === "expenses" || field === "amount" ? "amount" : field;
+  if (!/^\d+(?:\.\d+)?$/.test(normalized) || !Number.isFinite(number)) return error;
+  if (error === "amount") return number <= 10_000_000 ? undefined : error;
+  if (!Number.isSafeInteger(number)) return error;
+  if (field === "age") return number >= 16 && number <= 120 ? undefined : error;
+  if (field === "children") return number <= 10 ? undefined : error;
+  return number >= 1 ? undefined : error;
 }
 
-/** Parse a string to a non-negative integer, falling back to `fallback` (default 0). */
-export function parseNonNegativeInt(value: string, fallback = 0): number {
-  return Math.max(0, parseInt(value, 10) || fallback);
-}
-
-/** Parse and clamp an age string into the domain-valid range [16, 120]. */
-export function clampAge(value: string, fallback = 35): number {
-  return Math.min(120, Math.max(16, parseInt(value, 10) || fallback));
+export function parseField(value: string, field: NumericField): number | null {
+  return validateField(value, field) ? null : Number(value.trim().replace(",", "."));
 }

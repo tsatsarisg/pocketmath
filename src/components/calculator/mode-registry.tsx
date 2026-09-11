@@ -8,15 +8,8 @@ import { EmployeeBreakdown } from "@/components/calculator/employee-breakdown";
 import { SelfEmployedBreakdown } from "@/components/calculator/self-employed-breakdown";
 import { MplokakiBreakdown } from "@/components/calculator/mplokaki-breakdown";
 
-// Single source of truth for the per-mode delivery wiring.
-//
-// Each mode maps to: the inputs renderer (fed the grouped state from the hook),
-// the breakdown renderer (fed that mode's result + period), and the i18n key
-// announced to assistive tech when the mode is selected. Render *functions*
-// (not bare components) are used because each mode pulls a different slice of
-// the CalculatorReturn — this keeps page.tsx free of `mode === ...` branches:
-// adding a mode means adding one entry here (plus its state in the hook).
 export interface ModeConfig {
+  labelKey: string;
   /** i18n key for the aria-live mode-change announcement. */
   a11yKey: string;
   /** Renders the mode's input fields from the calculator state. */
@@ -27,6 +20,7 @@ export interface ModeConfig {
 
 export const MODE_REGISTRY: { [K in Mode]: ModeConfig } = {
   employee: {
+    labelKey: "modes.employee",
     a11yKey: "a11y.modeEmployee",
     renderInputs: (calc) => <EmployeeInputs state={calc.emp} />,
     renderBreakdown: (calc, period) =>
@@ -35,6 +29,7 @@ export const MODE_REGISTRY: { [K in Mode]: ModeConfig } = {
       ) : null,
   },
   "self-employed": {
+    labelKey: "modes.selfEmployed",
     a11yKey: "a11y.modeSelfEmployed",
     renderInputs: (calc) => <SelfEmployedInputs state={calc.se} />,
     renderBreakdown: (calc, period) =>
@@ -43,6 +38,7 @@ export const MODE_REGISTRY: { [K in Mode]: ModeConfig } = {
       ) : null,
   },
   mplokaki: {
+    labelKey: "modes.mplokaki",
     a11yKey: "a11y.modeMplokaki",
     renderInputs: (calc) => <MplokakiInputs state={calc.mp} />,
     renderBreakdown: (calc, period) =>

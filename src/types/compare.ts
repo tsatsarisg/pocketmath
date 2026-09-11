@@ -1,6 +1,7 @@
 import type { CompareEntry } from "@/lib/tax/compare";
 
-export type ModeKey = "employee" | "selfEmployed" | "mplokaki";
+import type { Mode } from "./calculator";
+export type ModeKey = Mode;
 
 export interface RankedEntry {
   key: ModeKey;

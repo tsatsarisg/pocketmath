@@ -100,7 +100,7 @@ const jsonLdFaq = {
       name: "Τι είναι το μπλοκάκι και πώς φορολογείται;",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Το μπλοκάκι (Άρθρο 12 ΚΦΕ) είναι τρόπος παροχής υπηρεσιών με δελτία παροχής. Φορολογείται ως μισθωτή εργασία, με παρακράτηση 20% από τον εκδότη. Συνδυάζεται με εισφορές ΕΦΚΑ.",
+        text: "Το μπλοκάκι (Άρθρο 12 ΚΦΕ) είναι τρόπος παροχής υπηρεσιών με δελτία παροχής. Εφόσον πληρούνται οι προϋποθέσεις του άρθρου 12 παρ. 2 στ΄, φορολογείται ως μισθωτή εργασία. Η παρακράτηση φόρου και ο τρόπος ασφάλισης εξαρτώνται από την περίπτωση.",
       },
     },
     {
@@ -127,8 +127,10 @@ export default function RootLayout({
 
           GitHub Pages serves plain files and cannot send custom response
           headers, so the authoritative CSP in next.config.ts (headers()) does
-          NOT apply on that host. This <meta> tag mirrors the production
-          (non-dev) CSP so the policy still reaches the browser on Pages.
+          NOT apply on that host. This <meta> tag mirrors the header CSP so
+          the policy still reaches the browser on Pages. Both policies must
+          allow unsafe-eval in development for React's debugging features;
+          a stricter meta policy would still block it despite the header.
 
           IMPORTANT LIMITATIONS — a CSP delivered via <meta> is weaker than one
           sent as a header:
@@ -146,7 +148,7 @@ export default function RootLayout({
           httpEquiv="Content-Security-Policy"
           content={[
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline'",
+            `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: https:",
             "font-src 'self'",

@@ -1,102 +1,37 @@
-import type { SelfEmployedInput, SelfEmployedResult } from "./types";
-import {
-  FIRST_YEAR_BRACKET_DISCOUNT,
-  FIRST_YEAR_BENEFIT_MAX_YEARS,
-  STANDARD_BRACKETS,
-  getEfkaCategory,
-  getPrepaymentRate,
-} from "./constants";
+import { SelfEmployedInputSchema, type SelfEmployedInput, type SelfEmployedResult } from "./types";
+import { FIRST_YEAR_BRACKET_DISCOUNT, FIRST_YEAR_BENEFIT_MAX_YEARS, getPrepaymentRate } from "./constants";
+import { getAnnualEfka } from "./efka";
 import { calculateTax } from "./calculate-tax";
 
-/**
- * Calculate the first-3-years benefit: 50% reduction on the first bracket
- * (9% becomes 4.5% on income up to 10,000).
- *
- * Returns the amount saved (not the total tax).
- */
-function firstYearBenefitAmount(
-  taxableIncome: number,
-  yearsInBusiness: number,
-): number {
-  if (yearsInBusiness > FIRST_YEAR_BENEFIT_MAX_YEARS) return 0;
-
-  // The benefit is 50% off the first bracket (0–10,000 at 9%)
-  const firstBracketIncome = Math.min(
-    Math.max(0, taxableIncome),
-    STANDARD_BRACKETS[0]!.limit,
-  );
-  const normalTax = firstBracketIncome * STANDARD_BRACKETS[0]!.rate;
-  const discountedTax = normalTax * FIRST_YEAR_BRACKET_DISCOUNT;
-
-  return Math.round(discountedTax * 100) / 100;
-}
-
-/**
- * Calculate the full tax breakdown for a self-employed individual (Ατομική Επιχείρηση).
- *
- * Formula (2026):
- *   annualEFKA      = selectedCategory.monthly x 12
- *   taxableIncome   = max(0, annualRevenue - annualExpenses - annualEFKA)
- *   annualTax       = calculateTax(taxableIncome, 0, age, isEmployee=false)
- *                     // NO tax credit, NO family reductions
- *   First 3 years:    50% reduction on first bracket (9% -> 4.5% on first 10k)
- *   prepay           = annualTax x prepaymentRate
- *   annualNet        = annualRevenue - annualExpenses - annualEFKA - annualTax
- */
-export function calculateSelfEmployed(
-  input: SelfEmployedInput,
-): SelfEmployedResult {
-  const { annualRevenue, annualExpenses, efkaCategory, age, yearsInBusiness } =
-    input;
-
-  const category = getEfkaCategory(efkaCategory);
-  const annualEFKA = Math.round(category.monthly * 12 * 100) / 100;
-
-  const taxableIncome = Math.max(
-    0,
-    Math.round((annualRevenue - annualExpenses - annualEFKA) * 100) / 100,
-  );
-
-  // Self-employed: no family reductions (children=0, isEmployee=false)
-  const taxBreakdown = calculateTax(taxableIncome, 0, age, false);
+/** Full-year business estimate with the applicable minimum supplied after all adjustments. */
+export function calculateSelfEmployed(input: SelfEmployedInput): SelfEmployedResult {
+  const { annualRevenue, annualExpenses, efkaCategory, age, yearsInBusiness,
+    children = 0, additionalMonthlyInsurance = 0, firstIncomeDeclaration = false, minimumTaxableIncome: suppliedMinimum } = SelfEmployedInputSchema.parse(input);
+  if (yearsInBusiness > 3 && suppliedMinimum === undefined) {
+    throw new Error("The applicable annual minimum taxable income is required after year three.");
+  }
+  if (efkaCategory === "special" && yearsInBusiness > 5) {
+    throw new Error("The special EFKA category requires eligibility within the first five years.");
+  }
+  const round = (amount: number) => Math.round(amount * 100) / 100;
+  const annualEFKA = round(getAnnualEfka(efkaCategory) + additionalMonthlyInsurance * 12);
+  const actualProfit = round(annualRevenue - annualExpenses - annualEFKA);
+  const minimumTaxableIncome = yearsInBusiness <= 3 ? 0 : suppliedMinimum!;
+  const taxableIncome = Math.max(0, actualProfit, minimumTaxableIncome);
+  const taxBreakdown = calculateTax(taxableIncome, children, age);
   const grossTax = taxBreakdown.grossTax;
-
-  // First 3 years benefit: 50% off first bracket
-  const firstYearBenefit = firstYearBenefitAmount(
-    taxableIncome,
-    yearsInBusiness,
-  );
-  const annualTax =
-    Math.round(Math.max(0, grossTax - firstYearBenefit) * 100) / 100;
-
-  // Prepayment
-  const prepaymentRate = getPrepaymentRate(yearsInBusiness);
-  const prepayment = Math.round(annualTax * prepaymentRate * 100) / 100;
-  const totalTaxWithPrepayment =
-    Math.round((annualTax + prepayment) * 100) / 100;
-
-  const annualNet =
-    Math.round(
-      (annualRevenue - annualExpenses - annualEFKA - annualTax) * 100,
-    ) / 100;
-  const monthlyNet = Math.round((annualNet / 12) * 100) / 100;
-
-  const effectiveTaxRate = annualRevenue > 0 ? annualTax / annualRevenue : 0;
-
-  return {
-    annualRevenue,
-    annualExpenses,
-    annualEFKA,
-    taxableIncome,
-    grossTax,
-    firstYearBenefit,
-    annualTax,
-    prepaymentRate,
-    prepayment,
-    totalTaxWithPrepayment,
-    annualNet,
-    monthlyNet,
-    effectiveTaxRate,
-    taxBreakdown,
-  };
+  // Relief halves the actual first-bracket tax, so youth/family exemptions cannot be deducted twice.
+  const eligible = yearsInBusiness <= FIRST_YEAR_BENEFIT_MAX_YEARS && annualRevenue <= 10_000;
+  const firstYearBenefit = eligible ? round((taxBreakdown.brackets[0]?.tax ?? 0) * FIRST_YEAR_BRACKET_DISCOUNT) : 0;
+  const annualTax = round(Math.max(0, grossTax - firstYearBenefit));
+  const prepaymentRate = getPrepaymentRate(firstIncomeDeclaration);
+  const prepayment = round(annualTax * prepaymentRate);
+  const totalTaxWithPrepayment = round(annualTax + prepayment);
+  const annualNet = round(actualProfit - annualTax);
+  const monthlyNet = round(annualNet / 12);
+  const netAfterPrepayment = round(annualNet - prepayment);
+  const effectiveTaxRate = annualRevenue > 0 ? (annualTax + annualEFKA) / annualRevenue : 0;
+  return { annualRevenue, annualExpenses, annualEFKA, actualProfit, minimumTaxableIncome,
+    taxableIncome, grossTax, firstYearBenefit, annualTax, prepaymentRate, prepayment,
+    totalTaxWithPrepayment, annualNet, monthlyNet, netAfterPrepayment, effectiveTaxRate, taxBreakdown };
 }

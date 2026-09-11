@@ -3,26 +3,10 @@ import { useTranslation } from "react-i18next";
 import { calculateEmployee } from "@/lib/tax/employee";
 import { calculateSelfEmployed } from "@/lib/tax/self-employed";
 import { calculateMplokaki } from "@/lib/tax/mplokaki";
-import type { EfkaCategoryId } from "@/lib/tax/types";
-import type { EmployeeResult } from "@/lib/tax/types";
-import type { SelfEmployedResult } from "@/lib/tax/types";
-import type { MplokakiResult } from "@/lib/tax/types";
+import type { EfkaCategoryId, EmployeeResult, SelfEmployedResult, MplokakiResult } from "@/lib/tax/types";
 import type { Mode, Period } from "@/types/calculator";
-import { fmt } from "@/lib/format";
-import { parseNonNegative, parseNonNegativeInt, clampAge } from "@/lib/parse";
-import { getAvailableCategories } from "@/lib/tax/efka";
-
-export interface Stats {
-  grossLabel: string;
-  grossValue: string;
-  grossSub: string;
-  taxLabel: string;
-  taxValue: string;
-  taxSub: string;
-  netLabel: string;
-  netValue: string;
-  netSub: string;
-}
+import { getCalculatorStats, type Stats } from "@/lib/calculator-stats";
+import { parseField } from "@/lib/parse";
 
 export interface EmployeeState {
   monthly: string;
@@ -34,6 +18,14 @@ export interface EmployeeState {
 }
 
 export interface SelfEmployedState {
+  children: string;
+  setChildren: (v: string) => void;
+  minimumIncome: string;
+  setMinimumIncome: (v: string) => void;
+  additionalInsurance: string;
+  setAdditionalInsurance: (v: string) => void;
+  firstDeclaration: boolean;
+  setFirstDeclaration: (v: boolean) => void;
   monthly: string;
   setMonthly: (v: string) => void;
   expenses: string;
@@ -47,6 +39,18 @@ export interface SelfEmployedState {
 }
 
 export interface MplokakiState {
+  qualified: boolean;
+  setQualified: (v: boolean) => void;
+  insuranceMethod: "category" | "article39";
+  setInsuranceMethod: (v: "category" | "article39") => void;
+  workerInsurance: string;
+  setWorkerInsurance: (v: string) => void;
+  additionalInsurance: string;
+  setAdditionalInsurance: (v: string) => void;
+  actualWithholding: boolean;
+  setActualWithholding: (v: boolean) => void;
+  withheld: string;
+  setWithheld: (v: string) => void;
   monthly: string;
   setMonthly: (v: string) => void;
   efka: EfkaCategoryId;
@@ -77,6 +81,11 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   const [empChildren, setEmpChildren] = useState("0");
   const [empAge, setEmpAge] = useState("35");
 
+  const [seChildren, setSeChildren] = useState("0");
+  const [seMinimumIncome, setSeMinimumIncome] = useState("");
+  const [seAdditionalInsurance, setSeAdditionalInsurance] = useState("0");
+  const [seFirstDeclaration, setSeFirstDeclaration] = useState(false);
+
   // Self-employed state
   const [seMonthly, setSeMonthly] = useState("");
   const [seExpenses, setSeExpenses] = useState("0");
@@ -84,140 +93,79 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   const [seYears, setSeYears] = useState("4");
   const [seAge, setSeAge] = useState("35");
 
+  const [mpQualified, setMpQualified] = useState(false);
+  const [mpInsuranceMethod, setMpInsuranceMethod] = useState<"category" | "article39">("category");
+  const [mpWorkerInsurance, setMpWorkerInsurance] = useState("");
+  const [mpAdditionalInsurance, setMpAdditionalInsurance] = useState("0");
+  const [mpActualWithholding, setMpActualWithholding] = useState(false);
+  const [mpWithheld, setMpWithheld] = useState("");
+
   // Mplokaki state
   const [mpMonthly, setMpMonthly] = useState("");
   const [mpEfka, setMpEfka] = useState<EfkaCategoryId>("1st");
   const [mpChildren, setMpChildren] = useState("0");
   const [mpAge, setMpAge] = useState("35");
 
-  // The "special" EFKA category is only offered for <=5 years in business
-  // (see getAvailableCategories). Rather than mutate state during render when
-  // years grows past 5, we derive the *effective* category here: if the stored
-  // selection is no longer available for the current years, fall back to "1st".
-  // This keeps render pure and avoids a double-render from a corrective effect.
-  const effectiveSeEfka: EfkaCategoryId = useMemo(() => {
-    const available = getAvailableCategories(Number(seYears));
-    return available.some((c) => c.id === seEfka) ? seEfka : "1st";
-  }, [seEfka, seYears]);
+  function updateSeYears(value: string) {
+    setSeYears(value);
+    const years = parseField(value, "years");
+    if (years !== null && years > 5 && seEfka === "special") setSeEfka("1st");
+  }
 
   // Calculations
   const empResult = useMemo(() => {
-    try {
-      const monthlyGross = parseNonNegative(empMonthly);
-      const children = parseNonNegativeInt(empChildren);
-      const age = clampAge(empAge);
-      return calculateEmployee({ monthlyGross, children, age });
-    } catch {
-      return null;
-    }
+    const monthlyGross = parseField(empMonthly, "monthly");
+    const children = parseField(empChildren, "children");
+    const age = parseField(empAge, "age");
+    if (monthlyGross === null || children === null || age === null) return null;
+    return calculateEmployee({ monthlyGross, children, age });
   }, [empMonthly, empChildren, empAge]);
 
   const seResult = useMemo(() => {
-    try {
-      const annualRevenue = parseNonNegative(seMonthly) * 12;
-      const annualExpenses = parseNonNegative(seExpenses) * 12;
-      const yearsInBusiness = Math.max(1, parseInt(seYears, 10) || 4);
-      const age = clampAge(seAge);
-      return calculateSelfEmployed({
-        annualRevenue,
-        annualExpenses,
-        efkaCategory: effectiveSeEfka,
-        age,
-        yearsInBusiness,
-      });
-    } catch {
-      return null;
-    }
-  }, [seMonthly, seExpenses, effectiveSeEfka, seYears, seAge]);
+    const monthlyRevenue = parseField(seMonthly, "monthly");
+    const monthlyExpenses = parseField(seExpenses, "expenses");
+    const yearsInBusiness = parseField(seYears, "years");
+    const age = parseField(seAge, "age");
+    const children = parseField(seChildren, "children");
+    const minimumTaxableIncome = yearsInBusiness !== null && yearsInBusiness <= 3 ? 0 : parseField(seMinimumIncome, "amount");
+    const additionalMonthlyInsurance = parseField(seAdditionalInsurance, "amount");
+    if (children === null || minimumTaxableIncome === null || additionalMonthlyInsurance === null) return null;
+    if (monthlyRevenue === null || monthlyExpenses === null || yearsInBusiness === null || age === null) return null;
+    return calculateSelfEmployed({
+      minimumTaxableIncome,
+      children,
+      additionalMonthlyInsurance,
+      firstIncomeDeclaration: seFirstDeclaration,
+      annualRevenue: monthlyRevenue * 12,
+      annualExpenses: monthlyExpenses * 12,
+      efkaCategory: seEfka,
+      age,
+      yearsInBusiness,
+    });
+  }, [seMonthly, seExpenses, seEfka, seYears, seAge, seChildren, seMinimumIncome, seAdditionalInsurance, seFirstDeclaration]);
 
   const mpResult = useMemo(() => {
-    try {
-      const annualGrossInvoiced = parseNonNegative(mpMonthly) * 12;
-      const children = parseNonNegativeInt(mpChildren);
-      const age = clampAge(mpAge);
-      return calculateMplokaki({
-        annualGrossInvoiced,
-        efkaCategory: mpEfka,
-        children,
-        age,
-      });
-    } catch {
-      return null;
-    }
-  }, [mpMonthly, mpEfka, mpChildren, mpAge]);
+    const monthlyInvoiced = parseField(mpMonthly, "monthly");
+    const children = parseField(mpChildren, "children");
+    const age = parseField(mpAge, "age");
+    const contribution = parseField(mpInsuranceMethod === "article39" ? mpWorkerInsurance : mpAdditionalInsurance, "amount");
+    const annualWithheld = mpActualWithholding ? parseField(mpWithheld, "amount") : undefined;
+    if (!mpQualified || contribution === null || annualWithheld === null) return null;
+    if (monthlyInvoiced === null || children === null || age === null) return null;
+    return calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      insurance: mpInsuranceMethod === "article39"
+        ? { kind: "article39", annualWorkerContributions: contribution }
+        : { kind: "category", additionalMonthly: contribution },
+      annualWithheld,
+      annualGrossInvoiced: monthlyInvoiced * 12,
+      efkaCategory: mpEfka,
+      children,
+      age,
+    });
+  }, [mpMonthly, mpEfka, mpChildren, mpAge, mpQualified, mpInsuranceMethod, mpWorkerInsurance, mpAdditionalInsurance, mpActualWithholding, mpWithheld]);
 
-  // Derived display values.
-  //
-  // Each mode turns its (annual) domain result into the same three-stat shape.
-  // Rather than a three-way `mode === ...` branch, we look up a per-mode adapter
-  // keyed by Mode. To add/adjust a mode's stats you edit exactly one entry here.
-  // The shared period scaffolding (monthly flag + period label) is computed once
-  // and passed in, so adapters only express what differs between modes.
-  const stats = useMemo(() => {
-    const m = period === "monthly";
-    const periodLabel = m ? t("results.perMonth") : t("results.perYear");
-
-    const adapters: { [K in Mode]: () => Stats | null } = {
-      employee: () => {
-        if (!empResult) return null;
-        const gross = m ? empResult.monthlyGross : empResult.annualGross;
-        const tax = m
-          ? empResult.annualTax / 14 + empResult.annualEmployeeSS / 14
-          : empResult.annualTax + empResult.annualEmployeeSS;
-        const net = m ? empResult.monthlyNet : empResult.annualNet;
-        return {
-          grossLabel: t("results.gross"),
-          grossValue: fmt(gross),
-          grossSub: periodLabel,
-          taxLabel: t("results.taxAndContributions"),
-          taxValue: fmt(tax),
-          taxSub: periodLabel,
-          netLabel: t("results.net"),
-          netValue: fmt(net),
-          netSub: periodLabel,
-        };
-      },
-      "self-employed": () => {
-        if (!seResult) return null;
-        const div = m ? 12 : 1;
-        const gross = seResult.annualRevenue / div;
-        const tax =
-          (seResult.annualTax + seResult.annualEFKA + seResult.prepayment) / div;
-        const net = seResult.annualNet / div;
-        return {
-          grossLabel: t("results.revenue"),
-          grossValue: fmt(gross),
-          grossSub: periodLabel,
-          taxLabel: t("results.taxAndEfka"),
-          taxValue: fmt(tax),
-          taxSub: periodLabel,
-          netLabel: t("results.net"),
-          netValue: fmt(net),
-          netSub: periodLabel,
-        };
-      },
-      mplokaki: () => {
-        if (!mpResult) return null;
-        const div = m ? 12 : 1;
-        const gross = mpResult.annualGrossInvoiced / div;
-        const tax = (mpResult.annualTax + mpResult.annualEFKA) / div;
-        const net = mpResult.annualNet / div;
-        return {
-          grossLabel: t("results.invoiced"),
-          grossValue: fmt(gross),
-          grossSub: periodLabel,
-          taxLabel: t("results.taxAndEfka"),
-          taxValue: fmt(tax),
-          taxSub: periodLabel,
-          netLabel: t("results.net"),
-          netValue: fmt(net),
-          netSub: periodLabel,
-        };
-      },
-    };
-
-    return adapters[mode]();
-  }, [mode, period, empResult, seResult, mpResult, t]);
+  const stats = getCalculatorStats(mode, period, empResult, seResult, mpResult, t);
 
   // Gate results on actual user input. The "primary" revenue field differs per
   // mode, so look it up rather than branching by hand.
@@ -226,8 +174,7 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     "self-employed": seMonthly,
     mplokaki: mpMonthly,
   };
-  const hasUserInput =
-    primaryInput[mode] !== "" && primaryInput[mode] !== "0";
+  const hasUserInput = primaryInput[mode] !== "";
 
   const hasResult = stats !== null && hasUserInput;
 
@@ -241,6 +188,10 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
       setAge: setEmpAge,
     },
     se: {
+      children: seChildren, setChildren: setSeChildren,
+      minimumIncome: seMinimumIncome, setMinimumIncome: setSeMinimumIncome,
+      additionalInsurance: seAdditionalInsurance, setAdditionalInsurance: setSeAdditionalInsurance,
+      firstDeclaration: seFirstDeclaration, setFirstDeclaration: setSeFirstDeclaration,
       monthly: seMonthly,
       setMonthly: setSeMonthly,
       expenses: seExpenses,
@@ -248,11 +199,17 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
       efka: seEfka,
       setEfka: setSeEfka,
       years: seYears,
-      setYears: setSeYears,
+      setYears: updateSeYears,
       age: seAge,
       setAge: setSeAge,
     },
     mp: {
+      qualified: mpQualified, setQualified: setMpQualified,
+      insuranceMethod: mpInsuranceMethod, setInsuranceMethod: setMpInsuranceMethod,
+      workerInsurance: mpWorkerInsurance, setWorkerInsurance: setMpWorkerInsurance,
+      additionalInsurance: mpAdditionalInsurance, setAdditionalInsurance: setMpAdditionalInsurance,
+      actualWithholding: mpActualWithholding, setActualWithholding: setMpActualWithholding,
+      withheld: mpWithheld, setWithheld: setMpWithheld,
       monthly: mpMonthly,
       setMonthly: setMpMonthly,
       efka: mpEfka,

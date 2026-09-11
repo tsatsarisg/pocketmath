@@ -3,9 +3,9 @@
  *
  * Key formula (2026):
  *   annualGross      = monthlyGross × 14  (12 salaries + Christmas + Easter + Summer)
- *   annualEmployeeSS = min(monthlyGross, 7,761.94) × 14 × 13.87%
+ *   annualEmployeeSS = min(monthlyGross, 7,761.94) × 14 × 13.37%
  *   taxableIncome    = annualGross − annualEmployeeSS
- *   grossTax         = progressive brackets (isEmployee=true, age, children)
+ *   grossTax         = progressive brackets (age, children)
  *   taxCredit        = phase-out formula per children / taxableIncome
  *   annualTax        = max(0, grossTax − taxCredit)
  *   annualNet        = annualGross − annualEmployeeSS − annualTax
@@ -15,7 +15,7 @@
  * All monetary amounts are rounded to 2 dp at each step.
  *
  * Constants used:
- *   EMPLOYEE_SS_RATE          = 0.1387
+ *   EMPLOYEE_SS_RATE          = 0.1337
  *   EMPLOYER_SS_RATE          = 0.2179
  *   EMPLOYEE_SS_CEILING_MONTHLY = 7,761.94
  *   SALARY_MONTHS             = 14
@@ -23,7 +23,6 @@
 import { describe, it, expect } from "vitest";
 import { calculateEmployee } from "../employee";
 import {
-  EMPLOYEE_SS_RATE,
   EMPLOYER_SS_RATE,
   SALARY_MONTHS,
   EMPLOYEE_SS_CEILING_MONTHLY,
@@ -32,11 +31,6 @@ import {
 // ---------------------------------------------------------------------------
 // Helper — derive expected values from constants for resilience to future changes
 // ---------------------------------------------------------------------------
-
-function expectedSS(monthlyGross: number) {
-  const effective = Math.min(monthlyGross, EMPLOYEE_SS_CEILING_MONTHLY);
-  return Math.round(effective * SALARY_MONTHS * EMPLOYEE_SS_RATE * 100) / 100;
-}
 
 function expectedEmployerSS(monthlyGross: number) {
   const effective = Math.min(monthlyGross, EMPLOYEE_SS_CEILING_MONTHLY);
@@ -54,9 +48,10 @@ describe("calculateEmployee — basic case (monthlyGross=2000, children=0, age=3
     expect(result.annualGross).toBe(2_000 * SALARY_MONTHS);
   });
 
-  it("annualEmployeeSS is 13.87% of 14 monthly salaries below ceiling", () => {
-    // round(2000 * 14 * 0.1387 * 100) / 100 = round(388360) / 100 = 3883.60
-    expect(result.annualEmployeeSS).toBeCloseTo(expectedSS(2_000), 2);
+  it("annualEmployeeSS is 13.37% of 14 monthly salaries below ceiling", () => {
+    // Fixed 2026 reference: EUR 28,000 × 13.37% = EUR 3,743.60.
+    // Keep this independent of the imported rate so an incorrect constant fails.
+    expect(result.annualEmployeeSS).toBe(3_743.60);
   });
 
   it("taxableIncome = annualGross − annualEmployeeSS", () => {
@@ -121,7 +116,8 @@ describe("calculateEmployee — SS ceiling (monthlyGross > EMPLOYEE_SS_CEILING_M
   });
 
   it("SS is capped: the result equals what the ceiling monthly produces, not the actual salary", () => {
-    expect(result.annualEmployeeSS).toBeCloseTo(expectedSS(aboveCeiling), 2);
+    // EUR 7,761.94 × 14 × 13.37%, rounded to cents.
+    expect(result.annualEmployeeSS).toBe(14_528.80);
     // The ceiling-capped amount must equal the at-ceiling amount
     expect(result.annualEmployeeSS).toBeCloseTo(resultAtCeiling.annualEmployeeSS, 2);
   });
@@ -173,9 +169,9 @@ describe("calculateEmployee — tax credit and family reductions", () => {
   });
 
   it("taxCredit increases with number of children", () => {
-    const c0 = calculateEmployee({ monthlyGross: 800, children: 0, age: 35 });
-    const c1 = calculateEmployee({ monthlyGross: 800, children: 1, age: 35 });
-    const c2 = calculateEmployee({ monthlyGross: 800, children: 2, age: 35 });
+    const c0 = calculateEmployee({ monthlyGross: 1500, children: 0, age: 35 });
+    const c1 = calculateEmployee({ monthlyGross: 1500, children: 1, age: 35 });
+    const c2 = calculateEmployee({ monthlyGross: 1500, children: 2, age: 35 });
     expect(c1.taxCredit).toBeGreaterThan(c0.taxCredit);
     expect(c2.taxCredit).toBeGreaterThan(c1.taxCredit);
   });
@@ -199,6 +195,14 @@ describe("calculateEmployee — tax credit and family reductions", () => {
 // ---------------------------------------------------------------------------
 
 describe("calculateEmployee — age-based youth reductions", () => {
+  it("uses the corrected contributions in net pay when income tax is zero", () => {
+    const result = calculateEmployee({ monthlyGross: 1_000, children: 0, age: 25 });
+    expect(result.annualEmployeeSS).toBe(1_871.80);
+    expect(result.annualTax).toBe(0);
+    expect(result.annualNet).toBe(12_128.20);
+    expect(result.monthlyNet).toBe(866.30);
+  });
+
   it("age <=25 produces lower annualTax than age 35 at the same salary", () => {
     const young = calculateEmployee({ monthlyGross: 2_000, children: 0, age: 22 });
     const adult = calculateEmployee({ monthlyGross: 2_000, children: 0, age: 35 });
