@@ -1,5 +1,9 @@
 import type { EfkaCategory, EfkaCategoryId } from "./types";
-import { EFKA_CATEGORIES, getEfkaCategory, UNEMPLOYMENT_CONTRIBUTION_MONTHLY } from "./constants";
+import {
+  EFKA_CATEGORIES,
+  getEfkaCategory,
+  UNEMPLOYMENT_CONTRIBUTION_MONTHLY,
+} from "./constants";
 
 /**
  * Get all available EFKA insurance categories.
@@ -19,7 +23,13 @@ export function getAnnualEfka(categoryId: EfkaCategoryId): number {
  * Calculate monthly EFKA cost for a given category.
  */
 export function getMonthlyEfka(categoryId: EfkaCategoryId): number {
-  return Math.round((getEfkaCategory(categoryId).monthly + UNEMPLOYMENT_CONTRIBUTION_MONTHLY) * 100) / 100;
+  return (
+    Math.round(
+      (getEfkaCategory(categoryId).monthly +
+        UNEMPLOYMENT_CONTRIBUTION_MONTHLY) *
+        100,
+    ) / 100
+  );
 }
 
 /**

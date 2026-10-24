@@ -145,8 +145,14 @@ export interface SelfEmployedResult {
 // ---------------------------------------------------------------------------
 
 export const MplokakiInsuranceSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("category"), additionalMonthly: z.number().min(0).default(0) }),
-  z.object({ kind: z.literal("article39"), annualWorkerContributions: z.number().min(0) }),
+  z.object({
+    kind: z.literal("category"),
+    additionalMonthly: z.number().min(0).default(0),
+  }),
+  z.object({
+    kind: z.literal("article39"),
+    annualWorkerContributions: z.number().min(0),
+  }),
 ]);
 export type MplokakiInsurance = z.infer<typeof MplokakiInsuranceSchema>;
 

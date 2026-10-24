@@ -9,7 +9,7 @@ export function BreakdownRow({
 }: {
   label: string;
   value: string;
-  sub?: string;
+  sub?: string | undefined;
   highlight?: boolean;
   negative?: boolean;
 }) {

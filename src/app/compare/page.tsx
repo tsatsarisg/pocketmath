@@ -22,12 +22,16 @@ export default function ComparePage() {
   const hasInput = gross !== "";
 
   const result = useMemo(() => {
-    if (grossNum === null || minimumTaxableIncome === null) return null;
+    if (grossNum === null || minimumTaxableIncome === null) {
+      return null;
+    }
     return compareAll(grossNum, minimumTaxableIncome);
   }, [grossNum, minimumTaxableIncome]);
 
   const ranked: RankedEntry[] = useMemo(() => {
-    if (!result) return [];
+    if (!result) {
+      return [];
+    }
     const labels: Record<ModeKey, string> = {
       employee: t("compare.employee"),
       "self-employed": t("compare.selfEmployed"),
@@ -42,7 +46,10 @@ export default function ComparePage() {
       ...e,
       label: labels[e.key],
       rank: i,
-      barWidth: maxNet > 0 ? Math.max(0, Math.round((e.data.annualNet / maxNet) * 100)) : 0,
+      barWidth:
+        maxNet > 0
+          ? Math.max(0, Math.round((e.data.annualNet / maxNet) * 100))
+          : 0,
     }));
   }, [result, t]);
 
@@ -62,9 +69,22 @@ export default function ComparePage() {
 
       <div className="rounded-2xl bg-secondary/40 p-5 sm:p-6">
         <div className="max-w-sm mx-auto space-y-2 text-center">
-          <NumberField field="monthly" label={t("compare.grossMonthly")} value={gross} onChange={setGross} placeholder="2000" />
-          <NumberField field="amount" label={t("inputs.minimumIncome")} value={minimumIncome} onChange={setMinimumIncome} />
-          <p className="text-sm text-muted-foreground text-left">{t("inputs.minimumHelp")}</p>
+          <NumberField
+            field="monthly"
+            label={t("compare.grossMonthly")}
+            value={gross}
+            onChange={setGross}
+            placeholder="2000"
+          />
+          <NumberField
+            field="amount"
+            label={t("inputs.minimumIncome")}
+            value={minimumIncome}
+            onChange={setMinimumIncome}
+          />
+          <p className="text-sm text-muted-foreground text-left">
+            {t("inputs.minimumHelp")}
+          </p>
         </div>
       </div>
 
@@ -73,12 +93,18 @@ export default function ComparePage() {
         <p>{t("compare.defaults")}</p>
       </div>
       <div role="status" className="sr-only" aria-atomic="true">
-        {winner ? `${winner.label}: ${t("compare.bestNet")}` : hasInput ? t("results.invalid") : ""}
+        {winner
+          ? `${winner.label}: ${t("compare.bestNet")}`
+          : hasInput
+            ? t("results.invalid")
+            : ""}
       </div>
 
       {!hasInput && (
         <div className="rounded-2xl bg-secondary/20 py-12 text-center">
-          <p className="text-sm text-muted-foreground">{t("compare.emptyState")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("compare.emptyState")}
+          </p>
         </div>
       )}
 
@@ -108,7 +134,10 @@ export default function ComparePage() {
           <div className="text-center">
             <p className="text-[0.8125rem] text-muted-foreground">
               {t("compare.detailedCalc")}{" "}
-              <Link href="/" className="text-primary font-medium hover:underline">
+              <Link
+                href="/"
+                className="text-primary font-medium hover:underline"
+              >
                 {t("compare.goToCalculator")}
               </Link>
             </p>

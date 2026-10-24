@@ -28,14 +28,18 @@ const DEFAULTS = {
  * Compare net income across all three employment types for the same
  * gross monthly income, using sensible defaults for other parameters.
  */
-export function compareAll(monthlyGross: number, minimumTaxableIncome: number): CompareResult {
+export function compareAll(
+  monthlyGross: number,
+  minimumTaxableIncome: number,
+): CompareResult {
   const emp = calculateEmployee({
     monthlyGross,
     children: DEFAULTS.children,
     age: DEFAULTS.age,
   });
 
-  const se = calculateSelfEmployed({ minimumTaxableIncome,
+  const se = calculateSelfEmployed({
+    minimumTaxableIncome,
     annualRevenue: monthlyGross * 12,
     annualExpenses: DEFAULTS.annualExpenses,
     efkaCategory: DEFAULTS.efkaCategory,
@@ -43,7 +47,8 @@ export function compareAll(monthlyGross: number, minimumTaxableIncome: number): 
     yearsInBusiness: DEFAULTS.yearsInBusiness,
   });
 
-  const mp = calculateMplokaki({ qualifiesForEmployeeTax: true,
+  const mp = calculateMplokaki({
+    qualifiesForEmployeeTax: true,
     annualGrossInvoiced: monthlyGross * 12,
     efkaCategory: DEFAULTS.efkaCategory,
     children: DEFAULTS.children,

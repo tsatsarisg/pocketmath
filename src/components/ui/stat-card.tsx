@@ -11,7 +11,7 @@ export function StatCard({
   label: string;
   amount: string;
   sub?: string;
-  badge?: string;
+  badge?: string | undefined;
   hero?: boolean;
   className?: string;
 }) {

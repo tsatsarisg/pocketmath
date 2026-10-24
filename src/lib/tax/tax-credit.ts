@@ -7,8 +7,10 @@ import {
 
 /** Article 16 base credit, before the income taper and liability cap. */
 function getBaseCredit(children: number): number {
-  if (children <= 5) return TAX_CREDIT_BASE[children] ?? 777;
-  return TAX_CREDIT_BASE[5]! + (children - 5) * TAX_CREDIT_EXTRA_PER_CHILD;
+  if (children <= 5) {
+    return TAX_CREDIT_BASE[children] ?? 777;
+  }
+  return TAX_CREDIT_BASE[5] + (children - 5) * TAX_CREDIT_EXTRA_PER_CHILD;
 }
 
 /**

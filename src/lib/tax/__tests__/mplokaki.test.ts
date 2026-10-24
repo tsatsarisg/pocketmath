@@ -30,28 +30,45 @@ import { MPLOKAKI_WITHHOLDING_RATE } from "../constants";
 
 describe("calculateMplokaki — 20% withholding on gross invoiced", () => {
   it("totalWithheld = annualGrossInvoiced × 20%", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 40_000,
       efkaCategory: "1st",
       children: 0,
       age: 35,
     });
-    expect(result.totalWithheld).toBeCloseTo(40_000 * MPLOKAKI_WITHHOLDING_RATE, 2);
+    expect(result.totalWithheld).toBeCloseTo(
+      40_000 * MPLOKAKI_WITHHOLDING_RATE,
+      2,
+    );
   });
 
   it("totalWithheld is applied on gross (before EFKA or tax deductions)", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 50_000,
       efkaCategory: "1st",
       children: 0,
       age: 35,
     });
-    expect(result.totalWithheld).toBeCloseTo(50_000 * 0.20, 2);
+    expect(result.totalWithheld).toBeCloseTo(50_000 * 0.2, 2);
   });
 
   it("withholding scales linearly with gross invoiced", () => {
-    const r1 = calculateMplokaki({ qualifiesForEmployeeTax: true, annualGrossInvoiced: 30_000, efkaCategory: "1st", children: 0, age: 35 });
-    const r2 = calculateMplokaki({ qualifiesForEmployeeTax: true, annualGrossInvoiced: 60_000, efkaCategory: "1st", children: 0, age: 35 });
+    const r1 = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      annualGrossInvoiced: 30_000,
+      efkaCategory: "1st",
+      children: 0,
+      age: 35,
+    });
+    const r2 = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      annualGrossInvoiced: 60_000,
+      efkaCategory: "1st",
+      children: 0,
+      age: 35,
+    });
     expect(r2.totalWithheld).toBeCloseTo(r1.totalWithheld * 2, 2);
   });
 });
@@ -62,7 +79,8 @@ describe("calculateMplokaki — 20% withholding on gross invoiced", () => {
 
 describe("calculateMplokaki — tax base is invoiced minus EFKA", () => {
   it("taxableIncome = annualGrossInvoiced − annualEFKA", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 40_000,
       efkaCategory: "1st",
       children: 0,
@@ -75,7 +93,8 @@ describe("calculateMplokaki — tax base is invoiced minus EFKA", () => {
   });
 
   it("annualEFKA = 1st category monthly × 12 ≈ 3,129.24", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 40_000,
       efkaCategory: "1st",
       children: 0,
@@ -85,7 +104,8 @@ describe("calculateMplokaki — tax base is invoiced minus EFKA", () => {
   });
 
   it("tax credit is applied: annualTax < grossTax when credit > 0", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 25_000,
       efkaCategory: "1st",
       children: 0,
@@ -97,14 +117,15 @@ describe("calculateMplokaki — tax base is invoiced minus EFKA", () => {
 
   it("taxBreakdown uses employee-style brackets", () => {
     // With 3 children, bracket 2 should be reduced (9% instead of 20%)
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 40_000,
       efkaCategory: "1st",
       children: 3,
       age: 35,
     });
     // taxableIncome ≈ 36,990.76 — bracket 2 (10k–20k) should be at 9% for 3 children
-    expect(result.taxBreakdown.brackets[1]!.rate).toBe(0.09);
+    expect(result.taxBreakdown.brackets[1]?.rate).toBe(0.09);
   });
 });
 
@@ -114,19 +135,24 @@ describe("calculateMplokaki — tax base is invoiced minus EFKA", () => {
 
 describe("calculateMplokaki — balanceDue direction", () => {
   it("balanceDue = annualTax − totalWithheld", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 60_000,
       efkaCategory: "1st",
       children: 0,
       age: 35,
     });
-    expect(result.balanceDue).toBeCloseTo(result.annualTax - result.totalWithheld, 2);
+    expect(result.balanceDue).toBeCloseTo(
+      result.annualTax - result.totalWithheld,
+      2,
+    );
   });
 
   it("high income: balanceDue is positive (actual tax exceeds 20% withholding)", () => {
     // At 80,000 invoiced the effective tax rate exceeds 20% withholding
     // taxable ≈ 76,990.76; grossTax is substantial; credit phases out
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 80_000,
       efkaCategory: "1st",
       children: 0,
@@ -139,7 +165,8 @@ describe("calculateMplokaki — balanceDue direction", () => {
     // At 15,000 invoiced the effective income tax rate is very low relative to 20% withholding
     // taxable ≈ 11,990.76; grossTax ≈ 10,000×9%=900; credit=777 (income≈12k, no phase-out)
     // annualTax ≈ 123; totalWithheld = 15,000×20% = 3,000 → balanceDue ≈ -2,877
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 15_000,
       efkaCategory: "1st",
       children: 0,
@@ -149,8 +176,20 @@ describe("calculateMplokaki — balanceDue direction", () => {
   });
 
   it("moderate income: withholding and tax converge — crossover is between low and high", () => {
-    const low = calculateMplokaki({ qualifiesForEmployeeTax: true, annualGrossInvoiced: 15_000, efkaCategory: "1st", children: 0, age: 35 });
-    const high = calculateMplokaki({ qualifiesForEmployeeTax: true, annualGrossInvoiced: 80_000, efkaCategory: "1st", children: 0, age: 35 });
+    const low = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      annualGrossInvoiced: 15_000,
+      efkaCategory: "1st",
+      children: 0,
+      age: 35,
+    });
+    const high = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      annualGrossInvoiced: 80_000,
+      efkaCategory: "1st",
+      children: 0,
+      age: 35,
+    });
     expect(low.balanceDue).toBeLessThan(0);
     expect(high.balanceDue).toBeGreaterThan(0);
   });
@@ -162,7 +201,8 @@ describe("calculateMplokaki — balanceDue direction", () => {
 
 describe("calculateMplokaki — net income", () => {
   it("annualNet = annualGrossInvoiced − annualEFKA − annualTax", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 40_000,
       efkaCategory: "1st",
       children: 0,
@@ -175,7 +215,8 @@ describe("calculateMplokaki — net income", () => {
   });
 
   it("monthlyNet = annualNet / 12", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 40_000,
       efkaCategory: "1st",
       children: 0,
@@ -191,13 +232,15 @@ describe("calculateMplokaki — net income", () => {
 
 describe("calculateMplokaki — youth benefit (age effect)", () => {
   it("age <= 25: grossTax is lower than age 35 at the same invoiced amount", () => {
-    const young = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const young = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 30_000,
       efkaCategory: "1st",
       children: 0,
       age: 25,
     });
-    const adult = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const adult = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 30_000,
       efkaCategory: "1st",
       children: 0,
@@ -207,13 +250,15 @@ describe("calculateMplokaki — youth benefit (age effect)", () => {
   });
 
   it("age <= 25: annualTax is lower, so annualNet is higher", () => {
-    const young = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const young = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 30_000,
       efkaCategory: "1st",
       children: 0,
       age: 25,
     });
-    const adult = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const adult = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 30_000,
       efkaCategory: "1st",
       children: 0,
@@ -224,13 +269,15 @@ describe("calculateMplokaki — youth benefit (age effect)", () => {
   });
 
   it("age 26–30: grossTax is lower than age 35 (bracket 2 at 9% not 20%)", () => {
-    const young = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const young = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 30_000,
       efkaCategory: "1st",
       children: 0,
       age: 28,
     });
-    const adult = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const adult = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 30_000,
       efkaCategory: "1st",
       children: 0,
@@ -246,16 +293,40 @@ describe("calculateMplokaki — youth benefit (age effect)", () => {
 
 describe("calculateMplokaki — children reduce tax via family brackets and higher credit", () => {
   it("3 children: annualTax is lower than 0 children at the same income", () => {
-    const base = { annualGrossInvoiced: 40_000, efkaCategory: "1st" as const, age: 35 };
-    const c0 = calculateMplokaki({ qualifiesForEmployeeTax: true, ...base, children: 0 });
-    const c3 = calculateMplokaki({ qualifiesForEmployeeTax: true, ...base, children: 3 });
+    const base = {
+      annualGrossInvoiced: 40_000,
+      efkaCategory: "1st" as const,
+      age: 35,
+    };
+    const c0 = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      ...base,
+      children: 0,
+    });
+    const c3 = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      ...base,
+      children: 3,
+    });
     expect(c3.annualTax).toBeLessThan(c0.annualTax);
   });
 
   it("taxCredit increases with children count", () => {
-    const base = { annualGrossInvoiced: 20_000, efkaCategory: "1st" as const, age: 35 };
-    const c0 = calculateMplokaki({ qualifiesForEmployeeTax: true, ...base, children: 0 });
-    const c2 = calculateMplokaki({ qualifiesForEmployeeTax: true, ...base, children: 2 });
+    const base = {
+      annualGrossInvoiced: 20_000,
+      efkaCategory: "1st" as const,
+      age: 35,
+    };
+    const c0 = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      ...base,
+      children: 0,
+    });
+    const c2 = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
+      ...base,
+      children: 2,
+    });
     expect(c2.taxCredit).toBeGreaterThan(c0.taxCredit);
   });
 });
@@ -266,7 +337,8 @@ describe("calculateMplokaki — children reduce tax via family brackets and high
 
 describe("calculateMplokaki — zero invoiced amount", () => {
   it("zero gross invoiced produces zero totalWithheld", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 0,
       efkaCategory: "1st",
       children: 0,
@@ -276,7 +348,8 @@ describe("calculateMplokaki — zero invoiced amount", () => {
   });
 
   it("zero gross invoiced: taxableIncome is clamped to 0 (EFKA cannot push it negative)", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 0,
       efkaCategory: "1st",
       children: 0,
@@ -286,7 +359,8 @@ describe("calculateMplokaki — zero invoiced amount", () => {
   });
 
   it("zero gross invoiced: annualTax = 0", () => {
-    const result = calculateMplokaki({ qualifiesForEmployeeTax: true,
+    const result = calculateMplokaki({
+      qualifiesForEmployeeTax: true,
       annualGrossInvoiced: 0,
       efkaCategory: "1st",
       children: 0,

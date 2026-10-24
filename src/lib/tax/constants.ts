@@ -34,7 +34,9 @@ export const FAMILY_RATES_BRACKET_2: Readonly<Record<number, number>> = {
 
 /** Get the 2nd-bracket rate based on number of children. 4+ children = 0%. */
 export function getBracket2Rate(children: number): number {
-  if (children >= 4) return 0;
+  if (children >= 4) {
+    return 0;
+  }
   return FAMILY_RATES_BRACKET_2[children] ?? 0.2;
 }
 
@@ -53,7 +55,9 @@ export const FAMILY_RATES_BRACKET_3: Readonly<Record<number, number>> = {
 
 /** Article 15: two percentage points per additional child, never below zero. */
 export function getBracket3Rate(children: number): number {
-  if (children >= 5) return Math.max(0, (26 - 2 * children) / 100);
+  if (children >= 5) {
+    return Math.max(0, (26 - 2 * children) / 100);
+  }
   return FAMILY_RATES_BRACKET_3[children] ?? 0.26;
 }
 
@@ -62,7 +66,9 @@ export function getBracket3Rate(children: number): number {
 // ---------------------------------------------------------------------------
 
 // Article 16 KFE amounts (Law 5246/2025, tax year 2026).
-export const TAX_CREDIT_BASE: Readonly<Record<number, number>> = {
+export const TAX_CREDIT_BASE: Readonly<Record<number, number>> & {
+  readonly 5: number;
+} = {
   0: 777,
   1: 900,
   2: 1_120,
@@ -169,7 +175,9 @@ export const PREPAYMENT_RATE_STANDARD = 0.55;
 
 /** Half the standard advance for the first declaration of business income. */
 export function getPrepaymentRate(firstIncomeDeclaration: boolean): number {
-  if (firstIncomeDeclaration) return PREPAYMENT_RATE_FIRST_YEAR;
+  if (firstIncomeDeclaration) {
+    return PREPAYMENT_RATE_FIRST_YEAR;
+  }
   return PREPAYMENT_RATE_STANDARD;
 }
 

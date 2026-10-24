@@ -3,7 +3,12 @@ import { useTranslation } from "react-i18next";
 import { calculateEmployee } from "@/lib/tax/employee";
 import { calculateSelfEmployed } from "@/lib/tax/self-employed";
 import { calculateMplokaki } from "@/lib/tax/mplokaki";
-import type { EfkaCategoryId, EmployeeResult, SelfEmployedResult, MplokakiResult } from "@/lib/tax/types";
+import type {
+  EfkaCategoryId,
+  EmployeeResult,
+  SelfEmployedResult,
+  MplokakiResult,
+} from "@/lib/tax/types";
 import type { Mode, Period } from "@/types/calculator";
 import { getCalculatorStats, type Stats } from "@/lib/calculator-stats";
 import { parseField } from "@/lib/parse";
@@ -94,7 +99,9 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   const [seAge, setSeAge] = useState("35");
 
   const [mpQualified, setMpQualified] = useState(false);
-  const [mpInsuranceMethod, setMpInsuranceMethod] = useState<"category" | "article39">("category");
+  const [mpInsuranceMethod, setMpInsuranceMethod] = useState<
+    "category" | "article39"
+  >("category");
   const [mpWorkerInsurance, setMpWorkerInsurance] = useState("");
   const [mpAdditionalInsurance, setMpAdditionalInsurance] = useState("0");
   const [mpActualWithholding, setMpActualWithholding] = useState(false);
@@ -109,7 +116,9 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   function updateSeYears(value: string) {
     setSeYears(value);
     const years = parseField(value, "years");
-    if (years !== null && years > 5 && seEfka === "special") setSeEfka("1st");
+    if (years !== null && years > 5 && seEfka === "special") {
+      setSeEfka("1st");
+    }
   }
 
   // Calculations
@@ -117,7 +126,9 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     const monthlyGross = parseField(empMonthly, "monthly");
     const children = parseField(empChildren, "children");
     const age = parseField(empAge, "age");
-    if (monthlyGross === null || children === null || age === null) return null;
+    if (monthlyGross === null || children === null || age === null) {
+      return null;
+    }
     return calculateEmployee({ monthlyGross, children, age });
   }, [empMonthly, empChildren, empAge]);
 
@@ -127,10 +138,29 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     const yearsInBusiness = parseField(seYears, "years");
     const age = parseField(seAge, "age");
     const children = parseField(seChildren, "children");
-    const minimumTaxableIncome = yearsInBusiness !== null && yearsInBusiness <= 3 ? 0 : parseField(seMinimumIncome, "amount");
-    const additionalMonthlyInsurance = parseField(seAdditionalInsurance, "amount");
-    if (children === null || minimumTaxableIncome === null || additionalMonthlyInsurance === null) return null;
-    if (monthlyRevenue === null || monthlyExpenses === null || yearsInBusiness === null || age === null) return null;
+    const minimumTaxableIncome =
+      yearsInBusiness !== null && yearsInBusiness <= 3
+        ? 0
+        : parseField(seMinimumIncome, "amount");
+    const additionalMonthlyInsurance = parseField(
+      seAdditionalInsurance,
+      "amount",
+    );
+    if (
+      children === null ||
+      minimumTaxableIncome === null ||
+      additionalMonthlyInsurance === null
+    ) {
+      return null;
+    }
+    if (
+      monthlyRevenue === null ||
+      monthlyExpenses === null ||
+      yearsInBusiness === null ||
+      age === null
+    ) {
+      return null;
+    }
     return calculateSelfEmployed({
       minimumTaxableIncome,
       children,
@@ -142,30 +172,70 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
       age,
       yearsInBusiness,
     });
-  }, [seMonthly, seExpenses, seEfka, seYears, seAge, seChildren, seMinimumIncome, seAdditionalInsurance, seFirstDeclaration]);
+  }, [
+    seMonthly,
+    seExpenses,
+    seEfka,
+    seYears,
+    seAge,
+    seChildren,
+    seMinimumIncome,
+    seAdditionalInsurance,
+    seFirstDeclaration,
+  ]);
 
   const mpResult = useMemo(() => {
     const monthlyInvoiced = parseField(mpMonthly, "monthly");
     const children = parseField(mpChildren, "children");
     const age = parseField(mpAge, "age");
-    const contribution = parseField(mpInsuranceMethod === "article39" ? mpWorkerInsurance : mpAdditionalInsurance, "amount");
-    const annualWithheld = mpActualWithholding ? parseField(mpWithheld, "amount") : undefined;
-    if (!mpQualified || contribution === null || annualWithheld === null) return null;
-    if (monthlyInvoiced === null || children === null || age === null) return null;
+    const contribution = parseField(
+      mpInsuranceMethod === "article39"
+        ? mpWorkerInsurance
+        : mpAdditionalInsurance,
+      "amount",
+    );
+    const annualWithheld = mpActualWithholding
+      ? parseField(mpWithheld, "amount")
+      : undefined;
+    if (!mpQualified || contribution === null || annualWithheld === null) {
+      return null;
+    }
+    if (monthlyInvoiced === null || children === null || age === null) {
+      return null;
+    }
     return calculateMplokaki({
       qualifiesForEmployeeTax: true,
-      insurance: mpInsuranceMethod === "article39"
-        ? { kind: "article39", annualWorkerContributions: contribution }
-        : { kind: "category", additionalMonthly: contribution },
+      insurance:
+        mpInsuranceMethod === "article39"
+          ? { kind: "article39", annualWorkerContributions: contribution }
+          : { kind: "category", additionalMonthly: contribution },
       annualWithheld,
       annualGrossInvoiced: monthlyInvoiced * 12,
       efkaCategory: mpEfka,
       children,
       age,
     });
-  }, [mpMonthly, mpEfka, mpChildren, mpAge, mpQualified, mpInsuranceMethod, mpWorkerInsurance, mpAdditionalInsurance, mpActualWithholding, mpWithheld]);
+  }, [
+    mpMonthly,
+    mpEfka,
+    mpChildren,
+    mpAge,
+    mpQualified,
+    mpInsuranceMethod,
+    mpWorkerInsurance,
+    mpAdditionalInsurance,
+    mpActualWithholding,
+    mpWithheld,
+  ]);
 
-  const stats = getCalculatorStats(mode, period, empResult, seResult, mpResult, t);
+  const stats = getCalculatorStats(
+    mode,
+    period,
+    empResult,
+    seResult,
+    mpResult,
+    t,
+  );
 
   // Gate results on actual user input. The "primary" revenue field differs per
   // mode, so look it up rather than branching by hand.
@@ -188,10 +258,14 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
       setAge: setEmpAge,
     },
     se: {
-      children: seChildren, setChildren: setSeChildren,
-      minimumIncome: seMinimumIncome, setMinimumIncome: setSeMinimumIncome,
-      additionalInsurance: seAdditionalInsurance, setAdditionalInsurance: setSeAdditionalInsurance,
-      firstDeclaration: seFirstDeclaration, setFirstDeclaration: setSeFirstDeclaration,
+      children: seChildren,
+      setChildren: setSeChildren,
+      minimumIncome: seMinimumIncome,
+      setMinimumIncome: setSeMinimumIncome,
+      additionalInsurance: seAdditionalInsurance,
+      setAdditionalInsurance: setSeAdditionalInsurance,
+      firstDeclaration: seFirstDeclaration,
+      setFirstDeclaration: setSeFirstDeclaration,
       monthly: seMonthly,
       setMonthly: setSeMonthly,
       expenses: seExpenses,
@@ -204,12 +278,18 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
       setAge: setSeAge,
     },
     mp: {
-      qualified: mpQualified, setQualified: setMpQualified,
-      insuranceMethod: mpInsuranceMethod, setInsuranceMethod: setMpInsuranceMethod,
-      workerInsurance: mpWorkerInsurance, setWorkerInsurance: setMpWorkerInsurance,
-      additionalInsurance: mpAdditionalInsurance, setAdditionalInsurance: setMpAdditionalInsurance,
-      actualWithholding: mpActualWithholding, setActualWithholding: setMpActualWithholding,
-      withheld: mpWithheld, setWithheld: setMpWithheld,
+      qualified: mpQualified,
+      setQualified: setMpQualified,
+      insuranceMethod: mpInsuranceMethod,
+      setInsuranceMethod: setMpInsuranceMethod,
+      workerInsurance: mpWorkerInsurance,
+      setWorkerInsurance: setMpWorkerInsurance,
+      additionalInsurance: mpAdditionalInsurance,
+      setAdditionalInsurance: setMpAdditionalInsurance,
+      actualWithholding: mpActualWithholding,
+      setActualWithholding: setMpActualWithholding,
+      withheld: mpWithheld,
+      setWithheld: setMpWithheld,
       monthly: mpMonthly,
       setMonthly: setMpMonthly,
       efka: mpEfka,

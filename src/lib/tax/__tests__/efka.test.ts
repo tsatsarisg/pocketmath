@@ -83,12 +83,12 @@ describe("getAllEfkaCategories", () => {
   });
 
   it("first category is 'special'", () => {
-    expect(getAllEfkaCategories()[0]!.id).toBe("special");
+    expect(getAllEfkaCategories()[0]?.id).toBe("special");
   });
 
   it("last category is '6th'", () => {
     const all = getAllEfkaCategories();
-    expect(all[all.length - 1]!.id).toBe("6th");
+    expect(all[all.length - 1]?.id).toBe("6th");
   });
 });
 
@@ -112,7 +112,11 @@ describe("getMonthlyEfka — spot-check monthly amounts", () => {
   it("categories are monotonically increasing by monthly contribution", () => {
     const all = getAllEfkaCategories();
     for (let i = 1; i < all.length; i++) {
-      expect(all[i]!.monthly).toBeGreaterThan(all[i - 1]!.monthly);
+      const previous = all[i - 1];
+      if (!previous) {
+        throw new Error("Missing previous EFKA category");
+      }
+      expect(all[i]?.monthly).toBeGreaterThan(previous.monthly);
     }
   });
 });

@@ -31,14 +31,14 @@ Source: [e-EFKA Circular 38/2024](https://www.e-efka.gov.gr/sites/default/files/
 Non-salaried insurance categories:
 
 | Category | Pension + health / month | With unemployment / month |
-| --- | ---: | ---: |
-| Special | €150.46 | €160.46 |
-| 1st | €250.77 | €260.77 |
-| 2nd | €300.93 | €310.93 |
-| 3rd | €360.63 | €370.63 |
-| 4th | €433.47 | €443.47 |
-| 5th | €519.45 | €529.45 |
-| 6th | €675.87 | €685.87 |
+| -------- | -----------------------: | ------------------------: |
+| Special  |                  €150.46 |                   €160.46 |
+| 1st      |                  €250.77 |                   €260.77 |
+| 2nd      |                  €300.93 |                   €310.93 |
+| 3rd      |                  €360.63 |                   €370.63 |
+| 4th      |                  €433.47 |                   €443.47 |
+| 5th      |                  €519.45 |                   €529.45 |
+| 6th      |                  €675.87 |                   €685.87 |
 
 `EFKA_CATEGORIES.monthly` holds pension and health only. All calculations and category labels use the helpers, which add €10 unemployment. Additional monthly insurance is entered separately, including applicable supplementary, lump-sum and other mandatory contributions. Special-category selection requires first-five-year eligibility; the business calculator rejects it after year five. The invoice calculator labels this eligibility condition explicitly.
 

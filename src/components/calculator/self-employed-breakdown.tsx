@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { BreakdownRow } from "@/components/ui/breakdown-row";
-import { calculateSelfEmployed } from "@/lib/tax/self-employed";
+import { type calculateSelfEmployed } from "@/lib/tax/self-employed";
 import { fmt, fmtPct } from "@/lib/format";
 import type { Period } from "@/types/calculator";
 
@@ -33,8 +33,14 @@ export function SelfEmployedBreakdown({
         value={`-${fmt(result.annualEFKA / div)}`}
         negative
       />
-      <BreakdownRow label={t("breakdown.selfEmployed.actualProfit")} value={fmt(result.actualProfit / div)} />
-      <BreakdownRow label={t("breakdown.selfEmployed.minimumIncome")} value={fmt(result.minimumTaxableIncome / div)} />
+      <BreakdownRow
+        label={t("breakdown.selfEmployed.actualProfit")}
+        value={fmt(result.actualProfit / div)}
+      />
+      <BreakdownRow
+        label={t("breakdown.selfEmployed.minimumIncome")}
+        value={fmt(result.minimumTaxableIncome / div)}
+      />
       <BreakdownRow
         label={t("breakdown.selfEmployed.taxableIncome")}
         value={fmt(result.taxableIncome / div)}
@@ -75,7 +81,11 @@ export function SelfEmployedBreakdown({
         value={fmt(result.annualNet / div)}
         highlight
       />
-      <BreakdownRow label={t("breakdown.selfEmployed.netAfterPrepayment")} sub={t("breakdown.selfEmployed.cashHelp")} value={fmt(result.netAfterPrepayment / div)} />
+      <BreakdownRow
+        label={t("breakdown.selfEmployed.netAfterPrepayment")}
+        sub={t("breakdown.selfEmployed.cashHelp")}
+        value={fmt(result.netAfterPrepayment / div)}
+      />
       <BreakdownRow
         label={t("breakdown.selfEmployed.effectiveTaxRate")}
         value={fmtPct(result.effectiveTaxRate)}

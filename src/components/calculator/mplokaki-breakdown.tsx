@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { BreakdownRow } from "@/components/ui/breakdown-row";
-import { calculateMplokaki } from "@/lib/tax/mplokaki";
+import { type calculateMplokaki } from "@/lib/tax/mplokaki";
 import { fmt, fmtPct } from "@/lib/format";
 import type { Period } from "@/types/calculator";
 
@@ -54,7 +54,11 @@ export function MplokakiBreakdown({
         negative
       />
       <BreakdownRow
-        label={result.balanceDue >= 0 ? t("breakdown.mplokaki.balanceDue") : t("breakdown.mplokaki.refund")}
+        label={
+          result.balanceDue >= 0
+            ? t("breakdown.mplokaki.balanceDue")
+            : t("breakdown.mplokaki.refund")
+        }
         value={fmt(Math.abs(result.balanceDue) / div)}
         highlight
         negative={result.balanceDue > 0}

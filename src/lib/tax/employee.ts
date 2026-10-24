@@ -50,7 +50,8 @@ export function calculateEmployee(input: EmployeeInput): EmployeeResult {
   const employerTotalCost =
     Math.round((annualGross + employerAnnualSS) * 100) / 100;
 
-  const effectiveTaxRate = annualGross > 0 ? (annualTax + annualEmployeeSS) / annualGross : 0;
+  const effectiveTaxRate =
+    annualGross > 0 ? (annualTax + annualEmployeeSS) / annualGross : 0;
 
   return {
     monthlyGross,

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/geist";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Header } from "./header";

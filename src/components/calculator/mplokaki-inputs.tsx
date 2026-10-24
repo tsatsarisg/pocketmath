@@ -32,28 +32,73 @@ export function MplokakiInputs({ state }: { state: MplokakiState }) {
         placeholder="35"
       />
       <div className="sm:col-span-2 space-y-3">
-        <CheckField checked={state.qualified} onChange={state.setQualified}>{t("inputs.article12Confirmed")}</CheckField>
-        <p className="text-sm text-muted-foreground">{t("inputs.article12Help")}</p>
-        <p className="text-sm text-muted-foreground">{t("inputs.insuranceMethod")}</p>
-        <SegmentedControl label={t("inputs.insuranceMethod")} value={state.insuranceMethod} onChange={state.setInsuranceMethod}
-          options={[{ id: "category", label: t("inputs.categoryInsurance") }, { id: "article39", label: t("inputs.article39Insurance") }]} />
+        <CheckField checked={state.qualified} onChange={state.setQualified}>
+          {t("inputs.article12Confirmed")}
+        </CheckField>
+        <p className="text-sm text-muted-foreground">
+          {t("inputs.article12Help")}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          {t("inputs.insuranceMethod")}
+        </p>
+        <SegmentedControl
+          label={t("inputs.insuranceMethod")}
+          value={state.insuranceMethod}
+          onChange={state.setInsuranceMethod}
+          options={[
+            { id: "category", label: t("inputs.categoryInsurance") },
+            { id: "article39", label: t("inputs.article39Insurance") },
+          ]}
+        />
       </div>
       {state.insuranceMethod === "category" ? (
         <>
-          <EfkaField value={state.efka} onChange={state.setEfka} categories={getAllEfkaCategories()} />
-          <NumberField field="amount" label={t("inputs.additionalInsurance")} value={state.additionalInsurance} onChange={state.setAdditionalInsurance} />
-          <p className="sm:col-span-2 text-sm text-muted-foreground">{t("efka.additionalHelp")}</p>
+          <EfkaField
+            value={state.efka}
+            onChange={state.setEfka}
+            categories={getAllEfkaCategories()}
+          />
+          <NumberField
+            field="amount"
+            label={t("inputs.additionalInsurance")}
+            value={state.additionalInsurance}
+            onChange={state.setAdditionalInsurance}
+          />
+          <p className="sm:col-span-2 text-sm text-muted-foreground">
+            {t("efka.additionalHelp")}
+          </p>
         </>
       ) : (
         <div className="sm:col-span-2 space-y-2">
-          <NumberField field="amount" label={t("inputs.workerInsurance")} value={state.workerInsurance} onChange={state.setWorkerInsurance} />
-          <p className="text-sm text-muted-foreground">{t("inputs.article39Help")}</p>
+          <NumberField
+            field="amount"
+            label={t("inputs.workerInsurance")}
+            value={state.workerInsurance}
+            onChange={state.setWorkerInsurance}
+          />
+          <p className="text-sm text-muted-foreground">
+            {t("inputs.article39Help")}
+          </p>
         </div>
       )}
       <div className="sm:col-span-2 space-y-2">
-        <CheckField checked={state.actualWithholding} onChange={state.setActualWithholding}>{t("inputs.actualWithholding")}</CheckField>
-        {state.actualWithholding && <NumberField field="amount" label={t("inputs.withheld")} value={state.withheld} onChange={state.setWithheld} />}
-        <p className="text-sm text-muted-foreground">{t("inputs.withholdingHelp")}</p>
+        <CheckField
+          checked={state.actualWithholding}
+          onChange={state.setActualWithholding}
+        >
+          {t("inputs.actualWithholding")}
+        </CheckField>
+        {state.actualWithholding && (
+          <NumberField
+            field="amount"
+            label={t("inputs.withheld")}
+            value={state.withheld}
+            onChange={state.setWithheld}
+          />
+        )}
+        <p className="text-sm text-muted-foreground">
+          {t("inputs.withholdingHelp")}
+        </p>
       </div>
     </div>
   );

@@ -3,7 +3,6 @@
  * Run: node scripts/gen-assets.mjs
  */
 import sharp from "sharp";
-import { writeFileSync } from "fs";
 
 const BRAND_INDIGO = "#4f46e5";
 const BRAND_GREEN = "#34d399";

@@ -99,6 +99,4 @@ const webAppStr = safeJsonStringify(jsonLdWebApp);
 const faqStr = safeJsonStringify(jsonLdFaq);
 
 console.log("Update script-src in next.config.ts and public/_headers with:\n");
-console.log(
-  `script-src 'self' ${cspHash(webAppStr)} ${cspHash(faqStr)}`
-);
+console.log(`script-src 'self' ${cspHash(webAppStr)} ${cspHash(faqStr)}`);

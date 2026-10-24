@@ -1,3 +1,12 @@
+engineStrict: true
+strictPeerDependencies: true
+autoInstallPeers: false
+
+# React Hooks rules run inside Oxlint's JS plugin host, which needs no ESLint runtime.
+peerDependencyRules:
+  ignoreMissing:
+    - eslint
+
 # ── Supply-chain hardening (https://pnpm.io/supply-chain-security) ──
 # Single source of truth — the old .npmrc allowlist was merged in here.
 
@@ -16,13 +25,12 @@ minimumReleaseAge: 10080
 #                exists; darwin-arm64 and linux-x64 (CI) get prebuilds
 #                via @img/* optional dependencies
 allowBuilds:
-  '@swc/core': false
+  "@swc/core": false
   esbuild: false
-  msw: false # copies its worker file only when an "msw" config key exists — none here
   sharp: false
 
 # `pnpm add` saves exact versions — no ^/~ ranges in package.json.
-savePrefix: ''
+savePrefix: ""
 
 # Transitive dependencies must resolve from the registry — never from
 # git/tarball/URL sources injected by a compromised intermediate.

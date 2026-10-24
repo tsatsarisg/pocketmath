@@ -14,7 +14,9 @@ export function NetBar({ ranked }: { ranked: RankedEntry[] }) {
       {ranked.map((entry) => (
         <div key={entry.key} className="space-y-1">
           <div className="flex items-baseline justify-between">
-            <p className="text-[0.8125rem] font-medium text-foreground">{entry.label}</p>
+            <p className="text-[0.8125rem] font-medium text-foreground">
+              {entry.label}
+            </p>
             <p className="text-[0.8125rem] font-semibold tabular-nums text-foreground">
               {fmt(entry.data.annualNet)}
             </p>

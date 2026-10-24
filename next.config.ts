@@ -10,11 +10,11 @@ const isDev = process.env.NODE_ENV === "development";
 //
 // It MUST stay gated: `next dev`, `next start`, and the Docker/server build all
 // run WITHOUT this var so the app keeps serving from the root path (/) locally
-// and the async headers() block below continues to apply on server targets.
+// and the headers() block below continues to apply on server targets.
 // Hardcoding output: 'export' + basePath would break local dev and silently
 // drop the security headers, so we only switch them on when explicitly asked.
 // ---------------------------------------------------------------------------
-const isGithubPages = process.env.GITHUB_PAGES === "true";
+const isGithubPages = process.env["GITHUB_PAGES"] === "true";
 
 const nextConfig: NextConfig = {
   // ---------------------------------------------------------------------------
@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
   // assetPrefix handles static asset URLs, and images.unoptimized is required
   // because GitHub Pages has no Next.js image-optimization server.
   //
-  // NOTE: the async headers() block below is NOT applied to a static export.
+  // NOTE: the headers() block below is NOT applied to a static export.
   // GitHub Pages serves plain files and cannot emit custom response headers, so
   // those headers only take effect on server-target builds (next start/Docker).
   // A best-effort CSP <meta> tag is injected in src/app/layout.tsx instead.
@@ -78,7 +78,7 @@ const nextConfig: NextConfig = {
   // bootstrap/hydration scripts whose hashes change on every build.
   // External script loading is still blocked by default-src 'self'.
   // ---------------------------------------------------------------------------
-  async headers() {
+  headers() {
     return [
       {
         source: "/:path*",

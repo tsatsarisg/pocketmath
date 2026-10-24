@@ -1,6 +1,10 @@
 import type { TFunction } from "i18next";
 import type { Mode, Period } from "@/types/calculator";
-import type { EmployeeResult, SelfEmployedResult, MplokakiResult } from "@/lib/tax/types";
+import type {
+  EmployeeResult,
+  SelfEmployedResult,
+  MplokakiResult,
+} from "@/lib/tax/types";
 import { fmt } from "@/lib/format";
 
 export interface Stats {
@@ -32,7 +36,9 @@ export function getCalculatorStats(
 
   switch (mode) {
     case "employee":
-      if (!employee) return null;
+      if (!employee) {
+        return null;
+      }
       gross = employee.annualGross;
       tax = employee.annualTax + employee.annualEmployeeSS;
       net = employee.annualNet;
@@ -40,7 +46,9 @@ export function getCalculatorStats(
       taxLabel = t("results.taxAndContributions");
       break;
     case "self-employed":
-      if (!selfEmployed) return null;
+      if (!selfEmployed) {
+        return null;
+      }
       gross = selfEmployed.annualRevenue;
       tax = selfEmployed.annualTax + selfEmployed.annualEFKA;
       net = selfEmployed.annualNet;
@@ -48,7 +56,9 @@ export function getCalculatorStats(
       taxLabel = t("results.taxAndEfka");
       break;
     case "mplokaki":
-      if (!mplokaki) return null;
+      if (!mplokaki) {
+        return null;
+      }
       gross = mplokaki.annualGrossInvoiced;
       tax = mplokaki.annualTax + mplokaki.annualEFKA;
       net = mplokaki.annualNet;
@@ -57,7 +67,9 @@ export function getCalculatorStats(
       break;
   }
 
-  const periodLabel = t(period === "monthly" ? "results.perMonth" : "results.perYear");
+  const periodLabel = t(
+    period === "monthly" ? "results.perMonth" : "results.perYear",
+  );
   return {
     grossLabel,
     grossValue: fmt(gross / divisor),

@@ -9,7 +9,9 @@ export function RunnerCard({ entry }: { entry: RankedEntry }) {
 
   return (
     <div className="rounded-2xl bg-card ring-1 ring-border/50 p-4 sm:p-5">
-      <p className="text-[0.8125rem] font-semibold text-foreground mb-3">{entry.label}</p>
+      <p className="text-[0.8125rem] font-semibold text-foreground mb-3">
+        {entry.label}
+      </p>
 
       <div className="mb-3">
         <p className="text-xs font-semibold uppercase tracking-[0.1em] text-muted-foreground">
@@ -29,7 +31,9 @@ export function RunnerCard({ entry }: { entry: RankedEntry }) {
 
       <div className="space-y-1.5 border-t border-border/30 pt-3">
         <div className="flex items-baseline justify-between">
-          <p className="text-[0.75rem] text-muted-foreground">{t("compare.monthlyEquiv")}</p>
+          <p className="text-[0.75rem] text-muted-foreground">
+            {t("compare.monthlyEquiv")}
+          </p>
           <p className="text-[0.8125rem] font-medium tabular-nums text-foreground">
             {fmt(entry.data.annualNet / 12)}
           </p>
@@ -37,7 +41,9 @@ export function RunnerCard({ entry }: { entry: RankedEntry }) {
         {isEmployee && (
           <div className="flex items-baseline justify-between">
             <span className="flex items-center gap-1.5">
-              <p className="text-[0.75rem] text-muted-foreground">{t("compare.actualPaycheck")}</p>
+              <p className="text-[0.75rem] text-muted-foreground">
+                {t("compare.actualPaycheck")}
+              </p>
               <MetaPill className="text-primary bg-primary/10">14×</MetaPill>
             </span>
             <p className="text-[0.8125rem] font-medium tabular-nums text-foreground">
@@ -46,7 +52,9 @@ export function RunnerCard({ entry }: { entry: RankedEntry }) {
           </div>
         )}
         <div className="flex items-baseline justify-between">
-          <p className="text-[0.75rem] text-muted-foreground">{t("compare.effectiveTaxRate")}</p>
+          <p className="text-[0.75rem] text-muted-foreground">
+            {t("compare.effectiveTaxRate")}
+          </p>
           <p className="text-[0.8125rem] font-medium tabular-nums text-muted-foreground">
             {fmtPct(entry.data.effectiveTaxRate)}
           </p>

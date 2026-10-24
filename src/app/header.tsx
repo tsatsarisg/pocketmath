@@ -8,9 +8,18 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 function LanguageToggle() {
   const { t, i18n } = useTranslation();
   const current = i18n.language.startsWith("en") ? "en" : "el";
-  return <SegmentedControl compact label={t("a11y.language")} value={current}
-    onChange={(language) => void i18n.changeLanguage(language)}
-    options={[{ id: "el", label: "ΕΛ" }, { id: "en", label: "EN" }]} />;
+  return (
+    <SegmentedControl
+      compact
+      label={t("a11y.language")}
+      value={current}
+      onChange={(language) => void i18n.changeLanguage(language)}
+      options={[
+        { id: "el", label: "ΕΛ" },
+        { id: "en", label: "EN" },
+      ]}
+    />
+  );
 }
 
 export function Header() {

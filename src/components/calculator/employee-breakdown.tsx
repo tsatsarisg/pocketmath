@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { BreakdownRow } from "@/components/ui/breakdown-row";
-import { calculateEmployee } from "@/lib/tax/employee";
+import { type calculateEmployee } from "@/lib/tax/employee";
 import { fmt, fmtPct } from "@/lib/format";
 import type { Period } from "@/types/calculator";
 

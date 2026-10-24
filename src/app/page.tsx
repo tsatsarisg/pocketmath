@@ -21,10 +21,16 @@ export default function HomePage() {
 
   const calc = useCalculator(mode, period);
   const { stats, hasUserInput, hasResult } = calc;
-  const errorMessage = mode === "mplokaki" && !calc.mp.qualified ? t("inputs.article12Required") : t("results.invalid");
+  const errorMessage =
+    mode === "mplokaki" && !calc.mp.qualified
+      ? t("inputs.article12Required")
+      : t("results.invalid");
   const modeConfig = MODE_REGISTRY[mode];
 
-  const modes = (Object.keys(MODE_REGISTRY) as Mode[]).map((id) => ({ id, label: t(MODE_REGISTRY[id].labelKey) }));
+  const modes = (Object.keys(MODE_REGISTRY) as Mode[]).map((id) => ({
+    id,
+    label: t(MODE_REGISTRY[id].labelKey),
+  }));
 
   return (
     <>
@@ -78,9 +84,15 @@ export default function HomePage() {
 
         {/* Results */}
         <div role="status" className="sr-only" aria-atomic="true">
-          {hasResult && stats ? `${stats.netLabel}: ${stats.netValue} ${stats.netSub}` : hasUserInput ? errorMessage : ""}
+          {hasResult && stats
+            ? `${stats.netLabel}: ${stats.netValue} ${stats.netSub}`
+            : hasUserInput
+              ? errorMessage
+              : ""}
         </div>
-        {hasUserInput && !hasResult && <p className="text-sm text-destructive">{errorMessage}</p>}
+        {hasUserInput && !hasResult && (
+          <p className="text-sm text-destructive">{errorMessage}</p>
+        )}
         <div>
           {hasResult && stats && (
             <section className="space-y-4" aria-label={t("results.headline")}>
@@ -96,7 +108,11 @@ export default function HomePage() {
                   label={stats.netLabel}
                   amount={stats.netValue}
                   sub={stats.netSub}
-                  badge={mode === "employee" && period === "monthly" ? t("results.paycheckBadge") : undefined}
+                  badge={
+                    mode === "employee" && period === "monthly"
+                      ? t("results.paycheckBadge")
+                      : undefined
+                  }
                   hero
                   className="sm:col-span-2"
                 />
@@ -115,12 +131,18 @@ export default function HomePage() {
               {/* Expandable breakdown */}
               <div className="rounded-2xl bg-secondary/30 overflow-hidden transition-colors duration-200">
                 <button
-                  onClick={() => setBreakdownOpen((o) => !o)}
+                  onClick={() => {
+                    setBreakdownOpen((o) => !o);
+                  }}
                   aria-expanded={breakdownOpen}
                   aria-controls={breakdownId}
                   className="w-full flex items-center justify-between px-5 py-4 text-sm font-medium text-foreground hover:bg-secondary/50 transition-colors duration-200"
                 >
-                  <span>{breakdownOpen ? t("results.hideBreakdown") : t("results.showBreakdown")}</span>
+                  <span>
+                    {breakdownOpen
+                      ? t("results.hideBreakdown")
+                      : t("results.showBreakdown")}
+                  </span>
                   <ChevronDown
                     width={16}
                     height={16}

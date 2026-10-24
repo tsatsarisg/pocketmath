@@ -41,7 +41,9 @@ export function SegmentedControl<T extends string>({
     }
     event.preventDefault();
     const option = options[next];
-    if (!option) return;
+    if (!option) {
+      return;
+    }
     onChange(option.id);
     ref.current?.querySelectorAll<HTMLButtonElement>("button")[next]?.focus();
   }
@@ -50,9 +52,13 @@ export function SegmentedControl<T extends string>({
     <div
       ref={ref}
       role="radiogroup"
+      tabIndex={-1}
       aria-label={label}
       onKeyDown={handleKeyDown}
-      className={cn("flex rounded-xl bg-secondary/60 p-1 gap-0.5", !compact && "w-full sm:w-auto")}
+      className={cn(
+        "flex rounded-xl bg-secondary/60 p-1 gap-0.5",
+        !compact && "w-full sm:w-auto",
+      )}
     >
       {options.map((option) => (
         <button
@@ -61,10 +67,14 @@ export function SegmentedControl<T extends string>({
           role="radio"
           aria-checked={value === option.id}
           tabIndex={value === option.id ? 0 : -1}
-          onClick={() => onChange(option.id)}
+          onClick={() => {
+            onChange(option.id);
+          }}
           className={cn(
             "min-w-0 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            compact ? "px-2.5 py-1.5 text-xs" : "flex-1 px-2 sm:px-5 py-2.5 text-sm",
+            compact
+              ? "px-2.5 py-1.5 text-xs"
+              : "flex-1 px-2 sm:px-5 py-2.5 text-sm",
             value === option.id
               ? "bg-background text-foreground shadow-sm ring-1 ring-border/80"
               : "text-muted-foreground hover:text-foreground hover:bg-background/60",

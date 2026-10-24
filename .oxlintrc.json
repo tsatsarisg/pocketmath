@@ -1,0 +1,174 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "oxc",
+    "unicorn",
+    "import",
+    "react",
+    "nextjs",
+    "jsx-a11y"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "node": true,
+    "browser": true
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    ".next/**",
+    "out/**",
+    "coverage/**",
+    "next-env.d.ts"
+  ],
+  "rules": {
+    "eqeqeq": [
+      "error",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
+    "curly": ["error", "all"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-debugger": "error",
+    "no-eval": "error",
+    "no-implicit-coercion": "error",
+    "max-depth": ["error", 4],
+    "import/no-cycle": "error",
+    "import/no-self-import": "error",
+    "no-param-reassign": "error",
+    "jsx-a11y/prefer-tag-over-role": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.{ts,tsx}"],
+      "rules": {
+        "typescript/await-thenable": "error",
+        "typescript/ban-ts-comment": "error",
+        "typescript/no-array-delete": "error",
+        "typescript/no-base-to-string": "error",
+        "typescript/no-confusing-void-expression": "error",
+        "typescript/no-deprecated": "error",
+        "typescript/no-duplicate-enum-values": "error",
+        "typescript/no-duplicate-type-constituents": "error",
+        "typescript/no-dynamic-delete": "error",
+        "typescript/no-empty-object-type": "error",
+        "typescript/no-explicit-any": "error",
+        "typescript/no-extra-non-null-assertion": "error",
+        "typescript/no-extraneous-class": "error",
+        "typescript/no-for-in-array": "error",
+        "typescript/no-implied-eval": "error",
+        "typescript/no-meaningless-void-operator": "error",
+        "typescript/no-misused-new": "error",
+        "typescript/no-misused-promises": "error",
+        "typescript/no-misused-spread": "error",
+        "typescript/no-mixed-enums": "error",
+        "typescript/no-namespace": "error",
+        "typescript/no-non-null-asserted-nullish-coalescing": "error",
+        "typescript/no-non-null-asserted-optional-chain": "error",
+        "typescript/no-non-null-assertion": "error",
+        "typescript/no-redundant-type-constituents": "error",
+        "typescript/no-require-imports": "error",
+        "typescript/no-this-alias": "error",
+        "typescript/no-unnecessary-boolean-literal-compare": "error",
+        "typescript/no-unnecessary-condition": "error",
+        "typescript/no-unnecessary-template-expression": "error",
+        "typescript/no-unnecessary-type-arguments": "error",
+        "typescript/no-unnecessary-type-assertion": "error",
+        "typescript/no-unnecessary-type-constraint": "error",
+        "typescript/no-unnecessary-type-conversion": "error",
+        "typescript/no-unsafe-argument": "error",
+        "typescript/no-unsafe-assignment": "error",
+        "typescript/no-unsafe-call": "error",
+        "typescript/no-unsafe-declaration-merging": "error",
+        "typescript/no-unsafe-enum-comparison": "error",
+        "typescript/no-unsafe-function-type": "error",
+        "typescript/no-unsafe-member-access": "error",
+        "typescript/no-unsafe-return": "error",
+        "typescript/no-unsafe-unary-minus": "error",
+        "typescript/no-wrapper-object-types": "error",
+        "typescript/non-nullable-type-assertion-style": "error",
+        "typescript/only-throw-error": "error",
+        "typescript/prefer-as-const": "error",
+        "typescript/prefer-literal-enum-member": "error",
+        "typescript/prefer-namespace-keyword": "error",
+        "typescript/prefer-promise-reject-errors": "error",
+        "typescript/prefer-reduce-type-parameter": "error",
+        "typescript/prefer-return-this-type": "error",
+        "typescript/related-getter-setter-pairs": "error",
+        "typescript/require-array-sort-compare": "error",
+        "typescript/require-await": "error",
+        "typescript/switch-exhaustiveness-check": "error",
+        "typescript/triple-slash-reference": "error",
+        "typescript/unbound-method": "error",
+        "typescript/use-unknown-in-catch-callback-variable": "error",
+        "typescript/no-floating-promises": [
+          "error",
+          {
+            "ignoreVoid": false
+          }
+        ],
+        "typescript/no-invalid-void-type": [
+          "error",
+          {
+            "allowAsThisParameter": true
+          }
+        ],
+        "typescript/restrict-plus-operands": [
+          "error",
+          {
+            "allowAny": false,
+            "allowBoolean": false,
+            "allowNullish": false,
+            "allowNumberAndString": false,
+            "allowRegExp": false
+          }
+        ],
+        "typescript/restrict-template-expressions": [
+          "error",
+          {
+            "allowNumber": true
+          }
+        ],
+        "typescript/return-await": ["error", "error-handling-correctness-only"],
+        "typescript/consistent-type-imports": [
+          "error",
+          {
+            "fixStyle": "inline-type-imports"
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/**/*.{ts,tsx}"],
+      "jsPlugins": [
+        {
+          "name": "react-hooks-js",
+          "specifier": "eslint-plugin-react-hooks"
+        }
+      ],
+      "rules": {
+        "react-hooks-js/rules-of-hooks": "error",
+        "react-hooks-js/exhaustive-deps": "error",
+        "react-hooks-js/static-components": "error",
+        "react-hooks-js/use-memo": "error",
+        "react-hooks-js/preserve-manual-memoization": "error",
+        "react-hooks-js/incompatible-library": "error",
+        "react-hooks-js/immutability": "error",
+        "react-hooks-js/globals": "error",
+        "react-hooks-js/refs": "error",
+        "react-hooks-js/set-state-in-effect": "error",
+        "react-hooks-js/error-boundaries": "error",
+        "react-hooks-js/purity": "error",
+        "react-hooks-js/set-state-in-render": "error",
+        "react-hooks-js/unsupported-syntax": "error",
+        "react-hooks-js/config": "error",
+        "react-hooks-js/gating": "error"
+      }
+    }
+  ]
+}

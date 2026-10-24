@@ -14,15 +14,24 @@ interface NumberFieldProps {
   placeholder?: string;
 }
 
-export function NumberField({ field, label, value, onChange, placeholder }: NumberFieldProps) {
+export function NumberField({
+  field,
+  label,
+  value,
+  onChange,
+  placeholder,
+}: NumberFieldProps) {
   const id = useId();
   const { t } = useTranslation();
-  const error = field === "monthly" && value === "" ? undefined : validateField(value, field);
+  const error =
+    field === "monthly" && value === ""
+      ? undefined
+      : validateField(value, field);
   const inputProps = {
     id,
     value,
     placeholder,
-    "aria-invalid": !!error,
+    "aria-invalid": Boolean(error),
     "aria-describedby": error ? `${id}-error` : undefined,
   };
 
@@ -36,7 +45,9 @@ export function NumberField({ field, label, value, onChange, placeholder }: Numb
           {...inputProps}
           type="text"
           inputMode="numeric"
-          onChange={(event) => onChange(event.target.value)}
+          onChange={(event) => {
+            onChange(event.target.value);
+          }}
         />
       )}
       {error && (

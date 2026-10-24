@@ -12,10 +12,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
     // Restore saved language after hydration to avoid SSR/client mismatch.
     // Runs once on mount — server always renders 'el', client switches if needed.
     let raw: string | null = null;
-    try { raw = localStorage.getItem("i18nextLng"); } catch { return; }
-    const saved = raw !== null && SUPPORTED_LANGS.has(raw) ? (raw as "el" | "en") : null;
+    try {
+      raw = localStorage.getItem("i18nextLng");
+    } catch {
+      return;
+    }
+    const saved =
+      raw !== null && SUPPORTED_LANGS.has(raw) ? (raw as "el" | "en") : null;
     if (saved && saved !== i18n.language) {
-      i18n.changeLanguage(saved);
+      i18n.changeLanguage(saved).catch((error: unknown) => {
+        console.error("Language restoration failed", error);
+      });
     }
   }, []);
 

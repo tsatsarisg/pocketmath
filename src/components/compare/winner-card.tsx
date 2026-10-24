@@ -10,7 +10,9 @@ export function WinnerCard({ entry }: { entry: RankedEntry }) {
   return (
     <div className="rounded-2xl bg-net-accent-muted ring-2 ring-net-accent/30 p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[0.9375rem] font-semibold text-foreground">{entry.label}</p>
+        <p className="text-[0.9375rem] font-semibold text-foreground">
+          {entry.label}
+        </p>
         <MetaPill className="text-net-accent bg-net-accent/10">
           {t("compare.bestNet")}
         </MetaPill>
@@ -27,7 +29,9 @@ export function WinnerCard({ entry }: { entry: RankedEntry }) {
 
       <div className="space-y-2 border-t border-net-accent/20 pt-4">
         <div className="flex items-baseline justify-between">
-          <p className="text-[0.8125rem] text-net-accent">{t("compare.monthlyEquiv")}</p>
+          <p className="text-[0.8125rem] text-net-accent">
+            {t("compare.monthlyEquiv")}
+          </p>
           <p className="text-[0.9375rem] font-semibold tabular-nums text-net-accent">
             {fmt(entry.data.annualNet / 12)}
           </p>
@@ -35,7 +39,9 @@ export function WinnerCard({ entry }: { entry: RankedEntry }) {
         {isEmployee && (
           <div className="flex items-baseline justify-between">
             <span className="flex items-center gap-1.5">
-              <p className="text-[0.8125rem] text-net-accent">{t("compare.actualPaycheck")}</p>
+              <p className="text-[0.8125rem] text-net-accent">
+                {t("compare.actualPaycheck")}
+              </p>
               <MetaPill className="text-primary bg-primary/10">14×</MetaPill>
             </span>
             <p className="text-[0.9375rem] font-semibold tabular-nums text-net-accent">
@@ -53,7 +59,9 @@ export function WinnerCard({ entry }: { entry: RankedEntry }) {
           </p>
         </div>
         <div>
-          <p className="text-xs text-net-accent">{t("compare.effectiveTaxRate")}</p>
+          <p className="text-xs text-net-accent">
+            {t("compare.effectiveTaxRate")}
+          </p>
           <p className="text-[0.8125rem] font-medium tabular-nums text-net-accent">
             {fmtPct(entry.data.effectiveTaxRate)}
           </p>

@@ -9,13 +9,20 @@ import {
 function buildBrackets(children: number, age: number): TaxBracket[] {
   return STANDARD_BRACKETS.map((bracket, index) => {
     let rate = bracket.rate;
-    if (index === 0 && (age <= 25 || children >= 4)) rate = 0;
+    if (index === 0 && (age <= 25 || children >= 4)) {
+      rate = 0;
+    }
     if (index === 1) {
       rate = getBracket2Rate(children);
-      if (age <= 25) rate = 0;
-      else if (age <= 30) rate = Math.min(rate, 0.09);
+      if (age <= 25) {
+        rate = 0;
+      } else if (age <= 30) {
+        rate = Math.min(rate, 0.09);
+      }
     }
-    if (index === 2) rate = getBracket3Rate(children);
+    if (index === 2) {
+      rate = getBracket3Rate(children);
+    }
     return { limit: bracket.limit, rate };
   });
 }
@@ -38,7 +45,9 @@ export function calculateTax(
 
   for (const bracket of effectiveBrackets) {
     const taxable = Math.min(income, bracket.limit) - prev;
-    if (taxable <= 0) break;
+    if (taxable <= 0) {
+      break;
+    }
 
     const tax = Math.round(taxable * bracket.rate * 100) / 100;
     totalTax += tax;
@@ -52,7 +61,9 @@ export function calculateTax(
     });
 
     prev = bracket.limit;
-    if (income <= bracket.limit) break;
+    if (income <= bracket.limit) {
+      break;
+    }
   }
 
   const grossTax = Math.round(totalTax * 100) / 100;

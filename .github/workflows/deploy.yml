@@ -26,10 +26,17 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+
+      - name: Validate source
+        run: |
+          pnpm typecheck
+          pnpm lint
+          pnpm format:check
+          pnpm test
 
       # GITHUB_PAGES=true flips next.config.ts into static-export mode
       # (output: 'export' + basePath/assetPrefix '/pocketmath'). Emits to out/.
