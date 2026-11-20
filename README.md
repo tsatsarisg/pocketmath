@@ -1,6 +1,8 @@
 # PocketMath
 
-A Greek tax calculator for employees, self-employed, and mplokaki workers.
+A Greek tax calculator for employees, sole proprietors, mplokaki workers, and
+sole owners of a single-member IKE. The comparison page includes a direct
+sole proprietor versus IKE view.
 
 ## Development
 

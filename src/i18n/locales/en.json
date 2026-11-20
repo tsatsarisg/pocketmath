@@ -9,7 +9,8 @@
   "modes": {
     "employee": "Employee",
     "selfEmployed": "Self-Employed",
-    "mplokaki": "Block Invoice"
+    "mplokaki": "Block Invoice",
+    "ike": "Single-member IKE"
   },
   "period": {
     "monthly": "Monthly",
@@ -55,7 +56,7 @@
     "paycheckBadge": "1 of 14 paychecks / year",
     "showBreakdown": "Show detailed breakdown",
     "hideBreakdown": "Hide detailed breakdown",
-    "emptyState": "Enter your salary above to see the result",
+    "emptyState": "Enter a monthly amount to see the result",
     "invalid": "Correct the highlighted fields to see your result."
   },
   "disclaimer": "Results are approximate estimates for informational and educational purposes only. They do not constitute tax, financial, or legal advice and should not be used as the sole basis for any financial decision. Consult a qualified accountant for professional tax advice. Based on Law 5246/2025.",
@@ -113,8 +114,8 @@
     "terms": "Terms"
   },
   "compare": {
-    "headline": "Compare employment types",
-    "subtitle": "Same gross income — which arrangement puts more money in your pocket over a year?",
+    "headline": "Compare net income",
+    "subtitle": "See what you keep each year as an employee, invoice contractor, sole proprietor or single-member IKE owner.",
     "grossMonthly": "Gross monthly income",
     "emptyState": "Enter a monthly income to compare all three options",
     "employee": "Employee",
@@ -131,20 +132,29 @@
     "annualComparison": "Annual comparison",
     "whyDifferent": "Why is the employee monthly paycheck lower?",
     "whyDifferentBody": "Greek employees receive 14 salaries per year — 12 regular + Christmas bonus + Easter bonus + summer leave bonus. The annual total is higher, but each paycheck is 1/14 of that, not 1/12. The monthly equivalent rows above divide the annual net by 12 so all three options are on the same footing.",
-    "defaults": "Assumptions: age 35, no children or expenses, 4th business year, 1st EFKA category including €10 unemployment, no additional contributions. Block Invoice assumes Article 12 eligibility and category insurance. Your minimum applies to Self-Employed. Net excludes tax prepayment.",
+    "defaults": "The sole proprietor and IKE use the first EFKA category (€260.77/month). The IKE has one office, pays no management fee and distributes all available profit after the statutory reserve. Net income is shown before the new tax advance.",
     "detailedCalc": "Need a detailed breakdown?",
     "goToCalculator": "Go to calculator",
-    "basis": "The same monthly amount means 14 employee paychecks or 12 monthly invoices per year. Annual gross totals therefore differ."
+    "basis": "The same monthly amount means 14 employee paychecks or 12 monthly invoices per year. Annual gross totals therefore differ.",
+    "scope": "Comparison scenarios",
+    "allModes": "All scenarios",
+    "businessModes": "Sole proprietor and IKE",
+    "selfEmployedExpenses": "Sole proprietor expenses / month",
+    "ikeExpenses": "IKE expenses / month",
+    "expensesHelp": "Use deductible expenses for each business, excluding VAT and EFKA. Include accounting and other operating costs. The annual IKE registry fee is added automatically. Include any sole proprietor registry fee in that business’s expenses.",
+    "taxProfile": "Age, children and years as a sole proprietor",
+    "mplokakiBasis": "The invoice contractor scenario assumes Article 12(2)(f) eligibility and the first EFKA category."
   },
   "a11y": {
     "skipToContent": "Skip to main content",
     "modeEmployee": "Mode: Employee",
     "modeSelfEmployed": "Mode: Self-employed",
     "modeMplokaki": "Mode: Block invoice",
-    "employment": "Employment type",
+    "employment": "Work or business type",
     "period": "Period",
     "language": "Language",
-    "theme": "Dark mode"
+    "theme": "Dark mode",
+    "modeIke": "Single-member IKE mode"
   },
   "legal": {
     "privacyPolicy": "Privacy Policy",
@@ -274,7 +284,8 @@
     "amount": "Enter an amount from 0 to 10,000,000 (no thousands separators).",
     "age": "Enter a whole-number age from 16 to 120.",
     "children": "Enter a whole number from 0 to 10.",
-    "years": "Enter a whole number of years, at least 1."
+    "years": "Enter a whole number of years, at least 1.",
+    "percentage": "Enter a percentage from 0 to 100."
   },
   "efka": {
     "special": "Special",
@@ -287,5 +298,48 @@
     "specialNote": "First 5 years only",
     "includesUnemployment": "Includes €10/month unemployment contribution.",
     "additionalHelp": "Add any supplementary, lump-sum or other mandatory contributions not included in the category."
+  },
+  "ike": {
+    "scope": "Full-year 2026 estimate for a sole member who also manages the company, with one office and dividends as their only income from the company. Enter revenue and deductible expenses excluding VAT. Insurance and the registry fee are calculated separately.",
+    "expenses": "Deductible expenses / month",
+    "levyLabel": "Head office business levy / year",
+    "levy0": "€0 · Outside Attica, Islands Regional Unit or exempt",
+    "levy800": "€800 · Liable office, up to 200,000 residents",
+    "levy1000": "€1,000 · Liable office, over 200,000 residents",
+    "distribution": "Share of available profit distributed (%)",
+    "reducedPrepayment": "Eligible for the reduced tax advance (40%)",
+    "reducedHelp": "Available for an eligible new company’s first three tax years. The standard 80% applies to conversions and mergers.",
+    "taxes": "Taxes, business levy & EFKA",
+    "net": "Net amount to owner",
+    "gemi": "GEMI registry fee",
+    "taxableProfit": "Taxable company profit",
+    "corporateTax": "Corporate income tax (22%)",
+    "levy": "Business levy",
+    "profitAfterTax": "Company result after tax and levy",
+    "retainedProfit": "Profit retained in the IKE",
+    "reserve": "Includes the 5% statutory reserve of {{amount}}",
+    "grossDividend": "Gross dividend",
+    "dividendTax": "Dividend tax (5%)",
+    "personalEfka": "Personal EFKA contributions",
+    "shortfall": "Company loss covered by the owner",
+    "prepayment": "New corporate tax advance ({{rate}})",
+    "companyBalance": "IKE balance after distribution and tax advance",
+    "companyBalanceHelp": "Estimate before crediting any previous advance. A negative balance shows the company would need additional liquidity in this scenario.",
+    "notes": "Setup costs and official sources",
+    "transition": "If you close a sole proprietorship and continue the same activity through a single-member IKE, Article 28E may result in an additional personal assessment for 2026 following an audit. The estimate shows standard taxation before any such assessment.",
+    "transitionSource": "Article 28E",
+    "setup": "Standard online incorporation via e-YMS costs €18 once. Enter your own estimate for accounting and other operating costs. Closing or transferring a sole proprietorship may involve separate costs and tax treatment.",
+    "setupSource": "e-YMS incorporation",
+    "transferSource": "AADE guidance on business transfers",
+    "taxSource": "Corporate tax and advance",
+    "dividendSource": "Dividend tax",
+    "efkaSource": "2026 EFKA contributions",
+    "levySource": "2026 business levy",
+    "gemiSource": "Annual GEMI fee",
+    "reserveSource": "IKE statutory reserve",
+    "efkaEligibilitySource": "e-EFKA coverage of sole members",
+    "efkaHelp": "Special-category eligibility depends on your insurance history. Incorporation does not restart the first five years.",
+    "transferRelief": "For a qualifying transfer of a sole proprietorship, Law 4935/2022 provides an exemption for 30% of eligible profits starting in the following tax year. The estimate uses standard taxation.",
+    "transferReliefSource": "Business transfer exemption"
   }
 }

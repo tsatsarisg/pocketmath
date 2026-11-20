@@ -3,6 +3,11 @@ import { useTranslation } from "react-i18next";
 import { calculateEmployee } from "@/lib/tax/employee";
 import { calculateSelfEmployed } from "@/lib/tax/self-employed";
 import { calculateMplokaki } from "@/lib/tax/mplokaki";
+import {
+  calculateIke,
+  type IkeHeadOfficeLevy,
+  type IkeResult,
+} from "@/lib/tax/ike";
 import type {
   EfkaCategoryId,
   EmployeeResult,
@@ -66,7 +71,26 @@ export interface MplokakiState {
   setAge: (v: string) => void;
 }
 
+export interface IkeState {
+  monthly: string;
+  setMonthly: (v: string) => void;
+  expenses: string;
+  setExpenses: (v: string) => void;
+  efka: EfkaCategoryId;
+  setEfka: (v: EfkaCategoryId) => void;
+  additionalInsurance: string;
+  setAdditionalInsurance: (v: string) => void;
+  levy: IkeHeadOfficeLevy;
+  setLevy: (v: IkeHeadOfficeLevy) => void;
+  distribution: string;
+  setDistribution: (v: string) => void;
+  reducedPrepayment: boolean;
+  setReducedPrepayment: (v: boolean) => void;
+}
+
 export interface CalculatorReturn {
+  ike: IkeState;
+  ikeResult: IkeResult | null;
   emp: EmployeeState;
   se: SelfEmployedState;
   mp: MplokakiState;
@@ -112,6 +136,14 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   const [mpEfka, setMpEfka] = useState<EfkaCategoryId>("1st");
   const [mpChildren, setMpChildren] = useState("0");
   const [mpAge, setMpAge] = useState("35");
+
+  const [ikeMonthly, setIkeMonthly] = useState("");
+  const [ikeExpenses, setIkeExpenses] = useState("0");
+  const [ikeEfka, setIkeEfka] = useState<EfkaCategoryId>("1st");
+  const [ikeAdditionalInsurance, setIkeAdditionalInsurance] = useState("0");
+  const [ikeLevy, setIkeLevy] = useState<IkeHeadOfficeLevy>(0);
+  const [ikeDistribution, setIkeDistribution] = useState("100");
+  const [ikeReducedPrepayment, setIkeReducedPrepayment] = useState(false);
 
   function updateSeYears(value: string) {
     setSeYears(value);
@@ -228,6 +260,41 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     mpWithheld,
   ]);
 
+  const ikeResult = useMemo(() => {
+    const monthlyRevenue = parseField(ikeMonthly, "monthly");
+    const monthlyExpenses = parseField(ikeExpenses, "expenses");
+    const additionalMonthlyInsurance = parseField(
+      ikeAdditionalInsurance,
+      "amount",
+    );
+    const distributionPercent = parseField(ikeDistribution, "percentage");
+    if (
+      monthlyRevenue === null ||
+      monthlyExpenses === null ||
+      additionalMonthlyInsurance === null ||
+      distributionPercent === null
+    ) {
+      return null;
+    }
+    return calculateIke({
+      annualRevenue: monthlyRevenue * 12,
+      annualExpenses: monthlyExpenses * 12,
+      efkaCategory: ikeEfka,
+      additionalMonthlyInsurance,
+      distributionPercent,
+      headOfficeLevy: ikeLevy,
+      reducedPrepayment: ikeReducedPrepayment,
+    });
+  }, [
+    ikeMonthly,
+    ikeExpenses,
+    ikeAdditionalInsurance,
+    ikeDistribution,
+    ikeEfka,
+    ikeLevy,
+    ikeReducedPrepayment,
+  ]);
+
   const stats = getCalculatorStats(
     mode,
     period,
@@ -235,6 +302,7 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     seResult,
     mpResult,
     t,
+    ikeResult,
   );
 
   // Gate results on actual user input. The "primary" revenue field differs per
@@ -243,12 +311,30 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     employee: empMonthly,
     "self-employed": seMonthly,
     mplokaki: mpMonthly,
+    ike: ikeMonthly,
   };
   const hasUserInput = primaryInput[mode] !== "";
 
   const hasResult = stats !== null && hasUserInput;
 
   return {
+    ike: {
+      monthly: ikeMonthly,
+      setMonthly: setIkeMonthly,
+      expenses: ikeExpenses,
+      setExpenses: setIkeExpenses,
+      efka: ikeEfka,
+      setEfka: setIkeEfka,
+      additionalInsurance: ikeAdditionalInsurance,
+      setAdditionalInsurance: setIkeAdditionalInsurance,
+      levy: ikeLevy,
+      setLevy: setIkeLevy,
+      distribution: ikeDistribution,
+      setDistribution: setIkeDistribution,
+      reducedPrepayment: ikeReducedPrepayment,
+      setReducedPrepayment: setIkeReducedPrepayment,
+    },
+    ikeResult,
     emp: {
       monthly: empMonthly,
       setMonthly: setEmpMonthly,

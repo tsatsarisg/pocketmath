@@ -56,7 +56,8 @@ export function SegmentedControl<T extends string>({
       aria-label={label}
       onKeyDown={handleKeyDown}
       className={cn(
-        "flex rounded-xl bg-secondary/60 p-1 gap-0.5",
+        "rounded-xl bg-secondary/60 p-1 gap-0.5",
+        !compact && options.length === 4 ? "grid grid-cols-2 sm:flex" : "flex",
         !compact && "w-full sm:w-auto",
       )}
     >

@@ -91,6 +91,24 @@ describe("calculator state transitions", () => {
 });
 
 describe("scenario input requirements", () => {
+  it("waits for a valid IKE distribution percentage and accepts zero", () => {
+    const result = runSteps("ike", [
+      (calc) => {
+        calc.ike.setMonthly("2000");
+        calc.ike.setDistribution("101");
+      },
+      (calc) => {
+        expect(calc.hasUserInput).toBe(true);
+        expect(calc.hasResult).toBe(false);
+        calc.ike.setDistribution("0");
+        calc.ike.setLevy(1_000);
+      },
+    ]);
+    expect(result.hasResult).toBe(true);
+    expect(result.ikeResult?.grossDividend).toBe(0);
+    expect(result.ikeResult?.headOfficeLevy).toBe(1_000);
+  });
+
   it("blocks an established business until the minimum is entered", () => {
     const result = runSteps("self-employed", [
       (calc) => {

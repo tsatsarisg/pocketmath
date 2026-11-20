@@ -8,6 +8,9 @@ import { EmployeeBreakdown } from "@/components/calculator/employee-breakdown";
 import { SelfEmployedBreakdown } from "@/components/calculator/self-employed-breakdown";
 import { MplokakiBreakdown } from "@/components/calculator/mplokaki-breakdown";
 
+import { IkeInputs } from "./ike-inputs";
+import { IkeBreakdown } from "./ike-breakdown";
+
 export interface ModeConfig {
   labelKey: string;
   /** i18n key for the aria-live mode-change announcement. */
@@ -44,6 +47,15 @@ export const MODE_REGISTRY: { [K in Mode]: ModeConfig } = {
     renderBreakdown: (calc, period) =>
       calc.mpResult ? (
         <MplokakiBreakdown result={calc.mpResult} period={period} />
+      ) : null,
+  },
+  ike: {
+    labelKey: "modes.ike",
+    a11yKey: "a11y.modeIke",
+    renderInputs: (calc) => <IkeInputs state={calc.ike} />,
+    renderBreakdown: (calc, period) =>
+      calc.ikeResult ? (
+        <IkeBreakdown result={calc.ikeResult} period={period} />
       ) : null,
   },
 };

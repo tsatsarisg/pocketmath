@@ -1,6 +1,6 @@
 # Greek tax and insurance calculations — tax year 2026
 
-Parameters reviewed September 2026. This is a full-year scenario calculator, not a tax-return engine. Monthly business income assumes 12 equal months; employee salary assumes 14 equal salary units. Amounts exclude VAT. Insurance inputs represent deductible contributions paid for the scenario.
+Baseline reviewed September 2026. Single-member IKE rules reviewed 20 November 2026. This is a full-year scenario calculator, not a tax-return engine. Monthly business income assumes 12 equal months; employee salary assumes 14 equal salary units. Amounts exclude VAT. The sole proprietor and invoice scenarios treat the modelled contributions as deductible.
 
 ## Income tax
 
@@ -82,8 +82,38 @@ annualNet = invoiced - workerInsurance - annualTax
 
 The 20% withholding default is an explicit scenario assumption, not a universal rule. Actual withholding, including zero, overrides it and affects settlement only. The qualifying invoice scenario does not charge a business tax advance.
 
+## Single-member IKE
+
+The model covers one head office for a full tax year and a Greek-resident individual who is the only member and manages the IKE. The owner takes dividends without a management fee. The owner pays non-salaried EFKA personally, including unemployment and any applicable additional insurance. The company tax calculation excludes the owner's personal contributions. Special-category eligibility depends on the person's insurance history. [e-EFKA coverage](https://www.e-efka.gov.gr/el/sychnes-eroteseis/asphalisi-eisphores/asphalismenoi/genika/eleytheroi-epaggelmaties-aytoapascholoymenoi-kai-agrotes) · [e-EFKA 6/2026](https://www.e-efka.gov.gr/el/egkyklioi-kai-genika-eggrapha/egkyklios-62026)
+
+```
+profitBeforeTax = annualRevenue - annualDeductibleExpenses - 100
+corporateTax = max(0, profitBeforeTax) * 22%
+profitAfterTax = profitBeforeTax - corporateTax - headOfficeLevy
+legalReserve = max(0, profitAfterTax) * 5%
+grossDividend = (max(0, profitAfterTax) - legalReserve) * distributionPercent / 100
+dividendTax = grossDividend * 5%
+ownerNet = grossDividend - dividendTax - personalEFKA + min(0, profitAfterTax)
+companyBalanceAfterAdvance = profitAfterTax - grossDividend - newCorporateAdvance
+```
+
+- The €100 annual GEMI fee is included in recurring deductible expenses. First-year GEMI fees may be prorated. Standard e-YMS incorporation costs €18 once. Accounting, banking, invoicing and premises costs depend on the business and can be entered as expenses where deductible. The company prepares and files annual financial statements. [GEMI fee table](https://gge.mindev.gov.gr/tomeas-emporiou/sixnes-erotiseis-gemh/) · [e-YMS procedure](https://eu-go.gov.gr/services/596897) · [IKE law](https://ependyseis.mindev.gov.gr/uploads/photos/fek-a-86-2012.pdf)
+- Law 5355/2026 exempts head offices outside Attica and in Attica's Islands Regional Unit for tax year 2026. Where payable, the non-deductible head-office levy is €800 or €1,000 according to location and population. The selector also accommodates other exemptions. Branch levies and part-year fees require a separate estimate. [AADE O. 3055/2026, Articles 14 and 53](https://aade.gr/egkyklioi-kai-apofaseis/o-3055-19-11-2026)
+- The model applies the minimum 5% legal reserve and lets the owner distribute part or all of the available current-year profit. The personal net excludes company reserves and assumes the owner funds any operating shortfall. The 5% dividend tax applies to the amount distributed. [Law 4072/2012, Article 100](https://ependyseis.mindev.gov.gr/uploads/photos/fek-a-86-2012.pdf) · [AADE 2026 tax handbook](https://www.aade.gr/sites/default/files/2026-05/egxeiridio_erotiseon_apantiseon_forologias_may_2026.pdf)
+- The corporate income tax rate is 22%. The corporate advance is 80% of corporate tax, or 40% for the first three years of an eligible new company. The reduced rate excludes companies formed through conversion or merger. The advance affects the company balance before prior credits. The owner net and comparison exclude it. [AADE E. 2125/2021](https://www.aade.gr/sites/default/files/2021-06/e_2125_2021pro.pdf) · [Article 71, consolidated income tax code](https://gslegal.gov.gr/wp-content/uploads/2024/05/%CE%94%CE%99%CE%9F%CE%99%CE%9A%CE%97%CE%A4%CE%99%CE%9A%CE%97-%CE%9A%CE%A9%CE%94%CE%99%CE%9A%CE%9F%CE%A0%CE%9F%CE%99%CE%97%CE%A3%CE%97-%CE%9A%CE%A9%CE%94%CE%99%CE%9A%CE%91-%CE%A6%CE%9F%CE%A1%CE%9F%CE%9B%CE%9F%CE%93%CE%99%CE%91%CE%A3-%CE%95%CE%99%CE%A3%CE%9F%CE%94%CE%97%CE%9C%CE%91%CE%A4%CE%9F%CE%A3.pdf)
+
+### Moving from a sole proprietorship
+
+A newly incorporated IKE receives its own tax registration. Closing the sole proprietorship and contributing its assets or operations to a company are separate steps with case-specific treatment. Law 5162/2024, Article 52, provides for qualifying contributions of a sole proprietorship, including into an IKE. The scenario uses ordinary taxation before transition relief, transfer costs and any personal assessment under Article 28E. [AADE E. 2088/2025](https://www.aade.gr/egkyklioi-kai-apofaseis/e-2088-10-10-2025) · [AADE cessation procedure](https://www.aade.gr/egkyklioi-kai-apofaseis/1157-31-10-2024)
+
+A qualifying contribution can trigger the Article 5 exemption under Law 4935/2022 for 30% of eligible pre-tax profit beginning in the next tax year. Conditions include at least three years since the sole proprietorship opened and double-entry accounting at the recipient, with additional rules for multiple contributing businesses. The exemption requires a qualifying contribution and is subject to statutory limits. [AADE Law 4935/2022 notification](https://www.aade.gr/egkyklioi-kai-apofaseis/o-deaf-1048263-ex-2022) · [AADE E. 2005/2026](https://www.aade.gr/sites/default/files/2026-03/%CE%95_2005_2026.pdf)
+
+Management remuneration for services follows the rules for employment income, with specific treatment of the owner's contributions where both management remuneration and dividends are paid. This calculator uses a dividends-only scenario. [AADE E1 rules for managers and sole members](https://www.aade.gr/sites/default/files/2026-03/a1062_2026fek.pdf)
+
+Article 28E can apply through tax year 2026 after an audit when the sole owner's largest-revenue activity matches the former sole proprietorship by second-level KAD and corporate tax plus hypothetical tax on full distribution falls below the tax on the applicable sole-proprietor minimum. The additional assessment is personal and based on the difference. A midyear move can bring the IKE period within scope. [Law 5073/2023, Article 19](https://www.aade.gr/sites/default/files/2025-01/arthro28_5073.pdf)
+
 ## Presentation and verification
 
-Effective rates consistently include income tax and worker insurance, divided by gross income. Summary and comparison totals exclude the new advance, matching economic net income. Comparison assumes age 35, no children, first-category insurance, no extras or expenses, fourth business year and qualifying Article 12 tax treatment. It requires a supplied business minimum. Employee gross uses 14 salary units; business gross uses 12 months, so annual gross amounts differ at the same monthly input.
+Effective rates divide income tax and insurance by gross income, with the IKE rate also including dividend tax and any applicable business levy. Summary and comparison totals exclude the new advance. The comparison accepts separate sole-proprietor and IKE expenses, the IKE head-office levy, and the age, dependent children and sole-proprietor business years. It uses first-category insurance and assumes qualifying Article 12 treatment for invoice work. The sole-proprietor scenario requires the applicable business minimum after year three. Employee gross uses 14 salary units. Both businesses use 12 months, including in the dedicated sole proprietor and IKE comparison.
 
 Regression tests cover statutory amount tables, family and age boundaries, proportional credit taper and liability cap, revenue eligibility limits, explicit minimum-income handling, worker-only insurance, actual withholding, first-declaration advances, UI validation and reconciliation of comparison totals.

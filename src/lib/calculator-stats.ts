@@ -5,6 +5,7 @@ import type {
   SelfEmployedResult,
   MplokakiResult,
 } from "@/lib/tax/types";
+import type { IkeResult } from "@/lib/tax/ike";
 import { fmt } from "@/lib/format";
 
 export interface Stats {
@@ -26,6 +27,7 @@ export function getCalculatorStats(
   selfEmployed: SelfEmployedResult | null,
   mplokaki: MplokakiResult | null,
   t: TFunction,
+  ike: IkeResult | null = null,
 ): Stats | null {
   let gross: number;
   let tax: number;
@@ -35,6 +37,16 @@ export function getCalculatorStats(
   const divisor = period === "annual" ? 1 : mode === "employee" ? 14 : 12;
 
   switch (mode) {
+    case "ike":
+      if (!ike) {
+        return null;
+      }
+      gross = ike.annualRevenue;
+      tax = ike.totalTaxesAnnual;
+      net = ike.annualNet;
+      grossLabel = t("results.revenue");
+      taxLabel = t("ike.taxes");
+      break;
     case "employee":
       if (!employee) {
         return null;
@@ -77,7 +89,7 @@ export function getCalculatorStats(
     taxLabel,
     taxValue: fmt(tax / divisor),
     taxSub: periodLabel,
-    netLabel: t("results.net"),
+    netLabel: t(mode === "ike" ? "ike.net" : "results.net"),
     netValue: fmt(net / divisor),
     netSub: periodLabel,
   };

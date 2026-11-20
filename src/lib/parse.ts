@@ -1,6 +1,13 @@
 export type NumericField =
-  "monthly" | "expenses" | "amount" | "age" | "children" | "years";
-export type FieldError = "required" | "amount" | "age" | "children" | "years";
+  | "monthly"
+  | "expenses"
+  | "amount"
+  | "age"
+  | "children"
+  | "years"
+  | "percentage";
+export type FieldError =
+  "required" | "amount" | "age" | "children" | "years" | "percentage";
 
 export function validateField(
   value: string,
@@ -20,6 +27,9 @@ export function validateField(
   }
   if (error === "amount") {
     return number <= 10_000_000 ? undefined : error;
+  }
+  if (field === "percentage") {
+    return number <= 100 ? undefined : error;
   }
   if (!Number.isSafeInteger(number)) {
     return error;

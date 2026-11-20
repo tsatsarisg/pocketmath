@@ -49,6 +49,8 @@ export { taxCredit } from "./tax-credit";
 export { calculateEmployee } from "./employee";
 export { calculateSelfEmployed } from "./self-employed";
 export { calculateMplokaki } from "./mplokaki";
+export { calculateIke, IkeInputSchema } from "./ike";
+export type { IkeInput, IkeResult } from "./ike";
 
 // EFKA helpers
 export {

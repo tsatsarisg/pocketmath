@@ -1,6 +1,7 @@
 import { calculateEmployee } from "./employee";
 import { calculateSelfEmployed } from "./self-employed";
 import { calculateMplokaki } from "./mplokaki";
+import { calculateIke, type IkeHeadOfficeLevy } from "./ike";
 import type { EfkaCategoryId } from "./types";
 
 export interface CompareEntry {
@@ -14,45 +15,55 @@ export interface CompareResult {
   employee: CompareEntry;
   "self-employed": CompareEntry;
   mplokaki: CompareEntry;
+  ike: CompareEntry;
 }
 
-const DEFAULTS = {
-  children: 0,
-  age: 35,
-  efkaCategory: "1st" as EfkaCategoryId,
-  yearsInBusiness: 4,
-  annualExpenses: 0,
-};
+interface CompareOptions {
+  age?: number;
+  children?: number;
+  yearsInBusiness?: number;
+  annualSelfEmployedExpenses?: number;
+  annualIkeExpenses?: number;
+  ikeHeadOfficeLevy?: IkeHeadOfficeLevy;
+}
 
-/**
- * Compare net income across all three employment types for the same
- * gross monthly income, using sensible defaults for other parameters.
- */
+/** Compare annual net income for a shared monthly gross amount. */
 export function compareAll(
   monthlyGross: number,
   minimumTaxableIncome: number,
+  {
+    age = 35,
+    children = 0,
+    yearsInBusiness = 4,
+    annualSelfEmployedExpenses = 0,
+    annualIkeExpenses = 0,
+    ikeHeadOfficeLevy = 0,
+  }: CompareOptions = {},
 ): CompareResult {
-  const emp = calculateEmployee({
-    monthlyGross,
-    children: DEFAULTS.children,
-    age: DEFAULTS.age,
-  });
-
+  const efkaCategory: EfkaCategoryId = "1st";
+  const annualRevenue = monthlyGross * 12;
+  const emp = calculateEmployee({ monthlyGross, children, age });
   const se = calculateSelfEmployed({
     minimumTaxableIncome,
-    annualRevenue: monthlyGross * 12,
-    annualExpenses: DEFAULTS.annualExpenses,
-    efkaCategory: DEFAULTS.efkaCategory,
-    age: DEFAULTS.age,
-    yearsInBusiness: DEFAULTS.yearsInBusiness,
+    annualRevenue,
+    annualExpenses: annualSelfEmployedExpenses,
+    efkaCategory,
+    age,
+    children,
+    yearsInBusiness,
   });
-
   const mp = calculateMplokaki({
     qualifiesForEmployeeTax: true,
-    annualGrossInvoiced: monthlyGross * 12,
-    efkaCategory: DEFAULTS.efkaCategory,
-    children: DEFAULTS.children,
-    age: DEFAULTS.age,
+    annualGrossInvoiced: annualRevenue,
+    efkaCategory,
+    children,
+    age,
+  });
+  const ike = calculateIke({
+    annualRevenue,
+    annualExpenses: annualIkeExpenses,
+    efkaCategory,
+    headOfficeLevy: ikeHeadOfficeLevy,
   });
 
   return {
@@ -73,6 +84,12 @@ export function compareAll(
       annualNet: mp.annualNet,
       effectiveTaxRate: mp.effectiveTaxRate,
       totalTaxesAnnual: mp.annualTax + mp.annualEFKA,
+    },
+    ike: {
+      monthlyNet: ike.monthlyNet,
+      annualNet: ike.annualNet,
+      effectiveTaxRate: ike.effectiveTaxRate,
+      totalTaxesAnnual: ike.totalTaxesAnnual,
     },
   };
 }
