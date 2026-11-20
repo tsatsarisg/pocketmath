@@ -7,19 +7,19 @@ export function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="mt-auto">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 px-4 py-6 sm:py-4">
+    <footer className="mt-auto border-t border-border">
+      <div className="mx-auto flex max-w-6xl justify-center px-4 sm:justify-start sm:px-7">
         <div className="flex items-center gap-3 text-xs">
           <Link
             href="/privacy"
-            className="text-muted-foreground hover:text-foreground transition-colors duration-150"
+            className="inline-flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground hover:underline"
           >
             {t("footer.privacy")}
           </Link>
           <span className="text-muted-foreground/30">&middot;</span>
           <a
             href="https://github.com/tsatsarisg/pocketmath/blob/main/docs/tax-formulas.md"
-            className="text-muted-foreground hover:text-foreground transition-colors duration-150"
+            className="inline-flex min-h-11 items-center text-muted-foreground transition-colors hover:text-foreground hover:underline"
           >
             {t("footer.sources")}
           </a>

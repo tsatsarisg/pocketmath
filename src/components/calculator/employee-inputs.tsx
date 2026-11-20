@@ -5,7 +5,7 @@ import type { EmployeeState } from "@/hooks/use-calculator";
 export function EmployeeInputs({ state }: { state: EmployeeState }) {
   const { t } = useTranslation();
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 [&>*:first-child]:col-span-full">
       <NumberField
         field="monthly"
         label={t("inputs.grossMonthly")}

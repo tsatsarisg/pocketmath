@@ -16,7 +16,7 @@ export function BreakdownRow({
   return (
     <div
       className={cn(
-        "flex items-baseline justify-between gap-4 py-3",
+        "flex items-baseline justify-between gap-2.5 py-2.5",
         "border-b border-border/30 last:border-0",
         highlight && "font-medium",
       )}
@@ -29,14 +29,14 @@ export function BreakdownRow({
       >
         {label}
         {sub && (
-          <span className="block text-[0.6875rem] font-normal text-muted-foreground/50 mt-0.5">
+          <span className="block text-[0.6875rem] font-normal text-muted-foreground mt-0.5">
             {sub}
           </span>
         )}
       </dt>
       <dd
         className={cn(
-          "text-[0.8125rem] tabular-nums text-right shrink-0 font-medium",
+          "text-[0.8125rem] tabular-nums min-w-0 max-w-[55%] text-right [overflow-wrap:anywhere] font-medium",
           highlight ? "text-foreground font-semibold" : "text-muted-foreground",
           negative && "text-destructive",
         )}

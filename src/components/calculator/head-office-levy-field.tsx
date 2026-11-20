@@ -36,15 +36,10 @@ export function HeadOfficeLevyField({
           }
         }}
       >
-        <SelectTrigger id={id} className="min-h-10 data-[size=default]:h-auto">
-          <SelectValue className="min-w-0 whitespace-normal">
-            {t(`ike.levy${value}`)}
-          </SelectValue>
+        <SelectTrigger id={id}>
+          <SelectValue>{t(`ike.levy${value}`)}</SelectValue>
         </SelectTrigger>
-        <SelectContent
-          alignItemWithTrigger={false}
-          className="[&_[data-slot=select-item]>span:first-child]:shrink [&_[data-slot=select-item]>span:first-child]:whitespace-normal"
-        >
+        <SelectContent>
           {HEAD_OFFICE_LEVIES.map((levy) => (
             <SelectItem key={levy} value={String(levy)}>
               {t(`ike.levy${levy}`)}

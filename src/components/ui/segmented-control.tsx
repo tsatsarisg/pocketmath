@@ -56,7 +56,7 @@ export function SegmentedControl<T extends string>({
       aria-label={label}
       onKeyDown={handleKeyDown}
       className={cn(
-        "rounded-xl bg-secondary/60 p-1 gap-0.5",
+        "min-w-0 rounded-xl border border-border bg-background p-0.5 gap-0.5",
         !compact && options.length >= 4 ? "grid grid-cols-2 sm:flex" : "flex",
         !compact && "w-full sm:w-auto",
       )}
@@ -72,12 +72,12 @@ export function SegmentedControl<T extends string>({
             onChange(option.id);
           }}
           className={cn(
-            "min-w-0 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            "min-h-11 min-w-0 rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             compact
-              ? "px-2.5 py-1.5 text-xs"
+              ? "min-w-11 px-2.5 py-1 text-xs"
               : "flex-1 px-2 sm:px-5 py-2.5 text-sm",
             value === option.id
-              ? "bg-background text-foreground shadow-sm ring-1 ring-border/80"
+              ? "bg-accent text-accent-foreground shadow-sm"
               : "text-muted-foreground hover:text-foreground hover:bg-background/60",
           )}
         >

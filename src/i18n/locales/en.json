@@ -3,7 +3,7 @@
     "compare": "Compare"
   },
   "hero": {
-    "headline": "How much actually stays in your pocket?",
+    "headline": "Calculate your take-home income",
     "subtitle": "Net income calculator for tax year 2026"
   },
   "modes": {
@@ -18,6 +18,7 @@
     "annual": "Annual"
   },
   "inputs": {
+    "details": "Income details",
     "grossMonthly": "Gross salary / month",
     "children": "Children",
     "age": "Age",
@@ -45,6 +46,7 @@
     "withholdingHelp": "Otherwise assumes 20% of all invoiced revenue. This is not universal: use the actual amount (including 0) when different. Withholding changes the settlement, not final income tax."
   },
   "results": {
+    "breakdown": "Tax breakdown",
     "headline": "Results",
     "gross": "Gross",
     "revenue": "Revenue",
@@ -55,8 +57,6 @@
     "perMonth": "/month",
     "perYear": "/year",
     "paycheckBadge": "1 of 14 paychecks / year",
-    "showBreakdown": "Show detailed breakdown",
-    "hideBreakdown": "Hide detailed breakdown",
     "emptyState": "Enter a monthly amount to see the result",
     "invalid": "Correct the highlighted fields to see your result."
   },
@@ -113,8 +113,10 @@
     "sources": "Assumptions & sources"
   },
   "compare": {
+    "emptyState": "Enter an offer amount to compare take-home income.",
+    "offerDetails": "Offer details",
     "openQuick": "Calculate an offer",
-    "headline": "How much would you keep from the offer?",
+    "headline": "Compare take-home pay from an offer",
     "subtitle": "Compare personal take-home from the same business revenue.",
     "employee": "Employee",
     "selfEmployed": "Self-Employed",

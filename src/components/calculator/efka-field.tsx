@@ -36,8 +36,11 @@ export function EfkaField({ value, onChange, categories }: EfkaFieldProps) {
           }
         }}
       >
-        <SelectTrigger id={id} aria-describedby={`${id}-cost`}>
-          <SelectValue />
+        <SelectTrigger id={id} aria-describedby={`${id}-cost ${id}-help`}>
+          <SelectValue>
+            {category &&
+              `${t(`efka.${category.id}`)} · ${fmt(getMonthlyEfka(category.id))}${t("results.perMonth")}`}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           {categories.map((entry) => (
@@ -53,7 +56,10 @@ export function EfkaField({ value, onChange, categories }: EfkaFieldProps) {
         {category &&
           `${fmt(getAnnualEfka(category.id))}${t("results.perYear")}`}
       </p>
-      <p className="text-sm text-muted-foreground">
+      <p
+        id={`${id}-help`}
+        className="text-xs leading-relaxed text-muted-foreground"
+      >
         {t("efka.includesUnemployment")}
       </p>
     </FieldRow>

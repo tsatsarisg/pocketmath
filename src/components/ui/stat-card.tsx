@@ -19,16 +19,16 @@ export function StatCard({
     <div
       aria-label={`${label}: ${amount}`}
       className={cn(
-        "flex-1 min-w-0 rounded-2xl transition-all duration-300",
+        "min-w-0 rounded-xl border",
         hero
-          ? "bg-net-accent-muted ring-2 ring-net-accent/30 p-5 sm:p-6"
-          : "bg-card ring-1 ring-border/50 p-4 sm:p-5",
+          ? "bg-net-accent-muted border-net-accent/25 p-4 sm:p-5"
+          : "bg-background border-border p-3 sm:p-4",
         className,
       )}
     >
       <p
         className={cn(
-          "text-[0.6875rem] font-semibold uppercase tracking-[0.1em]",
+          "text-xs leading-snug font-medium",
           hero ? "text-net-accent" : "text-muted-foreground",
         )}
       >
@@ -38,8 +38,8 @@ export function StatCard({
         className={cn(
           "tabular-nums [overflow-wrap:anywhere] leading-tight tracking-tight mt-1",
           hero
-            ? "text-[2rem] sm:text-[2.5rem] font-extrabold text-net-accent"
-            : "text-[1.75rem] font-bold text-foreground",
+            ? "text-[clamp(1.75rem,7vw,2.75rem)] font-bold text-net-accent"
+            : "text-lg font-semibold text-foreground sm:text-xl",
         )}
       >
         {amount}

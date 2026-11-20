@@ -136,7 +136,11 @@ export default function RootLayout({
         <Providers>
           <div className="flex min-h-svh flex-col bg-background text-foreground">
             <Header />
-            <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10">
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="mx-auto w-full max-w-6xl flex-1 px-4 pt-6 pb-8 outline-none sm:px-7 sm:pt-10 lg:pt-14"
+            >
               {children}
             </main>
             <Footer />

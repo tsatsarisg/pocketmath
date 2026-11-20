@@ -48,18 +48,10 @@ export function PartnershipFields({
             }
           }}
         >
-          <SelectTrigger
-            id={bookkeepingId}
-            className="min-h-10 data-[size=default]:h-auto"
-          >
-            <SelectValue className="min-w-0 whitespace-normal">
-              {t(`partnership.${fields.bookkeeping}`)}
-            </SelectValue>
+          <SelectTrigger id={bookkeepingId}>
+            <SelectValue>{t(`partnership.${fields.bookkeeping}`)}</SelectValue>
           </SelectTrigger>
-          <SelectContent
-            alignItemWithTrigger={false}
-            className="[&_[data-slot=select-item]>span:first-child]:shrink [&_[data-slot=select-item]>span:first-child]:whitespace-normal"
-          >
+          <SelectContent>
             {PARTNERSHIP_BOOKKEEPING.map((entry) => (
               <SelectItem key={entry} value={entry}>
                 {t(`partnership.${entry}`)}
