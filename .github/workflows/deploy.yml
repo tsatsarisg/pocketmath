@@ -34,10 +34,7 @@ jobs:
 
       - name: Validate source
         run: |
-          pnpm typecheck
-          pnpm lint
-          pnpm format:check
-          pnpm test
+          pnpm check
           pnpm audit --audit-level high
 
       - name: Build static export
