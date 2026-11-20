@@ -91,6 +91,26 @@ describe("calculator state transitions", () => {
 });
 
 describe("scenario input requirements", () => {
+  it("validates the two-partner split and accepts decimal shares and zero EFKA cost", () => {
+    const result = runSteps("partnership", [
+      (calc) => {
+        calc.partnership.setMonthly("6000");
+        calc.partnership.fields.setShare("100");
+      },
+      (calc) => {
+        expect(calc.hasUserInput).toBe(true);
+        expect(calc.hasResult).toBe(false);
+        calc.partnership.fields.setShare("99,5");
+        calc.partnership.fields.setOtherPartnerEfka("0");
+        calc.partnership.fields.setBookkeeping("doubleEntry");
+      },
+    ]);
+    expect(result.hasResult).toBe(true);
+    expect(result.partnershipResult?.annualOtherPartnerEfka).toBe(0);
+    expect(result.partnershipResult?.dividendTaxRate).toBe(0.05);
+    expect(result.partnershipResult?.annualNet).toBe(50_719.08);
+  });
+
   it("waits for a valid IKE distribution percentage and accepts zero", () => {
     const result = runSteps("ike", [
       (calc) => {

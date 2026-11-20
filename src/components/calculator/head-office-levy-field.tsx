@@ -9,24 +9,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IKE_HEAD_OFFICE_LEVIES, type IkeHeadOfficeLevy } from "@/lib/tax/ike";
+import { HEAD_OFFICE_LEVIES, type HeadOfficeLevy } from "@/lib/tax/corporate";
 
-export function IkeLevyField({
+export function HeadOfficeLevyField({
   value,
   onChange,
+  label,
 }: {
-  value: IkeHeadOfficeLevy;
-  onChange: (value: IkeHeadOfficeLevy) => void;
+  value: HeadOfficeLevy;
+  onChange: (value: HeadOfficeLevy) => void;
+  label?: string;
 }) {
   const id = useId();
   const { t } = useTranslation();
   return (
     <FieldRow>
-      <Label htmlFor={id}>{t("ike.levyLabel")}</Label>
+      <Label htmlFor={id}>{label ?? t("ike.levyLabel")}</Label>
       <Select
         value={String(value)}
         onValueChange={(next) => {
-          const levy = IKE_HEAD_OFFICE_LEVIES.find(
+          const levy = HEAD_OFFICE_LEVIES.find(
             (amount) => String(amount) === next,
           );
           if (levy !== undefined) {
@@ -43,7 +45,7 @@ export function IkeLevyField({
           alignItemWithTrigger={false}
           className="[&_[data-slot=select-item]>span:first-child]:shrink [&_[data-slot=select-item]>span:first-child]:whitespace-normal"
         >
-          {IKE_HEAD_OFFICE_LEVIES.map((levy) => (
+          {HEAD_OFFICE_LEVIES.map((levy) => (
             <SelectItem key={levy} value={String(levy)}>
               {t(`ike.levy${levy}`)}
             </SelectItem>

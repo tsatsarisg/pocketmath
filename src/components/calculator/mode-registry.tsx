@@ -10,6 +10,8 @@ import { MplokakiBreakdown } from "@/components/calculator/mplokaki-breakdown";
 
 import { IkeInputs } from "./ike-inputs";
 import { IkeBreakdown } from "./ike-breakdown";
+import { PartnershipInputs } from "./partnership-inputs";
+import { PartnershipBreakdown } from "./partnership-breakdown";
 
 export interface ModeConfig {
   labelKey: string;
@@ -56,6 +58,15 @@ export const MODE_REGISTRY: { [K in Mode]: ModeConfig } = {
     renderBreakdown: (calc, period) =>
       calc.ikeResult ? (
         <IkeBreakdown result={calc.ikeResult} period={period} />
+      ) : null,
+  },
+  partnership: {
+    labelKey: "modes.partnership",
+    a11yKey: "a11y.modePartnership",
+    renderInputs: (calc) => <PartnershipInputs state={calc.partnership} />,
+    renderBreakdown: (calc, period) =>
+      calc.partnershipResult ? (
+        <PartnershipBreakdown result={calc.partnershipResult} period={period} />
       ) : null,
   },
 };

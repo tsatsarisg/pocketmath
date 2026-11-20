@@ -6,10 +6,13 @@ import { useTranslation } from "react-i18next";
 import { compareAll } from "@/lib/tax/compare";
 import type { CompareEntry } from "@/lib/tax/compare";
 import { NumberField } from "@/components/calculator/number-field";
-import { IkeLevyField } from "@/components/calculator/ike-levy-field";
+import { HeadOfficeLevyField } from "@/components/calculator/head-office-levy-field";
 import { IkeNotes, IkeTransitionNote } from "@/components/calculator/ike-notes";
+import { PartnershipFields } from "@/components/calculator/partnership-inputs";
+import { PartnershipNotes } from "@/components/calculator/partnership-notes";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import type { IkeHeadOfficeLevy } from "@/lib/tax/ike";
+import { usePartnershipFields } from "@/hooks/use-partnership-fields";
 import { parseField } from "@/lib/parse";
 import { WinnerCard } from "@/components/compare/winner-card";
 import { RunnerCard } from "@/components/compare/runner-card";
@@ -23,6 +26,8 @@ export default function ComparePage() {
   const [selfEmployedExpenses, setSelfEmployedExpenses] = useState("0");
   const [ikeExpenses, setIkeExpenses] = useState("0");
   const [ikeLevy, setIkeLevy] = useState<IkeHeadOfficeLevy>(0);
+  const partnership = usePartnershipFields();
+  const partnershipInput = partnership.input;
   const [age, setAge] = useState("35");
   const [children, setChildren] = useState("0");
   const [years, setYears] = useState("4");
@@ -48,6 +53,7 @@ export default function ComparePage() {
       minimumTaxableIncome === null ||
       monthlySelfEmployedExpenses === null ||
       monthlyIkeExpenses === null ||
+      !partnershipInput ||
       parsedAge === null ||
       parsedChildren === null ||
       yearsInBusiness === null
@@ -61,6 +67,7 @@ export default function ComparePage() {
       annualSelfEmployedExpenses: monthlySelfEmployedExpenses * 12,
       annualIkeExpenses: monthlyIkeExpenses * 12,
       ikeHeadOfficeLevy: ikeLevy,
+      partnership: partnershipInput,
     });
   }, [
     gross,
@@ -71,6 +78,7 @@ export default function ComparePage() {
     children,
     years,
     ikeLevy,
+    partnershipInput,
   ]);
 
   const ranked: RankedEntry[] = useMemo(() => {
@@ -82,10 +90,12 @@ export default function ComparePage() {
       "self-employed": t("compare.selfEmployed"),
       mplokaki: t("compare.mplokaki"),
       ike: t("modes.ike"),
+      partnership: t("modes.partnership"),
     };
     const entries = (Object.entries(result) as [ModeKey, CompareEntry][])
       .filter(
-        ([key]) => scope === "all" || key === "ike" || key === "self-employed",
+        ([key]) =>
+          scope === "all" || (key !== "employee" && key !== "mplokaki"),
       )
       .map(([key, data]) => ({ key, data }))
       .sort((a, b) => b.data.annualNet - a.data.annualNet);
@@ -138,7 +148,11 @@ export default function ComparePage() {
             onChange={setGross}
             placeholder="2000"
           />
-          <IkeLevyField value={ikeLevy} onChange={setIkeLevy} />
+          <HeadOfficeLevyField
+            value={ikeLevy}
+            onChange={setIkeLevy}
+            label={t("compare.ikeLevy")}
+          />
           <NumberField
             field="expenses"
             label={t("compare.selfEmployedExpenses")}
@@ -155,6 +169,17 @@ export default function ComparePage() {
         <p className="text-sm text-muted-foreground">
           {t("compare.expensesHelp")}
         </p>
+        <details className="space-y-3">
+          <summary className="cursor-pointer text-sm font-medium">
+            {t("compare.partnershipSettings")}
+          </summary>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <PartnershipFields fields={partnership} comparison />
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {t("partnership.efkaHelp")}
+          </p>
+        </details>
         <details className="space-y-3">
           <summary className="cursor-pointer text-sm font-medium">
             {t("compare.taxProfile")}
@@ -198,9 +223,11 @@ export default function ComparePage() {
       <div className="space-y-2 text-sm text-muted-foreground">
         {scope === "all" && <p>{t("compare.basis")}</p>}
         <p>{t("compare.defaults")}</p>
+        <p>{t("compare.partnershipBasis")}</p>
         {scope === "all" && <p>{t("compare.mplokakiBasis")}</p>}
         <IkeTransitionNote />
         <IkeNotes includeTransition={false} />
+        <PartnershipNotes />
       </div>
       <div role="status" className="sr-only" aria-atomic="true">
         {winner

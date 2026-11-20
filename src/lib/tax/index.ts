@@ -51,6 +51,8 @@ export { calculateSelfEmployed } from "./self-employed";
 export { calculateMplokaki } from "./mplokaki";
 export { calculateIke, IkeInputSchema } from "./ike";
 export type { IkeInput, IkeResult } from "./ike";
+export { calculatePartnership, PartnershipInputSchema } from "./partnership";
+export type { PartnershipInput, PartnershipResult } from "./partnership";
 
 // EFKA helpers
 export {

@@ -44,7 +44,11 @@ export function NumberField({
         <Input
           {...inputProps}
           type="text"
-          inputMode={field === "percentage" ? "decimal" : "numeric"}
+          inputMode={
+            field === "percentage" || field === "profitShare"
+              ? "decimal"
+              : "numeric"
+          }
           onChange={(event) => {
             onChange(event.target.value);
           }}

@@ -57,7 +57,7 @@ export function SegmentedControl<T extends string>({
       onKeyDown={handleKeyDown}
       className={cn(
         "rounded-xl bg-secondary/60 p-1 gap-0.5",
-        !compact && options.length === 4 ? "grid grid-cols-2 sm:flex" : "flex",
+        !compact && options.length >= 4 ? "grid grid-cols-2 sm:flex" : "flex",
         !compact && "w-full sm:w-auto",
       )}
     >

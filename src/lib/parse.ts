@@ -5,9 +5,16 @@ export type NumericField =
   | "age"
   | "children"
   | "years"
-  | "percentage";
+  | "percentage"
+  | "profitShare";
 export type FieldError =
-  "required" | "amount" | "age" | "children" | "years" | "percentage";
+  | "required"
+  | "amount"
+  | "age"
+  | "children"
+  | "years"
+  | "percentage"
+  | "profitShare";
 
 export function validateField(
   value: string,
@@ -30,6 +37,9 @@ export function validateField(
   }
   if (field === "percentage") {
     return number <= 100 ? undefined : error;
+  }
+  if (field === "profitShare") {
+    return number > 0 && number < 100 ? undefined : error;
   }
   if (!Number.isSafeInteger(number)) {
     return error;

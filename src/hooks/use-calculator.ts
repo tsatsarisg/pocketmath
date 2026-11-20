@@ -17,6 +17,11 @@ import type {
 import type { Mode, Period } from "@/types/calculator";
 import { getCalculatorStats, type Stats } from "@/lib/calculator-stats";
 import { parseField } from "@/lib/parse";
+import { usePartnershipFields } from "@/hooks/use-partnership-fields";
+import {
+  calculatePartnership,
+  type PartnershipResult,
+} from "@/lib/tax/partnership";
 
 export interface EmployeeState {
   monthly: string;
@@ -88,7 +93,19 @@ export interface IkeState {
   setReducedPrepayment: (v: boolean) => void;
 }
 
+interface PartnershipState {
+  fields: ReturnType<typeof usePartnershipFields>;
+  monthly: string;
+  setMonthly: (v: string) => void;
+  distribution: string;
+  setDistribution: (v: string) => void;
+  reducedPrepayment: boolean;
+  setReducedPrepayment: (v: boolean) => void;
+}
+
 export interface CalculatorReturn {
+  partnership: PartnershipState;
+  partnershipResult: PartnershipResult | null;
   ike: IkeState;
   ikeResult: IkeResult | null;
   emp: EmployeeState;
@@ -144,6 +161,13 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
   const [ikeLevy, setIkeLevy] = useState<IkeHeadOfficeLevy>(0);
   const [ikeDistribution, setIkeDistribution] = useState("100");
   const [ikeReducedPrepayment, setIkeReducedPrepayment] = useState(false);
+
+  const partnershipFields = usePartnershipFields();
+  const partnershipInput = partnershipFields.input;
+  const [partnershipMonthly, setPartnershipMonthly] = useState("");
+  const [partnershipDistribution, setPartnershipDistribution] = useState("100");
+  const [partnershipReducedPrepayment, setPartnershipReducedPrepayment] =
+    useState(false);
 
   function updateSeYears(value: string) {
     setSeYears(value);
@@ -295,6 +319,32 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     ikeReducedPrepayment,
   ]);
 
+  const partnershipResult = useMemo(() => {
+    const monthlyRevenue = parseField(partnershipMonthly, "monthly");
+    const distributionPercent = parseField(
+      partnershipDistribution,
+      "percentage",
+    );
+    if (
+      !partnershipInput ||
+      monthlyRevenue === null ||
+      distributionPercent === null
+    ) {
+      return null;
+    }
+    return calculatePartnership({
+      ...partnershipInput,
+      annualRevenue: monthlyRevenue * 12,
+      distributionPercent,
+      reducedPrepayment: partnershipReducedPrepayment,
+    });
+  }, [
+    partnershipInput,
+    partnershipMonthly,
+    partnershipDistribution,
+    partnershipReducedPrepayment,
+  ]);
+
   const stats = getCalculatorStats(
     mode,
     period,
@@ -303,6 +353,7 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     mpResult,
     t,
     ikeResult,
+    partnershipResult,
   );
 
   // Gate results on actual user input. The "primary" revenue field differs per
@@ -312,12 +363,23 @@ export function useCalculator(mode: Mode, period: Period): CalculatorReturn {
     "self-employed": seMonthly,
     mplokaki: mpMonthly,
     ike: ikeMonthly,
+    partnership: partnershipMonthly,
   };
   const hasUserInput = primaryInput[mode] !== "";
 
   const hasResult = stats !== null && hasUserInput;
 
   return {
+    partnership: {
+      fields: partnershipFields,
+      monthly: partnershipMonthly,
+      setMonthly: setPartnershipMonthly,
+      distribution: partnershipDistribution,
+      setDistribution: setPartnershipDistribution,
+      reducedPrepayment: partnershipReducedPrepayment,
+      setReducedPrepayment: setPartnershipReducedPrepayment,
+    },
+    partnershipResult,
     ike: {
       monthly: ikeMonthly,
       setMonthly: setIkeMonthly,

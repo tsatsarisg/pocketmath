@@ -10,7 +10,8 @@
     "employee": "Employee",
     "selfEmployed": "Self-Employed",
     "mplokaki": "Block Invoice",
-    "ike": "Single-member IKE"
+    "ike": "Single-member IKE",
+    "partnership": "O.E. / E.E."
   },
   "period": {
     "monthly": "Monthly",
@@ -115,9 +116,9 @@
   },
   "compare": {
     "headline": "Compare net income",
-    "subtitle": "See what you keep each year as an employee, invoice contractor, sole proprietor or single-member IKE owner.",
+    "subtitle": "See what you keep each year as an employee, invoice contractor, sole proprietor, single-member IKE owner or O.E. / E.E. partner.",
     "grossMonthly": "Gross monthly income",
-    "emptyState": "Enter a monthly income to compare all three options",
+    "emptyState": "Enter a monthly income to compare scenarios",
     "employee": "Employee",
     "selfEmployed": "Self-Employed",
     "mplokaki": "Block Invoice",
@@ -131,19 +132,24 @@
     "bestNet": "Best annual net",
     "annualComparison": "Annual comparison",
     "whyDifferent": "Why is the employee monthly paycheck lower?",
-    "whyDifferentBody": "Greek employees receive 14 salaries per year — 12 regular + Christmas bonus + Easter bonus + summer leave bonus. The annual total is higher, but each paycheck is 1/14 of that, not 1/12. The monthly equivalent rows above divide the annual net by 12 so all three options are on the same footing.",
+    "whyDifferentBody": "Greek employees receive 14 salaries per year, including Christmas, Easter and summer leave payments. Each regular paycheck represents 1/14 of the annual total. The monthly equivalent divides annual net income by 12 across all scenarios.",
     "defaults": "The sole proprietor and IKE use the first EFKA category (€260.77/month). The IKE has one office, pays no management fee and distributes all available profit after the statutory reserve. Net income is shown before the new tax advance.",
     "detailedCalc": "Need a detailed breakdown?",
     "goToCalculator": "Go to calculator",
     "basis": "The same monthly amount means 14 employee paychecks or 12 monthly invoices per year. Annual gross totals therefore differ.",
     "scope": "Comparison scenarios",
     "allModes": "All scenarios",
-    "businessModes": "Sole proprietor and IKE",
+    "businessModes": "Business structures",
     "selfEmployedExpenses": "Sole proprietor expenses / month",
     "ikeExpenses": "IKE expenses / month",
-    "expensesHelp": "Use deductible expenses for each business, excluding VAT and EFKA. Include accounting and other operating costs. The annual IKE registry fee is added automatically. Include any sole proprietor registry fee in that business’s expenses.",
+    "expensesHelp": "Use deductible expenses for each business, excluding VAT and EFKA. Include accounting and other operating costs. The IKE and O.E. / E.E. annual registry fees are added automatically. Include any sole proprietor registry fee in that business’s expenses.",
     "taxProfile": "Age, children and years as a sole proprietor",
-    "mplokakiBasis": "The invoice contractor scenario assumes Article 12(2)(f) eligibility and the first EFKA category."
+    "mplokakiBasis": "The invoice contractor scenario assumes Article 12(2)(f) eligibility and the first EFKA category.",
+    "ikeLevy": "IKE head office business levy / year",
+    "partnershipExpenses": "O.E. / E.E. expenses per month",
+    "partnershipLevy": "O.E. / E.E. head office business levy / year",
+    "partnershipSettings": "O.E. / E.E. settings",
+    "partnershipBasis": "The O.E. / E.E. comparison uses your net share and assumes full distribution. It starts with a 99%–1% split, single-entry books and monthly EFKA of €260.77 per partner. Taxes and contributions cover the company and both partners."
   },
   "a11y": {
     "skipToContent": "Skip to main content",
@@ -154,7 +160,8 @@
     "period": "Period",
     "language": "Language",
     "theme": "Dark mode",
-    "modeIke": "Single-member IKE mode"
+    "modeIke": "Single-member IKE mode",
+    "modePartnership": "General or limited partnership mode"
   },
   "legal": {
     "privacyPolicy": "Privacy Policy",
@@ -285,7 +292,8 @@
     "age": "Enter a whole-number age from 16 to 120.",
     "children": "Enter a whole number from 0 to 10.",
     "years": "Enter a whole number of years, at least 1.",
-    "percentage": "Enter a percentage from 0 to 100."
+    "percentage": "Enter a percentage from 0 to 100.",
+    "profitShare": "Enter a percentage greater than 0 and less than 100."
   },
   "efka": {
     "special": "Special",
@@ -341,5 +349,38 @@
     "efkaHelp": "Special-category eligibility depends on your insurance history. Incorporation does not restart the first five years.",
     "transferRelief": "For a qualifying transfer of a sole proprietorship, Law 4935/2022 provides an exemption for 30% of eligible profits starting in the following tax year. The estimate uses standard taxation.",
     "transferReliefSource": "Business transfer exemption"
+  },
+  "partnership": {
+    "scope": "Full-year 2026 estimate for an O.E. general partnership or E.E. limited partnership with two Greek-resident individual partners, one office and partner income from profit distributions. Enter revenue and expenses excluding VAT. EFKA and the registry fee are calculated separately.",
+    "bookkeeping": "Bookkeeping",
+    "singleEntry": "Single-entry (0% on distributions)",
+    "doubleEntry": "Double-entry (5% on distributions)",
+    "share": "Your share of profits (%)",
+    "partnerEfka": "Your EFKA contributions / month",
+    "otherPartnerEfka": "Other partner’s EFKA contributions / month",
+    "efkaHelp": "Insurance coverage applies even to a partner with 1%. Enter each partner’s paid contributions that are a deductible cost of the partnership. Concurrent salaried work can change the amount payable.",
+    "taxes": "Taxes, levy and contributions for the company and both partners",
+    "partnerEfkaCost": "Your EFKA contributions",
+    "otherPartnerEfkaCost": "Other partner’s EFKA contributions",
+    "retainedProfit": "Profit retained by the partnership",
+    "distributedProfit": "Total profit distributed",
+    "grossShare": "Your gross share of distributions",
+    "dividendTax": "Tax on your share ({{rate}})",
+    "otherPartnerNet": "Other partner’s net distribution",
+    "shortfall": "Your estimated share of funding the loss",
+    "shortfallHelp": "The estimate uses the same percentages for funding a loss and distributing profits.",
+    "companyBalance": "Partnership balance after distribution and advance",
+    "notes": "Bookkeeping, partner liability and O.E. / E.E. sources",
+    "bookkeepingHelp": "For a typical O.E. / E.E. with individual partners, the turnover limit for the category eligible for single-entry bookkeeping is €1,500,000. Category changes are assessed after two consecutive financial years. Select the books the partnership uses.",
+    "liability": "Every O.E. partner has unlimited joint and several liability. At least one E.E. partner has that liability. A limited partner who has paid their contribution generally bears no liability for partnership debts, subject to statutory exceptions.",
+    "setup": "Standard online incorporation has a one-off €15 fee. The annual registry fee is €80 for a full year.",
+    "setupOe": "Set up an O.E.",
+    "setupEe": "Set up an E.E.",
+    "transition": "The estimate uses standard taxation. A qualifying contribution of a sole proprietorship into a company with double-entry books may receive relief under Law 4935/2022. Partnership membership carries genuine ownership rights and obligations.",
+    "booksSource": "ELTE accounting guidance",
+    "liabilitySource": "Law 4072/2012, Articles 249 and 271–280",
+    "efkaDeductionSource": "Deduction for partner contributions",
+    "efkaEligibilitySource": "e-EFKA coverage of O.E. / E.E. partners",
+    "abuseSource": "Article 39 of the Tax Procedure Code"
   }
 }

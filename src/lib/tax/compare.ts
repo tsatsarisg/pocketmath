@@ -2,6 +2,7 @@ import { calculateEmployee } from "./employee";
 import { calculateSelfEmployed } from "./self-employed";
 import { calculateMplokaki } from "./mplokaki";
 import { calculateIke, type IkeHeadOfficeLevy } from "./ike";
+import { calculatePartnership, type PartnershipInput } from "./partnership";
 import type { EfkaCategoryId } from "./types";
 
 export interface CompareEntry {
@@ -16,6 +17,7 @@ export interface CompareResult {
   "self-employed": CompareEntry;
   mplokaki: CompareEntry;
   ike: CompareEntry;
+  partnership: CompareEntry;
 }
 
 interface CompareOptions {
@@ -25,6 +27,10 @@ interface CompareOptions {
   annualSelfEmployedExpenses?: number;
   annualIkeExpenses?: number;
   ikeHeadOfficeLevy?: IkeHeadOfficeLevy;
+  partnership?: Omit<
+    PartnershipInput,
+    "annualRevenue" | "distributionPercent" | "reducedPrepayment"
+  >;
 }
 
 /** Compare annual net income for a shared monthly gross amount. */
@@ -38,6 +44,7 @@ export function compareAll(
     annualSelfEmployedExpenses = 0,
     annualIkeExpenses = 0,
     ikeHeadOfficeLevy = 0,
+    partnership,
   }: CompareOptions = {},
 ): CompareResult {
   const efkaCategory: EfkaCategoryId = "1st";
@@ -65,6 +72,10 @@ export function compareAll(
     efkaCategory,
     headOfficeLevy: ikeHeadOfficeLevy,
   });
+  const partnershipResult = calculatePartnership({
+    ...partnership,
+    annualRevenue,
+  });
 
   return {
     employee: {
@@ -90,6 +101,12 @@ export function compareAll(
       annualNet: ike.annualNet,
       effectiveTaxRate: ike.effectiveTaxRate,
       totalTaxesAnnual: ike.totalTaxesAnnual,
+    },
+    partnership: {
+      monthlyNet: partnershipResult.monthlyNet,
+      annualNet: partnershipResult.annualNet,
+      effectiveTaxRate: partnershipResult.effectiveTaxRate,
+      totalTaxesAnnual: partnershipResult.totalTaxesAnnual,
     },
   };
 }

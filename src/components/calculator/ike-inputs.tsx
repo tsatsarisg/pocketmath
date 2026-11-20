@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { NumberField } from "./number-field";
 import { EfkaField } from "./efka-field";
 import { CheckField } from "./check-field";
-import { IkeLevyField } from "./ike-levy-field";
+import { HeadOfficeLevyField } from "./head-office-levy-field";
 import { IkeNotes } from "./ike-notes";
 import { getAllEfkaCategories } from "@/lib/tax/efka";
 import type { IkeState } from "@/hooks/use-calculator";
@@ -26,7 +26,7 @@ export function IkeInputs({ state }: { state: IkeState }) {
           value={state.expenses}
           onChange={state.setExpenses}
         />
-        <IkeLevyField value={state.levy} onChange={state.setLevy} />
+        <HeadOfficeLevyField value={state.levy} onChange={state.setLevy} />
         <NumberField
           field="percentage"
           label={t("ike.distribution")}

@@ -1,14 +1,20 @@
 import { z } from "zod";
 import { getAnnualEfka } from "./efka";
 import { EfkaCategoryIdSchema } from "./types";
+import {
+  CORPORATE_TAX_RATE,
+  DIVIDEND_TAX_RATE,
+  getCorporatePrepaymentRate,
+  HEAD_OFFICE_LEVIES,
+  roundMoney as round,
+  type HeadOfficeLevy,
+} from "./corporate";
 
-const CORPORATE_TAX_RATE = 0.22;
-const DIVIDEND_TAX_RATE = 0.05;
 const LEGAL_RESERVE_RATE = 0.05;
 const ANNUAL_GEMI_FEE = 100;
 
-export const IKE_HEAD_OFFICE_LEVIES = [0, 800, 1000] as const;
-export type IkeHeadOfficeLevy = (typeof IKE_HEAD_OFFICE_LEVIES)[number];
+export const IKE_HEAD_OFFICE_LEVIES = HEAD_OFFICE_LEVIES;
+export type IkeHeadOfficeLevy = HeadOfficeLevy;
 
 export const IkeInputSchema = z.object({
   annualRevenue: z.number().min(0),
@@ -34,7 +40,6 @@ export function calculateIke(input: IkeInput) {
     distributionPercent,
   } = IkeInputSchema.parse(input);
 
-  const round = (amount: number) => Math.round(amount * 100) / 100;
   const annualGemiFee = ANNUAL_GEMI_FEE;
   const annualEFKA = round(
     getAnnualEfka(efkaCategory) + additionalMonthlyInsurance * 12,
@@ -58,7 +63,7 @@ export function calculateIke(input: IkeInput) {
     corporateTax + dividendTax + headOfficeLevy + annualEFKA,
   );
 
-  const prepaymentRate = reducedPrepayment ? 0.4 : 0.8;
+  const prepaymentRate = getCorporatePrepaymentRate(reducedPrepayment);
   const prepayment = round(corporateTax * prepaymentRate);
   const companyBalanceAfterPrepayment = round(
     profitAfterTax - grossDividend - prepayment,

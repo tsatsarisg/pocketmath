@@ -6,6 +6,7 @@ import type {
   MplokakiResult,
 } from "@/lib/tax/types";
 import type { IkeResult } from "@/lib/tax/ike";
+import type { PartnershipResult } from "@/lib/tax/partnership";
 import { fmt } from "@/lib/format";
 
 export interface Stats {
@@ -28,6 +29,7 @@ export function getCalculatorStats(
   mplokaki: MplokakiResult | null,
   t: TFunction,
   ike: IkeResult | null = null,
+  partnership: PartnershipResult | null = null,
 ): Stats | null {
   let gross: number;
   let tax: number;
@@ -37,6 +39,16 @@ export function getCalculatorStats(
   const divisor = period === "annual" ? 1 : mode === "employee" ? 14 : 12;
 
   switch (mode) {
+    case "partnership":
+      if (!partnership) {
+        return null;
+      }
+      gross = partnership.annualRevenue;
+      tax = partnership.totalTaxesAnnual;
+      net = partnership.annualNet;
+      grossLabel = t("results.revenue");
+      taxLabel = t("partnership.taxes");
+      break;
     case "ike":
       if (!ike) {
         return null;
@@ -89,7 +101,9 @@ export function getCalculatorStats(
     taxLabel,
     taxValue: fmt(tax / divisor),
     taxSub: periodLabel,
-    netLabel: t(mode === "ike" ? "ike.net" : "results.net"),
+    netLabel: t(
+      mode === "ike" || mode === "partnership" ? "ike.net" : "results.net",
+    ),
     netValue: fmt(net / divisor),
     netSub: periodLabel,
   };
