@@ -32,7 +32,7 @@ export const PartnershipInputSchema = z.object({
 
 export type PartnershipInput = z.input<typeof PartnershipInputSchema>;
 
-/** Full-year O.E./E.E. with two individual partners and deductible EFKA costs. */
+/** Full-year E.E. with the user as general partner and deductible EFKA costs for both partners. */
 export function calculatePartnership(input: PartnershipInput) {
   const {
     annualRevenue,

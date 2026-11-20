@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test && pnpm build",
-    "build:pages": "GITHUB_PAGES=true next build",
+    "build:pages": "GITHUB_PAGES=true next build && node scripts/gen-csp-hashes.mjs",
     "assets:generate": "node scripts/gen-assets.mjs",
     "deps:check": "pnpm outdated",
     "audit": "pnpm audit"
@@ -43,7 +43,7 @@
     "clsx": "2.1.1",
     "i18next": "26.4.7",
     "lucide-react": "1.58.0",
-    "next": "16.4.2",
+    "next": "16.4.5",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-i18next": "17.0.20",

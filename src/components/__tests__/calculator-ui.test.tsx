@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import i18n from "@/i18n";
+import ComparePage from "@/app/compare/page";
 import { NumberField } from "@/components/calculator/number-field";
 import { SelfEmployedBreakdown } from "@/components/calculator/self-employed-breakdown";
 import { EmployeeBreakdown } from "@/components/calculator/employee-breakdown";
@@ -17,6 +18,20 @@ afterEach(() => {
 });
 
 describe("calculator presentation", () => {
+  it("opens the offer comparison in first-year business mode with optional expenses", async () => {
+    await i18n.changeLanguage("el");
+    const html = renderToStaticMarkup(<ComparePage />);
+    const checkbox = html.match(/<input[^>]+type="checkbox"[^>]*>/)?.[0];
+    expect(checkbox).toBeDefined();
+    expect(checkbox).not.toContain("checked");
+    expect(html).toContain("Αμοιβή προ ΦΠΑ / μήνα");
+    expect(html).toContain("Κοινά έξοδα / μήνα (προαιρετικά)");
+    expect(html).toContain("Πρώτη έναρξη");
+    expect(html).not.toContain("Εφαρμοστέο ελάχιστο φορολογητέο εισόδημα");
+    expect(html).toContain("Σύγκρινε και ετερόρρυθμη εταιρεία (Ε.Ε.)");
+    expect(html).not.toContain("ΕΦΚΑ ετερόρρυθμου εταίρου");
+  });
+
   it("shows the 2026 employee contribution rate in both languages", async () => {
     const result = calculateEmployee({
       monthlyGross: 2000,

@@ -1,102 +1,48 @@
-/**
- * Generates SHA-256 CSP hashes for the JSON-LD <script> blocks in layout.tsx.
- *
- * Run this whenever you modify jsonLdWebApp or jsonLdFaq in src/app/layout.tsx,
- * then update the 'sha256-...' values in:
- *   - next.config.ts  (script-src directive)
- *   - public/_headers (script-src directive)
- *
- * Usage:
- *   node scripts/gen-csp-hashes.mjs
- */
-
 import { createHash } from "node:crypto";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-// Keep these objects in sync with layout.tsx
-
-const jsonLdWebApp = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: "PocketMath",
-  alternateName: "PocketMath.gr",
-  description:
-    "Δωρεάν υπολογιστής καθαρού μισθού και σύγκριση φορολόγησης για Ελλάδα 2026",
-  url: "https://pocketmath.gr",
-  applicationCategory: "FinanceApplication",
-  operatingSystem: "Any",
-  inLanguage: ["el", "en"],
-  isAccessibleForFree: true,
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "EUR",
-  },
-  about: {
-    "@type": "Thing",
-    name: "Greek Income Tax & Net Salary Calculator 2026",
-  },
-  audience: {
-    "@type": "Audience",
-    geographicArea: {
-      "@type": "Country",
-      name: "Greece",
-    },
-  },
-};
-
-const jsonLdFaq = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Πόσο είναι ο καθαρός μισθός για μεικτό 2000€ το 2026;",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Για μεικτό μισθό 2000€/μήνα το 2026, ο καθαρός μισθός ανέρχεται περίπου στα 1.590€ ανά μισθοδοσία (1/14 ετήσιου καθαρού). Ο μισθωτός λαμβάνει 14 μισθούς το χρόνο.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Τι είναι το μπλοκάκι και πώς φορολογείται;",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Το μπλοκάκι (Άρθρο 12 ΚΦΕ) είναι τρόπος παροχής υπηρεσιών με δελτία παροχής. Φορολογείται ως μισθωτή εργασία, με παρακράτηση 20% από τον εκδότη. Συνδυάζεται με εισφορές ΕΦΚΑ.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Ποιο συμφέρει περισσότερο: μισθωτός, ελεύθερος επαγγελματίας ή μπλοκάκι;",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Εξαρτάται από το εισόδημα και τις συνθήκες. Το PocketMath προσφέρει εργαλείο σύγκρισης που δείχνει το καθαρό ετήσιο εισόδημα και για τις τρεις μορφές απασχόλησης για το ίδιο μεικτό εισόδημα.",
-      },
-    },
-  ],
-};
-
-/**
- * Must match safeJsonStringify in src/lib/safe-json.ts exactly.
- */
-function safeJsonStringify(value) {
-  return JSON.stringify(value)
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026")
-    .replace(/\u2028/g, "\\u2028")
-    .replace(/\u2029/g, "\\u2029");
+const output = fileURLToPath(new URL("../out/", import.meta.url));
+const files = (await readdir(output, { recursive: true })).filter((file) =>
+  file.endsWith(".html"),
+);
+if (files.length === 0) {
+  throw new Error("No static HTML found for CSP hardening.");
 }
 
-function cspHash(content) {
-  return (
-    "'sha256-" +
-    createHash("sha256").update(content, "utf8").digest("base64") +
-    "'"
+for (const file of files) {
+  const path = join(output, file);
+  const html = await readFile(path, "utf8");
+  const meta =
+    /<meta http-equiv="Content-Security-Policy" content="([^"]*)"\s*\/?\s*>/i;
+  const scriptPolicy = /(?<=; )script-src .*?(?=; [a-z-]+ |$)/;
+  const policy = html.match(meta)?.[1];
+  const head = /<head>\s*<meta charset="utf-8"\s*\/?\s*>/i;
+  if (!policy || !scriptPolicy.test(policy) || !head.test(html)) {
+    throw new Error(`Missing CSP or UTF-8 document head in ${file}.`);
+  }
+
+  // Read the final Next.js hydration payload and other inline scripts as served.
+  const hashes = new Set();
+  for (const [, attributes, body] of html.matchAll(
+    /<script\b([^>]*)>([\s\S]*?)<\/script>/gi,
+  )) {
+    if (!/\ssrc\s*=/i.test(attributes) && body) {
+      const hash = createHash("sha256")
+        .update(body.replace(/\r\n?/g, "\n"))
+        .digest("base64");
+      hashes.add(`'sha256-${hash}'`);
+    }
+  }
+  const hardened = policy.replace(
+    scriptPolicy,
+    ["script-src 'self'", ...hashes].join(" "),
+  );
+  const tag = `<meta http-equiv="Content-Security-Policy" content="${hardened}"/>`;
+  await writeFile(
+    path,
+    html.replace(meta, "").replace(head, (opening) => opening + tag),
   );
 }
-
-const webAppStr = safeJsonStringify(jsonLdWebApp);
-const faqStr = safeJsonStringify(jsonLdFaq);
-
-console.log("Update script-src in next.config.ts and public/_headers with:\n");
-console.log(`script-src 'self' ${cspHash(webAppStr)} ${cspHash(faqStr)}`);
+console.log(`Hardened the script policy on ${files.length} static pages.`);

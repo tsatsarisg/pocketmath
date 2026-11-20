@@ -128,4 +128,23 @@ describe("2026 scenario safeguards", () => {
       );
     }
   });
+
+  it("reports the first-year personal and company cash figures separately", () => {
+    const result = compareAll(4000, 0, {
+      annualBusinessRevenue: 48_000,
+      annualSelfEmployedExpenses: 2400,
+      annualIkeExpenses: 4800,
+      yearsInBusiness: 1,
+      firstIncomeDeclaration: true,
+      reducedCorporatePrepayment: true,
+    });
+    expect(result["self-employed"]).toMatchObject({
+      annualNet: 32_607.16,
+      cashAfterAdvance: 29_894.67,
+    });
+    expect(result.ike).toMatchObject({
+      annualNet: 27_211,
+      cashAfterAdvance: -2111.9,
+    });
+  });
 });

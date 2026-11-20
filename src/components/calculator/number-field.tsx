@@ -12,6 +12,7 @@ interface NumberFieldProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  optional?: boolean;
 }
 
 export function NumberField({
@@ -20,11 +21,12 @@ export function NumberField({
   value,
   onChange,
   placeholder,
+  optional = false,
 }: NumberFieldProps) {
   const id = useId();
   const { t } = useTranslation();
   const error =
-    field === "monthly" && value === ""
+    (field === "monthly" || optional) && value.trim() === ""
       ? undefined
       : validateField(value, field);
   const inputProps = {

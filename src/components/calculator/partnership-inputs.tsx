@@ -101,6 +101,9 @@ export function PartnershipInputs({ state }: { state: PartnershipState }) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">{t("partnership.scope")}</p>
+      <p className="text-sm text-muted-foreground">
+        {t("partnership.liability")}
+      </p>
       <div className="grid gap-4 sm:grid-cols-2">
         <NumberField
           field="monthly"

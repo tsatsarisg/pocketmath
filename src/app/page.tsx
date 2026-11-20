@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
@@ -50,6 +51,12 @@ export default function HomePage() {
           <p className="text-muted-foreground text-[0.875rem] max-w-sm mx-auto">
             {t("hero.subtitle")}
           </p>
+          <Link
+            href="/compare"
+            className="inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            {t("compare.openQuick")}
+          </Link>
         </section>
 
         {/* Mode selector */}

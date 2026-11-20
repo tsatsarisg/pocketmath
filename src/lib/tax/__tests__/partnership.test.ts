@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { compareAll } from "../compare";
 import { calculatePartnership } from "../partnership";
 
-describe("O.E. and E.E. in tax year 2026", () => {
+describe("E.E. in tax year 2026", () => {
   const annualRevenue = 72_000;
   const annualExpenses = 12_000;
 

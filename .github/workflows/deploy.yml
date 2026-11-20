@@ -5,11 +5,7 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Allow the workflow to publish to GitHub Pages via OIDC.
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 # Only one Pages deploy at a time; let an in-progress run finish.
 concurrency:
@@ -18,9 +14,14 @@ concurrency:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      pages: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v6
 
@@ -37,13 +38,10 @@ jobs:
           pnpm lint
           pnpm format:check
           pnpm test
+          pnpm audit --audit-level high
 
-      # GITHUB_PAGES=true flips next.config.ts into static-export mode
-      # (output: 'export' + basePath/assetPrefix '/pocketmath'). Emits to out/.
       - name: Build static export
-        run: pnpm build
-        env:
-          GITHUB_PAGES: "true"
+        run: pnpm build:pages
 
       - uses: actions/configure-pages@v6
 
@@ -52,6 +50,10 @@ jobs:
           path: out
 
   deploy:
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      pages: write
+      id-token: write
     needs: build
     runs-on: ubuntu-latest
     environment:

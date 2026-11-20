@@ -1,8 +1,9 @@
 # PocketMath
 
 A Greek tax calculator for employees, sole proprietors, mplokaki workers,
-single-member IKE owners and O.E. / E.E. partners. The comparison page includes
-a view for the three business structures.
+single-member IKE owners and general partners of an E.E. with one limited
+partner. The comparison opens with the offer and optional shared expenses.
+It starts from a full-year, first-opening scenario and offers E.E. as an option.
 
 ## Development
 
@@ -82,3 +83,17 @@ installed.
 
 GitHub Pages uses `GITHUB_PAGES=true` to export the `/pocketmath` subpath;
 normal development and server builds use the root path.
+
+## Security boundary
+
+The GitHub Pages build runs calculations in browser memory. The app has no
+backend or analytics. Only language and theme preferences are stored locally.
+
+`pnpm build:pages` hashes the inline scripts in the generated HTML and places the
+CSP before page scripts. Inline styles support the UI. GitHub Pages serves the
+CSP as HTML metadata. Frame-embedding protection for the application itself
+requires an HTTP response header at the hosting layer. The server build and
+hosts that support `_headers` have their own header configuration.
+
+The deployment workflow checks the lockfile for high and critical npm advisories
+before uploading the site.

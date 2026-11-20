@@ -13,7 +13,7 @@ const sources = [
   ],
   [
     "efkaEligibilitySource",
-    "https://www.e-efka.gov.gr/el/elektronikes-yperesies/eggrafi-mi-misthoton",
+    "https://eugo.gov.gr/page/insurance-rules-for-businesses-in-greece",
     "partnership",
   ],
   [
@@ -43,7 +43,7 @@ const sources = [
   ],
   [
     "liabilitySource",
-    "https://www.aade.gr/dl_assets/misc/7%20%CE%A6%CE%95%CE%9A%2086-%CE%91-2012.pdf",
+    "https://gge.mindev.gov.gr/tomeas-emporiou/%CE%B4%CE%AF%CE%BA%CE%B1%CE%B9%CE%BF-%CF%84%CE%B7%CF%82-%CE%B5%CF%84%CE%B5%CF%81%CF%8C%CF%81%CF%81%CF%85%CE%B8%CE%BC%CE%B7%CF%82-%CE%B5%CF%84%CE%B1%CE%B9%CF%81%CE%B5%CE%AF%CE%B1%CF%82-%CE%B5-%CE%B5/",
     "partnership",
   ],
   [
@@ -68,13 +68,8 @@ export function PartnershipNotes() {
         {t("partnership.notes")}
       </summary>
       <p>{t("partnership.bookkeepingHelp")}</p>
-      <p>{t("partnership.liability")}</p>
       <p>
         {t("partnership.setup")}{" "}
-        <a href="https://eu-go.gov.gr/services/901750" className={linkClass}>
-          {t("partnership.setupOe")}
-        </a>
-        {" · "}
         <a href="https://eu-go.gov.gr/services/815536" className={linkClass}>
           {t("partnership.setupEe")}
         </a>

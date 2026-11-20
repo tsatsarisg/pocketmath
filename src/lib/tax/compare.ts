@@ -10,6 +10,7 @@ export interface CompareEntry {
   annualNet: number;
   effectiveTaxRate: number;
   totalTaxesAnnual: number;
+  cashAfterAdvance?: number;
 }
 
 export interface CompareResult {
@@ -26,6 +27,11 @@ interface CompareOptions {
   yearsInBusiness?: number;
   annualSelfEmployedExpenses?: number;
   annualIkeExpenses?: number;
+  annualBusinessRevenue?: number;
+  annualInvoiceExpenses?: number;
+  efkaCategory?: EfkaCategoryId;
+  firstIncomeDeclaration?: boolean;
+  reducedCorporatePrepayment?: boolean;
   ikeHeadOfficeLevy?: IkeHeadOfficeLevy;
   partnership?: Omit<
     PartnershipInput,
@@ -43,12 +49,16 @@ export function compareAll(
     yearsInBusiness = 4,
     annualSelfEmployedExpenses = 0,
     annualIkeExpenses = 0,
+    annualBusinessRevenue = monthlyGross * 12,
+    annualInvoiceExpenses = 0,
+    efkaCategory = "1st",
+    firstIncomeDeclaration = false,
+    reducedCorporatePrepayment = false,
     ikeHeadOfficeLevy = 0,
     partnership,
   }: CompareOptions = {},
 ): CompareResult {
-  const efkaCategory: EfkaCategoryId = "1st";
-  const annualRevenue = monthlyGross * 12;
+  const annualRevenue = annualBusinessRevenue;
   const emp = calculateEmployee({ monthlyGross, children, age });
   const se = calculateSelfEmployed({
     minimumTaxableIncome,
@@ -58,6 +68,7 @@ export function compareAll(
     age,
     children,
     yearsInBusiness,
+    firstIncomeDeclaration,
   });
   const mp = calculateMplokaki({
     qualifiesForEmployeeTax: true,
@@ -71,11 +82,15 @@ export function compareAll(
     annualExpenses: annualIkeExpenses,
     efkaCategory,
     headOfficeLevy: ikeHeadOfficeLevy,
+    reducedPrepayment: reducedCorporatePrepayment,
   });
   const partnershipResult = calculatePartnership({
     ...partnership,
     annualRevenue,
+    reducedPrepayment: reducedCorporatePrepayment,
   });
+
+  const invoiceNet = mp.annualNet - annualInvoiceExpenses;
 
   return {
     employee: {
@@ -89,10 +104,11 @@ export function compareAll(
       annualNet: se.annualNet,
       effectiveTaxRate: se.effectiveTaxRate,
       totalTaxesAnnual: se.annualTax + se.annualEFKA,
+      cashAfterAdvance: se.netAfterPrepayment,
     },
     mplokaki: {
-      monthlyNet: mp.monthlyNet,
-      annualNet: mp.annualNet,
+      monthlyNet: Math.round((invoiceNet / 12) * 100) / 100,
+      annualNet: invoiceNet,
       effectiveTaxRate: mp.effectiveTaxRate,
       totalTaxesAnnual: mp.annualTax + mp.annualEFKA,
     },
@@ -101,12 +117,14 @@ export function compareAll(
       annualNet: ike.annualNet,
       effectiveTaxRate: ike.effectiveTaxRate,
       totalTaxesAnnual: ike.totalTaxesAnnual,
+      cashAfterAdvance: ike.companyBalanceAfterPrepayment,
     },
     partnership: {
       monthlyNet: partnershipResult.monthlyNet,
       annualNet: partnershipResult.annualNet,
       effectiveTaxRate: partnershipResult.effectiveTaxRate,
       totalTaxesAnnual: partnershipResult.totalTaxesAnnual,
+      cashAfterAdvance: partnershipResult.companyBalanceAfterPrepayment,
     },
   };
 }
