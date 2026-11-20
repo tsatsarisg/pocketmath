@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     url: "https://tsatsarisg.github.io/pocketmath/compare",
     title: "PocketMath Σύγκριση 2026 | Ατομική, ΙΚΕ, Ε.Ε., Μισθωτός, Μπλοκάκι",
     description:
-      "Δες ποια μορφή απασχόλησης συμφέρει περισσότερο με σύγκριση καθαρού ετήσιου εισοδήματος.",
+      "Ενδεικτική σύγκριση καθαρού ετήσιου εισοδήματος για επιλεγμένα σενάρια στην Ελλάδα το 2026.",
     images: [
       {
         url: "/og-image.png",

@@ -27,6 +27,8 @@ describe("calculator presentation", () => {
     expect(html).toContain("Αμοιβή προ ΦΠΑ / μήνα");
     expect(html).toContain("Κοινά έξοδα / μήνα (προαιρετικά)");
     expect(html).toContain("Πρώτη έναρξη");
+    expect(html).toContain("<summary");
+    expect(html).toContain("Πρόσθεσε σενάρια");
     expect(html).not.toContain("Εφαρμοστέο ελάχιστο φορολογητέο εισόδημα");
     expect(html).toContain("Σύγκρινε και ετερόρρυθμη εταιρεία (Ε.Ε.)");
     expect(html).not.toContain("ΕΦΚΑ ετερόρρυθμου εταίρου");

@@ -1,5 +1,6 @@
 export type NumericField =
   | "monthly"
+  | "annual-offer"
   | "expenses"
   | "amount"
   | "age"
@@ -10,6 +11,7 @@ export type NumericField =
 export type FieldError =
   | "required"
   | "amount"
+  | "annual-offer"
   | "age"
   | "children"
   | "years"
@@ -34,6 +36,9 @@ export function validateField(
   }
   if (error === "amount") {
     return number <= 10_000_000 ? undefined : error;
+  }
+  if (field === "annual-offer") {
+    return number <= 120_000_000 ? undefined : error;
   }
   if (field === "percentage") {
     return number <= 100 ? undefined : error;

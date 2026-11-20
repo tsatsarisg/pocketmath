@@ -3,7 +3,6 @@ import { NumberField } from "./number-field";
 import { EfkaField } from "./efka-field";
 import { CheckField } from "./check-field";
 import { HeadOfficeLevyField } from "./head-office-levy-field";
-import { IkeNotes } from "./ike-notes";
 import { getAllEfkaCategories } from "@/lib/tax/efka";
 import type { IkeState } from "@/hooks/use-calculator";
 
@@ -55,7 +54,7 @@ export function IkeInputs({ state }: { state: IkeState }) {
           {t("ike.reducedHelp")}
         </span>
       </CheckField>
-      <IkeNotes />
+      <p className="text-sm text-muted-foreground">{t("ike.transition")}</p>
     </div>
   );
 }

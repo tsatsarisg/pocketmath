@@ -56,7 +56,6 @@ const jsonLdWebApp = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "PocketMath",
-  alternateName: "PocketMath.gr",
   description:
     "Δωρεάν υπολογιστής καθαρού μισθού και σύγκριση φορολόγησης για Ελλάδα 2026",
   url: "https://tsatsarisg.github.io/pocketmath",
@@ -80,37 +79,6 @@ const jsonLdWebApp = {
       name: "Greece",
     },
   },
-};
-
-const jsonLdFaq = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "Πόσο είναι ο καθαρός μισθός για μεικτό 2000€ το 2026;",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Για μεικτό μισθό 2000€/μήνα το 2026, ο καθαρός μισθός ανέρχεται περίπου στα 1.590€ ανά μισθοδοσία (1/14 ετήσιου καθαρού). Ο μισθωτός λαμβάνει 14 μισθούς το χρόνο.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Τι είναι το μπλοκάκι και πώς φορολογείται;",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Το μπλοκάκι (Άρθρο 12 ΚΦΕ) είναι τρόπος παροχής υπηρεσιών με δελτία παροχής. Εφόσον πληρούνται οι προϋποθέσεις του άρθρου 12 παρ. 2 στ΄, φορολογείται ως μισθωτή εργασία. Η παρακράτηση φόρου και ο τρόπος ασφάλισης εξαρτώνται από την περίπτωση.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Πώς συγκρίνεται η ατομική επιχείρηση με τη μονοπρόσωπη ΙΚΕ;",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Εξαρτάται από το εισόδημα και τις συνθήκες. Το PocketMath προσφέρει εργαλείο σύγκρισης που δείχνει το καθαρό ετήσιο εισόδημα για ατομική και μονοπρόσωπη ΙΚΕ με τα ίδια έσοδα και ξεχωριστά έξοδα.",
-      },
-    },
-  ],
 };
 
 export default function RootLayout({
@@ -162,10 +130,6 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: safeJsonStringify(jsonLdWebApp) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: safeJsonStringify(jsonLdFaq) }}
         />
       </head>
       <body>

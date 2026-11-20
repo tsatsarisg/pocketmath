@@ -4,31 +4,27 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { compareAll } from "@/lib/tax/compare";
-import type { CompareEntry } from "@/lib/tax/compare";
 import { CheckField } from "@/components/calculator/check-field";
 import { PeriodToggle } from "@/components/ui/period-toggle";
 import { EfkaField } from "@/components/calculator/efka-field";
 import { getAvailableCategories } from "@/lib/tax/efka";
-import { fmt } from "@/lib/format";
-import type { Period } from "@/types/calculator";
+import { fmt, fmtPct } from "@/lib/format";
+import type { Mode, Period } from "@/types/calculator";
 import type { EfkaCategoryId } from "@/lib/tax/types";
 import { NumberField } from "@/components/calculator/number-field";
 import { HeadOfficeLevyField } from "@/components/calculator/head-office-levy-field";
-import { IkeNotes, IkeTransitionNote } from "@/components/calculator/ike-notes";
 import { PartnershipFields } from "@/components/calculator/partnership-inputs";
-import { PartnershipNotes } from "@/components/calculator/partnership-notes";
-import { SegmentedControl } from "@/components/ui/segmented-control";
 import type { IkeHeadOfficeLevy } from "@/lib/tax/ike";
 import { usePartnershipFields } from "@/hooks/use-partnership-fields";
 import { parseField } from "@/lib/parse";
-import { WinnerCard } from "@/components/compare/winner-card";
-import { RunnerCard } from "@/components/compare/runner-card";
-import { NetBar } from "@/components/compare/net-bar";
-import type { ModeKey, RankedEntry } from "@/types/compare";
+import { getOfferAmounts } from "@/lib/offer-amount";
 
 export default function ComparePage() {
   const { t } = useTranslation();
-  const [gross, setGross] = useState("");
+  const [offer, setOffer] = useState<{ value: string; period: Period }>({
+    value: "",
+    period: "monthly",
+  });
   const [period, setPeriod] = useState<Period>("monthly");
   const [commonExpenses, setCommonExpenses] = useState("");
   const [efka, setEfka] = useState<EfkaCategoryId>("1st");
@@ -38,6 +34,7 @@ export default function ComparePage() {
   const [selfEmployedExpenses, setSelfEmployedExpenses] = useState("0");
   const [ikeExpenses, setIkeExpenses] = useState("0");
   const [ikeLevy, setIkeLevy] = useState<IkeHeadOfficeLevy>(0);
+  const [includeEmployee, setIncludeEmployee] = useState(false);
   const [includeMplokaki, setIncludeMplokaki] = useState(false);
   const [includePartnership, setIncludePartnership] = useState(false);
   const partnership = usePartnershipFields();
@@ -45,14 +42,14 @@ export default function ComparePage() {
   const [age, setAge] = useState("35");
   const [children, setChildren] = useState("0");
   const [years, setYears] = useState("1");
-  const [scope, setScope] = useState<"all" | "business">("business");
-  const hasInput = gross.trim() !== "";
+  const { displayedAmount, monthlyGross, annualBusinessRevenue } =
+    getOfferAmounts(offer.value, offer.period, period);
+  const hasInput = offer.value.trim() !== "";
   const yearsInBusiness = parseField(years, "years");
   const categories = getAvailableCategories(yearsInBusiness ?? 6);
   const efkaCategory = categories.some(({ id }) => id === efka) ? efka : "1st";
 
   const result = useMemo(() => {
-    const amount = parseField(gross, "monthly");
     const monthlyCommonExpenses = parseField(
       commonExpenses.trim() || "0",
       "expenses",
@@ -69,7 +66,7 @@ export default function ComparePage() {
         ? 0
         : parseField(minimumIncome, "amount");
     if (
-      amount === null ||
+      monthlyGross === null ||
       monthlyCommonExpenses === null ||
       minimumTaxableIncome === null ||
       monthlySelfEmployedExpenses === null ||
@@ -81,15 +78,12 @@ export default function ComparePage() {
     ) {
       return null;
     }
-    const monthlyGross =
-      scope === "business" && period === "annual" ? amount / 12 : amount;
     return compareAll(monthlyGross, minimumTaxableIncome, {
       efkaCategory,
       firstIncomeDeclaration: yearsInBusiness === 1,
       reducedCorporatePrepayment,
       annualInvoiceExpenses: monthlyCommonExpenses * 12,
-      ...(scope === "business" &&
-        period === "annual" && { annualBusinessRevenue: amount }),
+      annualBusinessRevenue,
       age: parsedAge,
       children: parsedChildren,
       yearsInBusiness,
@@ -106,9 +100,8 @@ export default function ComparePage() {
       }),
     });
   }, [
-    gross,
-    period,
-    scope,
+    monthlyGross,
+    annualBusinessRevenue,
     commonExpenses,
     efkaCategory,
     reducedCorporatePrepayment,
@@ -122,41 +115,20 @@ export default function ComparePage() {
     partnershipInput,
   ]);
 
-  const ranked: RankedEntry[] = useMemo(() => {
-    if (!result) {
-      return [];
-    }
-    const labels: Record<ModeKey, string> = {
-      employee: t("compare.employee"),
-      "self-employed": t("compare.selfEmployed"),
-      mplokaki: t("compare.mplokaki"),
-      ike: t("modes.ike"),
-      partnership: t("modes.partnership"),
-    };
-    const entries = (Object.entries(result) as [ModeKey, CompareEntry][])
-      .filter(([key]) => key !== "partnership" || includePartnership)
-      .filter(([key]) =>
-        scope === "all"
-          ? key !== "mplokaki" || includeMplokaki
-          : key !== "employee" && key !== "mplokaki",
-      )
-      .map(([key, data]) => ({ key, data }))
-      .sort((a, b) => b.data.annualNet - a.data.annualNet);
-
-    const maxNet = entries[0]?.data.annualNet ?? 0;
-    return entries.map((e, i) => ({
-      ...e,
-      label: labels[e.key],
-      rank: i,
-      barWidth:
-        maxNet > 0
-          ? Math.max(0, Math.round((e.data.annualNet / maxNet) * 100))
-          : 0,
-    }));
-  }, [result, scope, includeMplokaki, includePartnership, t]);
-
+  const scenarios: [Mode, string, boolean][] = [
+    ["employee", t("compare.employee"), includeEmployee],
+    ["self-employed", t("compare.selfEmployed"), true],
+    ["mplokaki", t("compare.mplokaki"), includeMplokaki],
+    ["ike", t("modes.ike"), true],
+    ["partnership", t("modes.partnership"), includePartnership],
+  ];
+  const ranked = result
+    ? scenarios
+        .filter(([, , included]) => included)
+        .map(([key, label]) => ({ key, label, data: result[key] }))
+        .sort((a, b) => b.data.annualNet - a.data.annualNet)
+    : [];
   const winner = ranked[0];
-  const runners = ranked.slice(1);
 
   return (
     <div className="mx-auto max-w-[640px] space-y-8">
@@ -169,34 +141,29 @@ export default function ComparePage() {
         </p>
       </section>
 
-      <div className="flex justify-center">
-        <SegmentedControl
-          label={t("compare.scope")}
-          options={[
-            { id: "all", label: t("compare.allModes") },
-            { id: "business", label: t("compare.businessModes") },
-          ]}
-          value={scope}
-          onChange={setScope}
-        />
-      </div>
       <div className="rounded-2xl bg-secondary/40 p-5 sm:p-6 space-y-4">
-        {scope === "business" && (
-          <PeriodToggle value={period} onChange={setPeriod} />
-        )}
+        <PeriodToggle
+          value={period}
+          onChange={(nextPeriod) => {
+            if (monthlyGross === null) {
+              setOffer({ value: offer.value, period: nextPeriod });
+            }
+            setPeriod(nextPeriod);
+          }}
+        />
         <div className="grid gap-4 sm:grid-cols-2">
           <NumberField
-            field="monthly"
+            field={period === "annual" ? "annual-offer" : "monthly"}
             label={t(
-              scope === "all"
-                ? "compare.grossMonthly"
-                : period === "annual"
-                  ? "compare.offerAnnual"
-                  : "compare.offerMonthly",
+              period === "annual"
+                ? "compare.offerAnnual"
+                : "compare.offerMonthly",
             )}
-            value={gross}
-            onChange={setGross}
-            placeholder="4000"
+            value={displayedAmount}
+            onChange={(value) => {
+              setOffer({ value, period });
+            }}
+            placeholder={period === "annual" ? "48000" : "4000"}
           />
           <NumberField
             field="expenses"
@@ -213,30 +180,41 @@ export default function ComparePage() {
               : "compare.quickBasis",
           )}
         </p>
-        {scope === "all" && (
+        <details className="space-y-3">
+          <summary className="cursor-pointer text-sm font-medium">
+            {t("compare.addScenarios")}
+          </summary>
+          <CheckField checked={includeEmployee} onChange={setIncludeEmployee}>
+            {t("compare.includeEmployee")}
+          </CheckField>
+          {includeEmployee && (
+            <p className="text-sm text-muted-foreground">
+              {t("compare.basis")}
+            </p>
+          )}
           <CheckField checked={includeMplokaki} onChange={setIncludeMplokaki}>
             {t("compare.includeMplokaki")}
           </CheckField>
-        )}
-        <CheckField
-          checked={includePartnership}
-          onChange={setIncludePartnership}
-        >
-          {t("compare.includePartnership")}
-        </CheckField>
-        {includePartnership && (
-          <div className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {t("partnership.liability")}
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <PartnershipFields fields={partnership} comparison />
+          <CheckField
+            checked={includePartnership}
+            onChange={setIncludePartnership}
+          >
+            {t("compare.includePartnership")}
+          </CheckField>
+          {includePartnership && (
+            <div className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                {t("partnership.liability")}
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <PartnershipFields fields={partnership} comparison />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t("partnership.efkaHelp")}
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {t("partnership.efkaHelp")}
-            </p>
-          </div>
-        )}
+          )}
+        </details>
         <details className="space-y-3">
           <summary className="cursor-pointer text-sm font-medium">
             {t("compare.taxProfile")}
@@ -290,6 +268,19 @@ export default function ComparePage() {
                 }
               }}
             />
+            {(yearsInBusiness ?? 1) > 3 && (
+              <div className="space-y-2">
+                <NumberField
+                  field="amount"
+                  label={t("inputs.minimumIncome")}
+                  value={minimumIncome}
+                  onChange={setMinimumIncome}
+                />
+                <p className="text-sm text-muted-foreground">
+                  {t("inputs.minimumHelp")}
+                </p>
+              </div>
+            )}
           </div>
           <CheckField
             checked={reducedCorporatePrepayment}
@@ -304,19 +295,6 @@ export default function ComparePage() {
             {t("compare.expensesHelp")}
           </p>
         </details>
-        {(yearsInBusiness ?? 1) > 3 && (
-          <>
-            <NumberField
-              field="amount"
-              label={t("inputs.minimumIncome")}
-              value={minimumIncome}
-              onChange={setMinimumIncome}
-            />
-            <p className="text-sm text-muted-foreground">
-              {t("inputs.minimumHelp")}
-            </p>
-          </>
-        )}
       </div>
 
       <div role="status" className="sr-only" aria-atomic="true">
@@ -327,94 +305,100 @@ export default function ComparePage() {
             : ""}
       </div>
 
-      {!hasInput && (
-        <div className="rounded-2xl bg-secondary/20 py-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            {t("compare.emptyState")}
-          </p>
-        </div>
-      )}
-
       {hasInput && !result && (
         <p className="text-sm text-destructive">{t("results.invalid")}</p>
       )}
 
-      {hasInput && result && winner && (
+      {hasInput && winner && (
         <section className="space-y-4" aria-label={t("results.headline")}>
-          <WinnerCard entry={winner} />
-
-          {runners.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {runners.map((entry) => (
-                <RunnerCard key={entry.key} entry={entry} />
-              ))}
-            </div>
-          )}
-
-          <NetBar ranked={ranked} />
+          <h2 className="text-sm font-semibold">
+            {t("compare.annualNetLabel")}
+          </h2>
+          <ol className="divide-y divide-border overflow-hidden rounded-xl bg-secondary/30">
+            {ranked.map(({ key, label, data }) => (
+              <li
+                key={key}
+                className={
+                  key === winner.key ? "bg-net-accent-muted" : undefined
+                }
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-4 py-3">
+                  <span className="font-medium">{label}</span>
+                  <strong className="tabular-nums">
+                    {fmt(data.annualNet)}
+                  </strong>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <p>{t("disclaimer")}</p>
+            <p>{t("compare.defaults")}</p>
+            <p>{t("ike.transition")}</p>
+          </div>
           <details className="rounded-xl bg-secondary/30 space-y-3 p-4">
             <summary className="cursor-pointer text-sm font-medium">
-              {t("compare.cashHeading")}
+              {t("compare.resultDetails")}
             </summary>
-            <dl className="space-y-2 text-sm">
-              {ranked.map(({ key, label, data }) =>
-                data.cashAfterAdvance === undefined ? null : (
-                  <div
-                    key={key}
-                    className="flex items-baseline justify-between gap-4"
-                  >
-                    <dt>
-                      {label} ·{" "}
-                      {t(
-                        key === "self-employed"
-                          ? "compare.personalCash"
-                          : "compare.companyCash",
-                      )}
-                    </dt>
-                    <dd className="tabular-nums">
-                      {fmt(data.cashAfterAdvance)}
-                    </dd>
+            {ranked.map(({ key, label, data }) => (
+              <div
+                key={key}
+                className="space-y-2 border-t border-border pt-3 text-sm"
+              >
+                <h3 className="font-semibold">{label}</h3>
+                <dl className="space-y-1 [&>div]:flex [&>div]:flex-wrap [&>div]:justify-between [&>div]:gap-x-4 [&_dd]:tabular-nums">
+                  <div>
+                    <dt>{t("compare.monthlyEquiv")}</dt>
+                    <dd>{fmt(data.annualNet / 12)}</dd>
                   </div>
-                ),
-              )}
-            </dl>
+                  {key === "employee" && (
+                    <div>
+                      <dt>{t("compare.actualPaycheck")} (14×)</dt>
+                      <dd>{fmt(data.monthlyNet)}</dd>
+                    </div>
+                  )}
+                  <div>
+                    <dt>{t("compare.totalTaxes")}</dt>
+                    <dd>{fmt(data.totalTaxesAnnual)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t("compare.effectiveTaxRate")}</dt>
+                    <dd>{fmtPct(data.effectiveTaxRate)}</dd>
+                  </div>
+                  {data.cashAfterAdvance !== undefined && (
+                    <div>
+                      <dt>
+                        {t("compare.cashHeading")} ·{" "}
+                        {t(
+                          key === "self-employed"
+                            ? "compare.personalCash"
+                            : "compare.companyCash",
+                        )}
+                      </dt>
+                      <dd>{fmt(data.cashAfterAdvance)}</dd>
+                    </div>
+                  )}
+                </dl>
+              </div>
+            ))}
           </details>
 
-          {scope === "all" && (
-            <div className="rounded-xl bg-secondary/30 px-4 py-4 space-y-1">
-              <p className="text-[0.8125rem] font-semibold text-foreground">
-                {t("compare.whyDifferent")}
-              </p>
-              <p className="text-[0.8125rem] text-muted-foreground leading-relaxed">
-                {t("compare.whyDifferentBody")}
-              </p>
-            </div>
-          )}
-
           <div className="text-center">
-            <p className="text-[0.8125rem] text-muted-foreground">
-              {t("compare.detailedCalc")}{" "}
-              <Link
-                href="/"
-                className="text-primary font-medium hover:underline"
-              >
-                {t("compare.goToCalculator")}
-              </Link>
-            </p>
+            <Link
+              href="/"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              {t("compare.goToCalculator")}
+            </Link>
           </div>
         </section>
       )}
-      <div className="space-y-2 text-sm text-muted-foreground">
-        {scope === "all" && <p>{t("compare.basis")}</p>}
-        <p>{t("compare.defaults")}</p>
-        {includePartnership && <p>{t("compare.partnershipBasis")}</p>}
-        {scope === "all" && includeMplokaki && (
-          <p>{t("compare.mplokakiBasis")}</p>
-        )}
-        <IkeTransitionNote />
-        <IkeNotes includeTransition={false} />
-        {includePartnership && <PartnershipNotes />}
-      </div>
+      {(includePartnership || includeMplokaki) && (
+        <div className="space-y-2 text-sm text-muted-foreground">
+          {includePartnership && <p>{t("compare.partnershipBasis")}</p>}
+          {includeMplokaki && <p>{t("compare.mplokakiBasis")}</p>}
+        </div>
+      )}
     </div>
   );
 }

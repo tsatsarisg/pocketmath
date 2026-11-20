@@ -14,7 +14,6 @@ import type { CalculatorReturn } from "@/hooks/use-calculator";
 import { CheckField } from "./check-field";
 import { HeadOfficeLevyField } from "./head-office-levy-field";
 import { NumberField } from "./number-field";
-import { PartnershipNotes } from "./partnership-notes";
 
 type PartnershipState = CalculatorReturn["partnership"];
 
@@ -132,7 +131,6 @@ export function PartnershipInputs({ state }: { state: PartnershipState }) {
           {t("ike.reducedHelp")}
         </span>
       </CheckField>
-      <PartnershipNotes />
     </div>
   );
 }

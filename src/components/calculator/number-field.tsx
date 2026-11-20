@@ -26,7 +26,8 @@ export function NumberField({
   const id = useId();
   const { t } = useTranslation();
   const error =
-    (field === "monthly" || optional) && value.trim() === ""
+    (field === "monthly" || field === "annual-offer" || optional) &&
+    value.trim() === ""
       ? undefined
       : validateField(value, field);
   const inputProps = {
@@ -40,7 +41,10 @@ export function NumberField({
   return (
     <FieldRow>
       <Label htmlFor={id}>{label}</Label>
-      {field === "monthly" || field === "expenses" || field === "amount" ? (
+      {field === "monthly" ||
+      field === "annual-offer" ||
+      field === "expenses" ||
+      field === "amount" ? (
         <EuroInput {...inputProps} onChange={onChange} />
       ) : (
         <Input

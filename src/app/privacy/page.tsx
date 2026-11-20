@@ -29,102 +29,36 @@ export default function PrivacyPage() {
       </Section>
 
       <Section heading={t("legal.privacy.whatData.heading")}>
-        <p>{t("legal.privacy.whatData.intro")}</p>
-        <ul className="list-disc pl-5 space-y-3">
-          <li>
-            <strong>
-              {t("legal.privacy.whatData.calculations").split(":")[0]}:
-            </strong>{" "}
-            {t("legal.privacy.whatData.calculations")
-              .split(":")
-              .slice(1)
-              .join(":")}
-          </li>
-          <li>
-            <strong>
-              {t("legal.privacy.whatData.serverLogs").split(":")[0]}:
-            </strong>{" "}
-            {t("legal.privacy.whatData.serverLogs")
-              .split(":")
-              .slice(1)
-              .join(":")}
-          </li>
-          <li>
-            <strong>
-              {t("legal.privacy.whatData.hosting").split(":")[0]}:
-            </strong>{" "}
-            {t("legal.privacy.whatData.hosting").split(":").slice(1).join(":")}
-          </li>
-          <li>
-            <strong>
-              {t("legal.privacy.whatData.language").split(":")[0]}:
-            </strong>{" "}
-            {t("legal.privacy.whatData.language").split(":").slice(1).join(":")}
-          </li>
-          <li>
-            <strong>{t("legal.privacy.whatData.theme").split(":")[0]}:</strong>{" "}
-            {t("legal.privacy.whatData.theme").split(":").slice(1).join(":")}
-          </li>
-          <li>
-            <strong>
-              {t("legal.privacy.whatData.emailContact").split(":")[0]}:
-            </strong>{" "}
-            {t("legal.privacy.whatData.emailContact")
-              .split(":")
-              .slice(1)
-              .join(":")}
-          </li>
-          <li>
-            <strong>
-              {t("legal.privacy.whatData.sponsorships").split(":")[0]}:
-            </strong>{" "}
-            {t("legal.privacy.whatData.sponsorships")
-              .split(":")
-              .slice(1)
-              .join(":")}
-          </li>
-        </ul>
-        <p className="mt-3">{t("legal.privacy.whatData.noCookies")}</p>
+        <p>{t("legal.privacy.whatData.calculations")}</p>
+        <p className="mt-2">{t("legal.privacy.whatData.preferences")}</p>
       </Section>
 
-      <Section heading={t("legal.privacy.legalBasis.heading")}>
-        <p>{t("legal.privacy.legalBasis.text")}</p>
-        <ul className="list-disc pl-5 space-y-2">
-          <li>{t("legal.privacy.legalBasis.serverLogs")}</li>
-          <li>{t("legal.privacy.legalBasis.localStorage")}</li>
-          <li>{t("legal.privacy.legalBasis.emailContact")}</li>
-          <li>{t("legal.privacy.legalBasis.sponsorships")}</li>
-        </ul>
+      <Section heading={t("legal.privacy.hosting.heading")}>
+        <p>{t("legal.privacy.hosting.text")}</p>
+        <a
+          className="mt-2 inline-block text-primary underline underline-offset-2"
+          href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+        >
+          {t("legal.privacy.hosting.link")}
+        </a>
       </Section>
 
-      <Section heading={t("legal.privacy.dataSharing.heading")}>
-        <p>{t("legal.privacy.dataSharing.text")}</p>
-      </Section>
-
-      <Section heading={t("legal.privacy.retention.heading")}>
-        <ul className="list-disc pl-5 space-y-2">
-          <li>{t("legal.privacy.retention.serverLogs")}</li>
-          <li>{t("legal.privacy.retention.localStorage")}</li>
-          <li>{t("legal.privacy.retention.contactEmails")}</li>
-          <li>{t("legal.privacy.retention.sponsorships")}</li>
-        </ul>
+      <Section heading={t("legal.privacy.email.heading")}>
+        <p>{t("legal.privacy.email.text")}</p>
+        <p className="mt-2">{t("legal.privacy.email.retention")}</p>
       </Section>
 
       <Section heading={t("legal.privacy.rights.heading")}>
-        <p>{t("legal.privacy.rights.intro")}</p>
-        <p className="mt-2">{t("legal.privacy.rights.list")}</p>
-        <p className="mt-3">{t("legal.privacy.rights.howTo")}</p>
-        <p className="mt-3 text-[0.8125rem] text-muted-foreground">
-          {t("legal.privacy.rights.hdpa")}
+        <p>{t("legal.privacy.rights.text")}</p>
+        <p className="mt-2">
+          {t("legal.privacy.rights.complaint")}{" "}
+          <a
+            className="text-primary underline underline-offset-2"
+            href="https://www.dpa.gr/"
+          >
+            {t("legal.privacy.rights.hdpa")}
+          </a>
         </p>
-      </Section>
-
-      <Section heading={t("legal.privacy.children.heading")}>
-        <p>{t("legal.privacy.children.text")}</p>
-      </Section>
-
-      <Section heading={t("legal.privacy.changes.heading")}>
-        <p>{t("legal.privacy.changes.text")}</p>
       </Section>
     </article>
   );
